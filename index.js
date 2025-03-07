@@ -1,45 +1,39 @@
-//creo un server estatico con express (modulo externo)
-
 const express = require(`express`)
 const session = require('express-session')
 const override = require('method-override')
 const rutas = require('./src/routes/mainRoutes.js')
 const login = require('./src/routes/loginRoutes.js')
-const app = express()
 const auth = require('./src/config/auth.js')
 
+const app = express()
+const port = process.env.PORT || 8080; // Corrección en la asignación del puerto
 
-const port = 8080 || process.env.PORT || 3000
-
+// Configurar EJS como motor de vistas
 app.set('view engine', 'ejs')
 app.set('views', (__dirname + '/src/views'))
 
+// Middlewares
 app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(override('_metodo'));
+app.use(override('_metodo'))
 
-
-//Es mejor ejecutar primero las rutas de login y luego las que necesiten 'auth'
-app.use('/login', login) // /login/login o /login/registro
-app.use('/', auth)
-app.use('/', rutas)
-
-
-
+// Configurar sesión antes de las rutas
 app.use(session({
     secret: 'clave_secreta',
     resave: false,
     saveUninitialized: true
-}));
+}))
 
-//app.use('/admin', auth, rutasAdmin) // /admin/loquesea /admin/xyz
+// Definir rutas
+app.use('/login', login) // /login/login o /login/registro
+app.use('/', auth) // Middleware de autenticación (si es necesario)
+app.use('/', rutas) // Rutas generales
 
-
-app.use((req, res, next) => {
+// Middleware para manejar errores 404
+app.use((req, res) => {
     res.status(404).send(`<h1 style="color: red"> Recurso no encontrado!</h1>`)
 })
 
 const IP = '127.0.0.1';
-
-app.listen(port, () => console.log(`Hola, estoy arriba en el puerto: ${port}`))
+app.listen(port, () => console.log(`Servidor corriendo en http://${IP}:${port}`))
