@@ -1,0 +1,58 @@
+<%- include('partials/head') %>
+	<body>
+		<header>
+			<div>
+			  <a href="index.html">
+				<img src="../img/logo.png" alt="Logo de Solo Caps"></a>
+		
+			  <h1>Solo Caps</h1>
+			</div>
+			<nav>
+			  <a class="activo" href="index.html">Inicio</a>
+			  <a href="productos.html">Productos</a>
+			  <a href="accesorios.html">Accesorios</a>
+			  <a href="contacto.html">Contactenos</a>
+			  <a href="listado.html">Listado</a>
+			</nav>
+			  <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
+		
+		  </header>
+
+		  <main>
+				<h2>Modificar el Item</h2>
+				<div id="producto-modificar">
+					<form action="/modificar?_metodo=PUT" method="POST" class="producto-form">
+						<label for="nombre">Nombre:</label>
+						<input type="text" name="nombre" value="<%= registro.nombre %>">
+						<label for="descripcion">Descripcion:</label>
+						<input type="text" name="descripcion" value="<%= registro.descripcion %>">
+						<label for="precio">Precio:</label>
+						<input type="number" name="precio" value="<%= registro.precio %>">
+						<label for="id_tipoProducto">Tipo de Producto:</label>
+						<label for="id_tipoProducto">Tipo de Producto:</label>
+						<select name="id_tipoProducto" id="selecttipoProductoForm">
+							<option value="">Seleccione un tipo de producto</option>
+							<% tiposProducto.forEach(tipo => { %>
+								<option value="<%= tipo.id %>" <%= registro.id_tipoProducto === tipo.id ? 'selected' : '' %>><%= tipo.nombre %></option>
+							<% }) %>
+						</select>
+		
+						<label for="alias">Marca:</label>
+						<select name="alias" id="proveedoresForm">
+							<option value="">Seleccione una marca</option>
+							<% proveedores.forEach(proveedor => { %>
+								<option value="<%= proveedor.id %>" <%= registro.alias === proveedor.id ? 'selected' : '' %>><%= proveedor.alias %></option>
+							<% }) %>
+						</select>
+						<input type="hidden" name="idMod" value="<%= registro.id %>"><br>
+						<input type="submit" value="Actualizar" class="btn">
+					</form>
+					<div id="btn-cancelar">
+						<a href="/listado.html" class="btn">Cancelar</a>
+					</div>
+				</div>
+				
+		  </main>
+
+
+<%- include('partials/footer') %>

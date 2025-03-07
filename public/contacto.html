@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
+
+  <title>SoloCaps</title>
+  <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+</head>
+
+<body>
+  <header>
+    <div>
+      <a href="index.html">
+        <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
+
+      <h1>Solo Caps</h1>
+    </div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="accesorios.html">Accesorios</a>
+      <a class="activo" href="contacto.html">Contactenos</a>
+    </nav>
+    <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
+
+  </header>
+  <main>
+    <!--carrusel boostrap inicio-->
+    <div id="slider">
+      <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="./img/banner1.jpg" class="d-block w-100" alt="banner1">
+          </div>
+          <div class="carousel-item">
+            <img src="./img/banner3.jpg" class="d-block w-100" alt="banner2">
+          </div>
+          <div class="carousel-item">
+            <img src="./img/banner5.jpg" class="d-block w-100" alt="banner3">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <!--fin de carrusel-->
+    <!-- inicio formulario -->
+    <h2>Completa el Formulario de Contacto</h2>
+    <section id="contacto">
+      <div>
+        <form>
+        <fieldset id="datos_personales">
+          <h3>Información Personal</h3>
+
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" placeholder="Tu Nombre">
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Tu Correo Electrónico" required>
+
+          <label for="telefono">Teléfono:</label>
+          <input type="tel" id="telefono" placeholder="Tu Teléfono">
+
+          <label for="mensaje">Mensaje:</label>
+          <textarea name="mensaje" id="mensaje" placeholder="Deja tu mensaje"></textarea>
+        </fieldset>
+        <!-- datos contacto -->
+        <fieldset id="datos_contacto">
+          <h3>Contacto</h3>
+
+          <p>Como desea ser contactado:</p>
+          <div class="forma-contacto">
+            <label for="telefono">Teléfono</label>
+            <input type="radio" name="contacto" value="telefono" id="telefono_contacto">
+
+            <label for="correo">Correo</label>
+            <input type="radio" name="contacto" value="correo" id="correo">
+          </div>
+
+          <p>Si Eligio Teléfono, elija la Fecha y Hora</p>
+          <div class="fecha_hora">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha">
+
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora" min="09:00" max="18:00">
+          </div>
+        </fieldset>
+        <fieldset id="boton_contacto">
+          <input type="submit" value="Enviar" onclick="return validarEmail()">
+        </fieldset>
+      </form>
+      </div>
+      <div id="img_contacto">
+        <img src="./img/cafe_granos.jpg" alt="cafe en granos">
+      </div>
+    </section>
+ 
+  </main>
+  <footer>
+    <div class="footer">
+      <a class="redsoc" href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a class="redsoc" href="#"><i class="fa-brands fa-twitter"></i></a>
+      <a class="redsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a class="redsoc" href="#"><i class="fa-brands fa-pinterest"></i></a>
+      <a class="redsoc" href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+      <p>Derechos reservados @2024</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

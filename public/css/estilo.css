@@ -1,0 +1,740 @@
+/* ---------fuentes -------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto:wght@300;400&display=swap');
+
+@font-face {
+  font-family: 'introbold';
+  src: url(../fuentes/Intro_Black_Alt.otf);
+  font-weight: bold;
+  font-style: bold;
+}
+
+@font-face {
+  font-family: 'introregular';
+  src: url(../fuentes/Intro_Regular_Alt.otf);
+  font-weight: bold;
+  font-style: bold;
+}
+
+@font-face {
+  font-family: 'introbook';
+  src: url(../fuentes/Intro_Book_Alt.otf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*-------- generales ---------------*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+body {
+  width: 100%;
+  margin: auto;
+  font-family: 'introregular';
+}
+
+/*......... inicio menu...........*/
+
+header div {
+  width: 100%;
+  height: 104px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+header div img {
+  height: 90px;
+  width: auto;
+}
+
+header div h1 {
+  font-family: 'introbold';
+  font-size: 48px;
+  color: #735d78;
+  text-shadow: 1px 1px 2px #666;
+  margin: 0;
+  /* Elimina márgenes predeterminados para un control mejor */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+header nav {
+  background-color: #e8c2ca;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  padding: 10px 20px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+header nav a:hover {
+  background-color: #b392ac;
+  color: white;
+  border-radius: 10px;
+}
+
+.activo {
+  background-color: #b392ac;
+}
+
+/*.........fin menu...........*/
+
+
+/*       inicio slider      */
+
+
+#slider {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 24px;
+}
+
+#slider img {
+  width: 320px;
+  height: 340px;
+  object-fit: cover;
+}
+
+/*........inicio card......*/
+
+section {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.tarjeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.tarjeta h2 {
+  width: 100%;
+  color: #202630;
+  font-size: 24px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.tarjeta article {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+.tarjeta article h3 {
+  font-size: 24px;
+  padding: 10px 10px 0 10px;
+  ;
+}
+
+.tarjeta article img {
+  width: 320px;
+  height: 340px;
+  object-fit: cover;
+  border-radius: 0px 0px 0px 0px;
+}
+
+.tarjeta article .cuerpo {
+  padding: 10px;
+  flex: 1 1 100%;
+}
+
+.tarjeta article .precio {
+  font-size: 25px;
+  font-weight: 500;
+  font-family: 'introbold';
+}
+
+.tarjeta article .pie {
+  background: #d1b3c4;
+  border-radius: 0 0 15px 15px;
+  padding: 10px;
+  text-align: center;
+}
+
+.tarjeta article .pie a {
+  text-decoration: none;
+  color: white;
+}
+
+.tarjeta article .pie a::after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: ""
+}
+
+.tarjeta article:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+/*........fin card......*/
+
+
+
+.flotante {
+  display: scroll;
+  position: fixed;
+  bottom: 320px;
+  right: 0px;
+}
+
+
+
+/*.........FOOTER...........*/
+
+footer {
+  background-color: #e8c2ca;
+  padding: 10px;
+  text-align: center;
+  margin-top: 56px;
+}
+
+
+/*.........FIN FOOTER...........*/
+
+
+
+
+
+/*.........CONTACTENOS...........*/
+
+
+
+h2 {
+  max-width: 1200px;
+  margin: auto;
+  width: 100%;
+  color: #202630;
+  font-size: 24px;
+  margin-top: 56px;
+  margin-bottom: 32px;
+}
+
+#img_contacto {
+  display: inline-block;
+  position: relative;
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+  /*border-radius: 50%;*/
+}
+
+#img_contacto img {
+  width: auto;
+  height: 100%;
+  margin-left: -2px;
+}
+
+#contacto {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+form label {
+  width: 72px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="tel"] {
+  width: 450px;
+  padding: 3px 10px;
+  border: 1px solid #f6f6f6;
+  border-radius: 3px;
+  background-color: #f6f6f6;
+  margin: 8px 0;
+  display: inline-block;
+}
+
+form input[type="submit"] {
+  width: 50%;
+  margin-top: 32px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 500;
+  font-size: 25px;
+  width: 150px;
+  height: 40px;
+}
+
+form input[type="submit"]:hover {
+  border: none;
+  background-color: #b392ac;
+  transform: scale(1.2);
+}
+
+textarea {
+  width: 450px;
+  height: 100px;
+  border: 1px solid #f6f6f6;
+  border-radius: 3px;
+  background-color: #f6f6f6;
+  margin: 8px 0;
+  /*resize: vertical | horizontal | none | both*/
+  resize: none;
+  display: block;
+}
+
+.forma-contacto, .fecha_hora {
+  width: 450px;
+  display: flex;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+
+/*.........FIN CONTACTENOS...........*/
+
+/*.........INICIO LISTADO...........*/
+
+/* muestra el listado de productos */
+#listado {
+  max-height: 400px;
+  /* Ajusta esta altura según tus necesidades */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.list-header, .list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.list-header {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.list-header h4 {
+  font-size: 15px;
+}
+
+.list-item h5 {
+  margin: 0;
+  flex: 1;
+  font-size: 15px;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column;
+}
+
+#acciones .btn {
+  width: 100px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 15px;
+  text-align: center;
+  line-height: 20px;
+  /* Centrar verticalmente el texto */
+  text-decoration: none;
+  /* Para los enlaces */
+  display: inline-block;
+  /* Para los enlaces */
+}
+
+#acciones .btn:hover {
+  background-color: #d1b3c4;
+  transform: scale(1.2);
+}
+
+/* Estilos específicos para los enlaces */
+#acciones a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#acciones a:hover {
+  background-color: #b392ac;
+}
+
+
+
+/*  sector Tipo Producto y Proveedores   */
+
+#datos_anexos {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-around;
+  display: none;
+}
+
+#datos_anexos h3 {
+  font-size: 15px;
+}
+
+.list-datos_anexos-header, .list-datos_anexos-item {
+  display: flex;
+  justify-content: space-around;
+  align-items: left;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  width: 500px;
+}
+
+.list-datos_anexos-header {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.list-datos_anexos-header h4 {
+  font-size: 15px;
+}
+
+.list-datos_anexos-item h5 {
+  margin: 0;
+  flex: 1;
+  font-size: 15px;
+}
+
+
+/* sector agregar producto */
+
+#producto-agregar {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+
+#producto-agregar form label {
+  width: 72px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+}
+
+
+#producto-agregar form a {
+  text-decoration: none;
+  color: white;
+}
+
+#producto-agregar form a::after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: ""
+}
+
+#producto-agregar form input[type="submit"] {
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 500;
+  font-size: 25px;
+  width: 150px;
+  height: 40px;
+}
+
+#producto-agregar form input[type="submit"]:hover {
+  border: none;
+  background-color: #b392ac;
+  transform: scale(1.2);
+}
+
+#producto-agregar .btn {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  line-height: 40px;
+  /* Centrar verticalmente el texto */
+  text-decoration: none;
+  /* Para los enlaces */
+  display: inline-block;
+  /* Para los enlaces */
+}
+
+#producto-agregar .btn:hover {
+  background-color: #d1b3c4;
+  transform: scale(1.2);
+}
+
+/* Estilos específicos para los enlaces */
+#producto-agregar a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#login-registro a:hover {
+  background-color: #b392ac;
+}
+/*.........Inicio Pagina Modificar...........*/
+
+#producto-modificar {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+#producto-modificar form label {
+  width: 72px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+}
+
+#producto-modificar .btn {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  line-height: 40px;
+  /* Centrar verticalmente el texto */
+  text-decoration: none;
+  /* Para los enlaces */
+  display: inline-block;
+  /* Para los enlaces */
+}
+
+#producto-modificar .btn:hover {
+  background-color: #d1b3c4;
+  transform: scale(1.2);
+}
+
+/* Estilos específicos para los enlaces */
+#producto-modificar a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#producto-modificar a:hover {
+  background-color: #b392ac;
+}
+
+
+#btn-cancelar {
+  margin-top: 20px;
+}
+
+/*.........Fin Pagina Modificar...........*/
+/*.........FIN LISTADO...........*/
+
+/*..........INICIO LOGIN REGISTRO ...............*/
+
+
+#login-registro {
+  width: 800px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+#login-registro form label {
+  width: 25px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+}
+
+
+
+#login-registro .btn {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  line-height: 40px;
+  /* Centrar verticalmente el texto */
+  text-decoration: none;
+  /* Para los enlaces */
+  display: inline-block;
+  /* Para los enlaces */
+}
+
+#login-registro .btn:hover {
+  background-color: #d1b3c4;
+  transform: scale(1.2);
+}
+
+/* Estilos específicos para los enlaces */
+#login-registro a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#login-registro a:hover {
+  background-color: #b392ac;
+}
+
+
+#btn-extra {
+  margin-top: 20px;
+}
+
+/*..........FIN LOGIN REGISTRO.............*/
+
+
+
+
+
+/*..........responsive.............*/
+
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+  #contacto {
+    width: auto;
+    padding: 16px;
+    margin: auto;
+  }
+}
+
+
+
+
+
+@media screen and (max-width: 767px) and (min-width: 1px) {
+
+  #capsulas {
+    justify-content: center;
+  }
+
+  #accesorios {
+    justify-content: center;
+  }
+
+  #porta_capsulas {
+    justify-content: center;
+  }
+
+  #recargables {
+    justify-content: center;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+  }
+
+  header div {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header div img {
+    margin-bottom: 10px;
+    /* Añade un margen inferior entre el logo y el título */
+  }
+
+  header div h1 {
+    font-size: 36px;
+    /* Reduce el tamaño del título para que se ajuste mejor en pantallas pequeñas */
+  }
+
+  header nav {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header nav a {
+    padding: 10px;
+    /* Ajusta el espaciado de los enlaces */
+    width: 100%;
+    /* Asegura que los enlaces ocupen todo el ancho disponible */
+    text-align: left;
+    /* Centra el texto */
+  }
+
+  #contacto {
+    width: auto;
+    padding: 16px;
+    margin: auto;
+  }
+
+  #img_contacto img {
+    display: none;
+  }
+
+}
