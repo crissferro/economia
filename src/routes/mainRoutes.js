@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const controladores = require('../controllers/mainController');
 const multer = require('multer');
+const path = require('path');
 const auth = require('../config/auth'); // Middleware de autenticación
 
 // Configuración de almacenamiento para archivos (si se requiere)

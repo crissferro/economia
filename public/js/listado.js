@@ -1,26 +1,35 @@
+// public/js/listado.js
 /*vercel: https://solocaps.vercel.app/ */
 /* local:  http://localhost:8080/ */
+//Funcion para hacer peticiones a las rutas
+async function fetchData(url, token){
+    try{
+      const res = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      });
+      if (!res.ok) {
+        throw new Error("Problemas en login");
+      }
+      return await res.json();
+    }catch(e){
+      console.error("Error en peticion", e);
+      if (e.message === "Problemas en login") {
+        window.location.href = "/login.html";
+      }
+      return [];
+    }
+  }
 
-document.querySelector('body').onload = async () => {
+  async function init(){
     const token = localStorage.getItem('jwt-token');
     console.log('Token from localStorage:', token); // Verifico el token
 
     // Cargar listado de productos
     try {
-        const res = await fetch(`https://solocaps.vercel.app/listado`, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!res.ok) {
-            window.location.href = "/login.html";
-            throw new Error("Problemas en login");
-        }
-
-        const datos = await res.json();
+        const datos = await fetchData("http://localhost:8080/listado", token) //cambiar la url si es necesario
         let listaHTML = document.querySelector(`#listado`);
         listaHTML.innerHTML = `
             <div class="list-header">
@@ -49,26 +58,15 @@ document.querySelector('body').onload = async () => {
         });
 
         // Cargar tipos de productos y proveedores
-        await Promise.all([cargarTiposProducto(token), cargarProveedores(token)]);
+        //cambiar las url si es necesario
+        await Promise.all([cargarTiposProducto(token, "http://localhost:8080/tiposProducto"), cargarProveedores(token, "http://localhost:8080/proveedores")]);
     } catch (error) {
         console.error('Error al cargar listado de productos:', error);
     }
 
-    async function cargarTiposProducto(token) {
+    async function cargarTiposProducto(token, url) {
         try {
-            const res = await fetch(`https://solocaps.vercel.app/tiposProducto`, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-
-            if (!res.ok) {
-                throw new Error(`Error fetching tiposProducto: ${res.statusText}`);
-            }
-
-            const tiposProducto = await res.json();
+            const tiposProducto = await fetchData(url, token);
             console.log('Tipos de Producto:', tiposProducto); // Verifico los datos obtenidos
 
             let selectTipoProducto = document.querySelector('#selecttipoProducto');
@@ -92,21 +90,9 @@ document.querySelector('body').onload = async () => {
         }
     }
 
-    async function cargarProveedores(token) {
+    async function cargarProveedores(token, url) {
         try {
-            const res = await fetch(`https://solocaps.vercel.app/proveedores`, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-
-            if (!res.ok) {
-                throw new Error(`Error fetching proveedores: ${res.statusText}`);
-            }
-
-            const proveedores = await res.json();
+            const proveedores = await fetchData(url, token);
             console.log('Proveedores:', proveedores); // Verifico los datos obtenidos
 
             let selectProveedores = document.querySelector('#proveedores');
@@ -130,4 +116,5 @@ document.querySelector('body').onload = async () => {
         }
 
     }
-};
+  }
+  document.addEventListener('DOMContentLoaded', init);

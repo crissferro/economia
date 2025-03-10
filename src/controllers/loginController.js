@@ -1,7 +1,7 @@
 const { conn } = require('../db/dbconnection');
 const jtoken = require('jsonwebtoken');
 const crypt = require('bcryptjs');
-const jwtconfig = require('../config/jwtconfig.js');
+const jwtconfig = require('./../config/jwtconfig.js');
 
 module.exports = {
     registro: async (req, res) => {
@@ -13,19 +13,21 @@ module.exports = {
 
     login: async (req, res) => {
         const { username, password } = req.body;
-        const [[valido]] = await conn.query(`SELECT * FROM users WHERE username = ?`, username);
+        const [[valido]] = await conn.query(`SELECT * FROM users WHERE username = ?`, username)
 
         if (valido === undefined) {
-            return res.status(404).send({ auth: false, message: 'Usuario no encontrado' });
+            res.status(404).send('Usuario no encontrado')
         }
 
-        if (!(await crypt.compare(password, valido.password))) {
-            return res.status(401).send({ auth: false, message: 'Password incorrecto' });
+        else if (!(await crypt.compare(password, valido.password))) {
+            res.status(401).send({ auth: false, token: null })
         }
 
-        const token = jtoken.sign({ id: valido.id }, jwtconfig.secretKey, { expiresIn: jwtconfig.tokenExpiresIn });
-
-        res.json({ auth: true, token: token });
+        else { token = jtoken.sign({ id: valido.id }, jwtconfig.secretKey, { expiresIn: jwtconfig.tokenExpiresIn })
+        console.log("token de usuario: ", token);
+        res.status(201).send({ auth: true, token });
+        }
+        
     },
 
     logout: (req, res) => {
