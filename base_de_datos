@@ -1,0 +1,180 @@
+base de datos nueva para probar
+
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 06-03-2025 a las 18:51:17
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Base de datos: `gastos`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `conceptos`
+--
+
+CREATE TABLE `conceptos` (
+  `id` int(11) NOT NULL,
+  `rubro_id` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `tipo` enum('ingreso','egreso') NOT NULL DEFAULT 'egreso',
+  `requiere_vencimiento` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `gastos`
+--
+
+CREATE TABLE `gastos` (
+  `id` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `concepto_id` int(11) DEFAULT NULL,
+  `fecha_vencimiento` date DEFAULT NULL,
+  `mes` int(11) NOT NULL,
+  `anio` int(11) NOT NULL,
+  `tipo` enum('ingreso','egreso') NOT NULL DEFAULT 'egreso',
+  `pagado` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Disparadores `gastos`
+--
+DELIMITER $$
+CREATE TRIGGER `ajustar_monto` BEFORE INSERT ON `gastos` FOR EACH ROW BEGIN
+  DECLARE tipo_concepto VARCHAR(10); 
+
+  -- Obtener el tipo de concepto (ingreso o egreso)
+  SELECT `tipo` INTO tipo_concepto 
+  FROM `conceptos` 
+  WHERE `id` = NEW.concepto_id;
+
+  -- Si el concepto es 'egreso', almacenar el monto en negativo
+  IF tipo_concepto = 'egreso' THEN
+    SET NEW.monto = NEW.monto * -1; 
+  END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rubros`
+--
+
+CREATE TABLE `rubros` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`) VALUES
+(3, 'admin', '$2b$10$M6bQl/qv.eJJ0625x6r/oOhBAoRstu.KzNREx9Mchgj9brxak3cbK');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `conceptos`
+--
+ALTER TABLE `conceptos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombre` (`nombre`,`rubro_id`),
+  ADD KEY `rubro_id` (`rubro_id`);
+
+--
+-- Indices de la tabla `gastos`
+--
+ALTER TABLE `gastos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `concepto_id` (`concepto_id`);
+
+--
+-- Indices de la tabla `rubros`
+--
+ALTER TABLE `rubros`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombre` (`nombre`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `conceptos`
+--
+ALTER TABLE `conceptos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT de la tabla `gastos`
+--
+ALTER TABLE `gastos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT de la tabla `rubros`
+--
+ALTER TABLE `rubros`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `conceptos`
+--
+ALTER TABLE `conceptos`
+  ADD CONSTRAINT `conceptos_ibfk_1` FOREIGN KEY (`rubro_id`) REFERENCES `rubros` (`id`),
+  ADD CONSTRAINT `fk_conceptos_rubro` FOREIGN KEY (`rubro_id`) REFERENCES `rubros` (`id`);
+
+--
+-- Filtros para la tabla `gastos`
+--
+ALTER TABLE `gastos`
+  ADD CONSTRAINT `fk_gastos_concepto` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`),
+  ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`);
+COMMIT;

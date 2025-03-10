@@ -1,7 +1,7 @@
 economia/
 │── src/                   # Lógica del servidor
 │   ├── config/                # Configuración (DB, variables, etc.)
-│   │   ├── auth.js        # Conexión a MariaDB/MySQL
+│   │   ├── auth.js        
 ├── ├── ├── jwtconfig.js
 │   ├── controllers/           # Controladores de la lógica de negocio
 │   │   ├── loginController.js
@@ -12,11 +12,12 @@ economia/
 │   ├── routes/                # Rutas API REST
 │   │   ├── loginRoutes.js
 │   │   ├── mainRoutes.js
-│   ├── views/                # Rutas API REST
+│   ├── views/                
 │   │   ├── partial/
-│   │       ├── footer.js
-│   │       ├── header.js
-│   │   ├── modificar.js
+│   │       ├── footer.ejs
+│   │       ├── header.ejs
+│   │   ├── modificar.ejs
+│   │   ├── dashboard.ejs
 │
 │── public/                  # Lógica del cliente
 │   ├── css/                   # Archivos CSS (Bootstrap u otro)
@@ -26,19 +27,19 @@ economia/
 │   │   ├── listado.js
 │   │   ├── login.js
 │   │   ├── gastos.js
-│   ├── rubros.html                # Lógica general del frontend
+│   ├── rubros.html                
 │   ├── index.html
 │   ├── login.html
 │   ├── conceptos.html
 │   ├── gastos.html
-│   ├── listado.html
+│   ├── listado_gastos.html
 
 │
 │── docker/                    # Archivos Docker
 │   ├── Dockerfile             # Configuración de la app en Docker
 │   ├── docker-compose.yml     # Contenedores (MariaDB, Apache, etc.)
 │
-│── .index.js                  # Variables de entorno (DB, claves, etc.)
+│── .index.js                  
 │── .env                       # Variables de entorno (DB, claves, etc.)
 │── package.json               # Dependencias de Node.js
 │── README.md                  # Documentación del proyecto
