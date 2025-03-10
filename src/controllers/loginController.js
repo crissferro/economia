@@ -23,11 +23,12 @@ module.exports = {
             res.status(401).send({ auth: false, token: null })
         }
 
-        else { token = jtoken.sign({ id: valido.id }, jwtconfig.secretKey, { expiresIn: jwtconfig.tokenExpiresIn })
-        console.log("token de usuario: ", token);
-        res.status(201).send({ auth: true, token });
+        else {
+            token = jtoken.sign({ id: valido.id }, jwtconfig.secretKey, { expiresIn: jwtconfig.tokenExpiresIn })
+            console.log("token de usuario: ", token);
+            res.status(201).send({ auth: true, token });
         }
-        
+
     },
 
     logout: (req, res) => {

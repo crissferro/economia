@@ -7,6 +7,11 @@ const multer = require('multer');
 const path = require('path');
 const auth = require('../config/auth'); // Middleware de autenticación
 
+// Verificar si controladores está bien importado
+if (!controladores) {
+	console.error("Error: No se pudieron cargar los controladores.");
+}
+
 // Configuración de almacenamiento para archivos (si se requiere)
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -21,10 +26,11 @@ const uploadFile = multer({ storage });
 // Rutas protegidas con autenticación (requieren token válido)
 
 // Rubros
-router.get('/rubros', auth, controladores.getRubros); // Ver listado de rubros
-router.post('/rubros', auth, controladores.crearRubro); // Crear nuevo rubro
-router.put('/rubros/:id', auth, controladores.actualizarRubro); // Modificar rubro
-router.delete('/rubros/:id', auth, controladores.eliminarRubro); // Eliminar rubro
+router.get('/rubros', auth, controladores.getRubros || ((req, res) => res.status(500).send("Error: Función no definida")));
+router.post('/rubros', auth, controladores.crearRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
+router.put('/rubros/:id', auth, controladores.actualizarRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
+router.delete('/rubros/:id', auth, controladores.eliminarRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
+
 
 // Conceptos
 router.get('/conceptos', auth, controladores.getConceptos); // Ver listado de conceptos
@@ -44,12 +50,6 @@ router.get('/listado/:id', auth, controladores.getDetalleGasto); // Ver detalle 
 
 // Ruta para el Dashboard
 // Si tu API es REST, probablemente devolverás JSON o una vista específica
-router.get('/dashboard', auth, (req, res) => {
-	// Si estás usando templating engine como 'ejs', puedes renderizar la vista
-	// res.render('dashboard', { user: req.user }); 
-
-	// Si estás devolviendo datos en formato JSON (API RESTful)
-	res.json({ message: 'Bienvenido al Dashboard', user: req.user });
-});
+router.get('/dashboard', controladores.getDashboard);
 
 module.exports = router;

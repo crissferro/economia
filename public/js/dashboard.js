@@ -6,7 +6,7 @@ document.querySelector('body').onload = async () => {
 
     // Cargar listado de productos
     try {
-        const res = await fetch(`http://127.0.0.1:8080/dashboard`, {
+        const res = await fetch(`http://localhost:8080/dashboard`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -32,8 +32,8 @@ document.querySelector('body').onload = async () => {
             </div>
         `;
 
-   datos.forEach(registro => {
-        listaHTML.innerHTML += `
+        datos.forEach(registro => {
+            listaHTML.innerHTML += `
             <div class="list-item">
                 <h5>${registro.descripcion}</h5>
                 <h5>${registro.monto}</h5>
@@ -43,8 +43,8 @@ document.querySelector('body').onload = async () => {
                 <h5>${registro.rubro}</h5>
             </div>
         `;
-    });
-  } catch (error) {
-    console.error('Error al cargar movimientos:', error);
-  }
+        });
+    } catch (error) {
+        console.error('Error al cargar movimientos:', error);
+    }
 }

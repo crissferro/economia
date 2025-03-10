@@ -22,166 +22,105 @@
       </div>
       <nav>
         <a href="index.html">Inicio</a>
-        <a class="activo" href="productos.html">Productos</a>
-        <a href="accesorios.html">Accesorios</a>
+        <a href="dashboard.html" id="listado-link">Dashboard</a>
+        <a class="activo"  href="gastos.html">Cargar Gastos</a>
+        <a href="rubros.html">Rubros</a>
+        <a href="conceptos.html">Conceptos</a>
         <a href="contacto.html">Contactenos</a>
+        <a href="login.html" style="display:none;">Log In</a>
+        
+        <a href="index.html">Logout</a>
       </nav>
       <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
     </header>
     <main>
-      <!--carrusel boostrap inicio-->
-      <div id="slider">
-        <div id="carousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="./img/banner1.jpg" class="d-block w-100" alt="banner1">
+      <div class="container">
+        <h2>Gastos</h2>
+        <!-- Formulario para agregar un nuevo gasto -->
+        <form id="agregarGastoForm">
+            <div class="mb-3">
+                <label for="montoGasto" class="form-label">Monto</label>
+                <input type="number" class="form-control" id="montoGasto" name="montoGasto" required>
             </div>
-            <div class="carousel-item">
-              <img src="./img/banner3.jpg" class="d-block w-100" alt="banner2">
+            <div class="mb-3">
+                <label for="conceptoGasto" class="form-label">Concepto</label>
+                <select class="form-select" id="conceptoGasto" name="conceptoGasto" required>
+                    <!-- Opciones de conceptos se cargarán aquí dinámicamente -->
+                </select>
+                <!--Se muestra el tipo de concepto(ingreso/egreso)-->
+                <p id="tipoConceptoTexto"></p>
             </div>
-            <div class="carousel-item">
-              <img src="./img/banner5.jpg" class="d-block w-100" alt="banner3">
+            <div class="mb-3" id="fechaVencimientoDiv" style="display: none;">
+                <label for="fechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
+                <input type="date" class="form-control" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
             </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-  
-      <!--fin de carrusel-->
-
-      <!--    Productos    -->
-
-      <section id="capsulas" class="tarjeta">
-        <h2>Cápsulas</h2>
-        <article>
-          <h3>Capsula cappucino Nescafe</h3>
-          <div class="cuerpo">
-            <img
-              src="./img/nescafe_capuccino.webp"
-              alt="Capsula Nescafe Capucino">
-            <p>Capsula cappucino Nescafe</p>
-            <p>Cantidad: 16</p>
-            <p class="precio">$9999</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>STARBUCKS House Blend</h3>
-          <div class="cuerpo">
-            <img
-              src="./img/starbuckscapsulas2.webp"
-              alt="Capsula Starbucks Nespresso">
-            <p>Capsula STARBUCKS tostado medio</p>
-            <p>Cantidad: 10</p>
-            <p class="precio">$8999</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Capsula Espresso Nescafe</h3>
-          <div class="cuerpo">
-            <img src="./img/nescafe_expreso.webp" alt="producto2">
-            <p>Capsula expresso Nescafe</p>
-            <p>Cantidad: 16</p>
-
-            <p class="precio">$7999</p>
-          </div>
-
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>STARBUCKS Americano</h3>
-          <img
-            src="./img/starbucksamericana.png"
-            alt="Capsula Nescafe Starbucks">
-
-          <div class="cuerpo">
-            <p>Capsula STARBUCKS tostado medio</p>
-            <p>Cantidad: 12</p>
-            <p class="precio">$8999</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-      </section>
-
-      <section id="cafes" class="tarjeta">
-        <h2>Cafe de Especialidad</h2>
-        <article>
-          <h3>Café Perú</h3>
-          <div class="cuerpo">
-            <img src="img/peru.png" alt="cafe peru">
-            <p>
-              Auténtico café de Perú. Granos 100% arábigos. <br>
-              Café de cuerpo balanceado, <br>acidez media en boca con sabor
-              dulce y chocolate.
-            </p>
-            <p class="precio">$ 9751</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Café Vita</h3>
-          <div class="cuerpo">
-            <img src="img/italia.jpg" alt="cafe italia">
-            <p>
-              VITA es el resultado de un viaje de inspiración. <br>
-              Buscamos combinar granos exclusivamente arábigos de <br>
-              diferentes regiones del mundo
-            </p>
-            <p class="precio">$ 11096</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Café Colombia</h3>
-          <div class="cuerpo">
-            <img src="img/colombia.png" alt="cafe colombia">
-            <p>
-              Café Tostado Natural de origen colombiano, <br>
-              100% arábigo. Único café con el aval de la <br>
-              Federación Nacional de Cafeteros de Colombia
-            </p>
-            <p class="precio">$ 11233</p>
-          </div>
-          <div class="pie">
-            <a href="#">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Café Brasil</h3>
-          <div class="cuerpo">
-            <img src="img/brasil.png" alt="cafe brasil">
-            <p>
-              Café de Origen 100% arábigo brasileño. <br>
-              Este café nos ofrece notas de cata <br>sabor a chocolate, nuez y
-              caramelo.
-            </p>
-            <p class="precio">$ 10675</p>
-          </div>
-          <div class="pie">
-            <a href="#">Comprar</a>
-          </div>
-        </article>
-      </section>
+            <div class="mb-3">
+                <label for="mesGasto" class="form-label">Mes</label>
+                <select class="form-select" id="mesGasto" name="mesGasto" required>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="anioGasto" class="form-label">Año</label>
+                <input type="number" class="form-control" id="anioGasto" name="anioGasto" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Gasto</button>
+        </form>
+        <!-- Formulario para editar un gasto -->
+        <form id="editarGastoForm" style="display: none;">
+            <input type="hidden" id="editarGastoId" name="editarGastoId">
+            <div class="mb-3">
+                <label for="editarMontoGasto" class="form-label">Monto</label>
+                <input type="number" class="form-control" id="editarMontoGasto" name="editarMontoGasto" required>
+            </div>
+            <div class="mb-3">
+                <label for="editarConceptoGasto" class="form-label">Concepto</label>
+                <select class="form-select" id="editarConceptoGasto" name="editarConceptoGasto" required>
+                    <!-- Opciones de conceptos se cargarán aquí dinámicamente -->
+                </select>
+                <!--Se muestra el tipo de concepto(ingreso/egreso)-->
+                <p id="editarTipoConceptoTexto"></p>
+            </div>
+            <div class="mb-3" id="editarFechaVencimientoDiv" style="display: none;">
+                <label for="editarFechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
+                <input type="date" class="form-control" id="editarFechaVencimientoGasto" name="editarFechaVencimientoGasto">
+            </div>
+            <div class="mb-3">
+                <label for="editarMesGasto" class="form-label">Mes</label>
+                  <select class="form-select" id="editarMesGasto" name="editarMesGasto" required>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="editarAnioGasto" class="form-label">Año</label>
+                <input type="number" class="form-control" id="editarAnioGasto" name="editarAnioGasto" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Editar Gasto</button>
+            <button type="button" class="btn btn-secondary" id="cancelarEditarGasto">Cancelar</button>
+        </form>
+    </div>
     </main>
     <footer>
       <div class="footer">

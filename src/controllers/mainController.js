@@ -1,18 +1,35 @@
 const { conn } = require('../db/dbconnection');
 
+
+// 🔹 LISTADO Dashboard
+module.exports.getDashboard = async (req, res) => {
+    const [dashboard] = await conn.query(`
+        SELECT g.id, g.monto, g.fecha, g.pagado, c.nombre as concepto, r.nombre as rubro
+        FROM gastos g
+        JOIN conceptos c ON g.concepto_id = c.id
+        JOIN rubros r ON c.rubro_id = r.id
+    `);
+    res.json(dashboard);
+};
+
+
+
 // 🔹 RUBROS (Categorías)
-module.exports.getRubros = async (req, res) => {
+module.exports.cargarRubros = async (req, res) => {
     const [rubros] = await conn.query('SELECT * FROM rubros');
     res.json(rubros);
 };
 
 module.exports.crearRubro = async (req, res) => {
     const { nombre } = req.body;
+    console.log("Datos recibidos en el backend:", req.body); // 🔹 LOG
+
     if (!nombre) return res.status(400).json({ error: 'El nombre del rubro es obligatorio' });
 
     await conn.query('INSERT INTO rubros (nombre) VALUES (?)', [nombre]);
     res.status(201).json({ mensaje: 'Rubro creado correctamente' });
 };
+
 
 module.exports.actualizarRubro = async (req, res) => {
     const { id } = req.params;

@@ -22,194 +22,46 @@
       </div>
       <nav>
         <a href="index.html">Inicio</a>
-        <a href="productos.html">Productos</a>
-        <a class="activo" href="accesorios.html">Accesorios</a>
+        <a href="dashboard.html" id="listado-link">Dashboard</a>
+        <a href="gastos.html">Cargar Gastos</a>
+        <a class="activo" href="rubros.html">Rubros</a>
+        <a href="conceptos.html">Conceptos</a>
         <a href="contacto.html">Contactenos</a>
+        <a href="login.html" style="display:none;">Log In</a>
+        
+        <a href="index.html">Logout</a>
       </nav>
       <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
     </header>
     <main>
       <!--carrusel boostrap inicio-->
-      <div id="slider">
-        <div id="carousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="./img/banner1.jpg" class="d-block w-100" alt="banner1">
+      <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2>Rubros</h2>
+                <div class="mb-3">
+                    <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
+                    <input type="text" class="form-control" id="nombreRubro" name="nombreRubro">
+                </div>
+                <button id="agregarRubro" class="btn btn-primary">Agregar Rubro</button>
+                <!-- Formulario oculto para editar -->
+                <div id="editarRubroForm" style="display: none;" class="mt-3">
+                    <h3>Editar Rubro</h3>
+                    <div class="mb-3">
+                        <label for="editarNombreRubro" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="editarNombreRubro" name="editarNombreRubro">
+                    </div>
+                    <button id="guardarRubro" class="btn btn-primary">Guardar Cambios</button>
+                    <button id="cancelarEditarRubro" class="btn btn-secondary">Cancelar</button>
+                </div>
+                <div id="listaRubros" class="mt-3">
+                    <!-- Aquí se mostrará la lista de rubros -->
+                </div>
             </div>
-            <div class="carousel-item">
-              <img src="./img/banner3.jpg" class="d-block w-100" alt="banner2">
-            </div>
-            <div class="carousel-item">
-              <img src="./img/banner5.jpg" class="d-block w-100" alt="banner3">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
-      </div>
+    </div>
 
       <!--fin de carrusel-->
-
-      <section id="accesorios" class="tarjeta">
-        <h2>Tazas</h2>
-        <article>
-          <h3>Taza Nespresso</h3>
-          <div class="cuerpo">
-            <img src="./img/tazas_nespresso.png" alt="taza nespresso">
-            <p>Taza Nespresso. </p>
-            <p>Touch suave al tacto.</p>
-            <p class="precio">$ 9751</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Taza Nespresso</h3>
-          <div class="cuerpo">
-            <img src="./img/tazas_nespresso2.png" alt="taza nespresso">
-            <p>Taza Nespresso.</p>
-            <p>Cristal, incluye plato metalico</p>
-               
-              
-            
-            <p class="precio">$ 11500</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Taza Dolce Gusto</h3>
-          <div class="cuerpo">
-            <img src="./img/tazas_dolce2.jpg" alt="taza dolce gusto">
-
-            <p>Taza Dolce Gusto.</p>
-            <p>Asa de Goma para mayor comodidad</p>
-              
-            
-            <p class="precio">$ 7000</p>
-          </div>
-
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Taza Dolce Gusto</h3>
-
-          <div class="cuerpo">
-            <img src="./img/tazas_dolce3.jpg" alt="taza dolce gusto">
-            <p>Taza Dolce Gusto. </p>
-            <p>Ceramica, incluye plato.</p>
-            <p class="precio">$ 8000</p>
-          </div>
-
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-      </section>
-
-      <section id="porta_capsulas" class="tarjeta">
-        <h2>Porta Capsulas</h2>
-        <article>
-          <h3>Porta Capsulas Bambu</h3>
-
-          <div class="cuerpo">
-            <img src="./img/porta_capsulas2.jpg" alt="Porta Capsulas Nespresso">
-            <p>Porta Capsulas Nespresso. </p>
-            <p>Materiales Bamboo y Acrilico.</p>
-            <p>Capacidad 12 capsulas.</p>
-
-            <p class="precio">$ 30000</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Porta Capsulas Acrílico</h3>
-          <div class="cuerpo">
-            <img src="./img/porta_capsulas3.jpg" alt="Porta Capsulas Nespresso">
-            <p>Porta Capsulas Nespresso.</p>
-            <p>Materiales Acrilico.</p>
-            <p>Capacidad 25 capsulas.</p>
-            <p class="precio">$ 40000</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Porta Capsulas Metal</h3>
-          <div class="cuerpo">
-            <img
-              src="./img/porta_capsulas6.jpg" alt="Porta Capsulas Dolce Gusto">
-            <p>Porta Capsulas Dolce Gusto.</p>
-            <p>Materiales Metálico.</p>
-            <p>Capacidad 20 capsulas.</p>
-
-            <p class="precio">$ 18000</p>
-          </div>
-          <div class="pie"><a href="#">Comprar</a></div>
-        </article>
-        <article>
-          <h3>Porta Capsulas Imán</h3>
-
-          <div class="cuerpo">
-            <img
-              src="./img/porta_capsulas8.jpg" alt="Porta Capsulas Dolce Gusto">
-
-            <p>Porta Capsulas Dolce Gusto.</p>
-            <p>Materiales Metal con Iman.</p>
-            <p>Capacidad 14 capsulas.</p>
-        
-            <p class="precio">$ 25000</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-      </section>
-      <section id="recargables" class="tarjeta">
-        <h2>Cápsulas Recargables</h2>
-
-        <article>
-          <h3>Capsulas Recargables</h3>
-
-          <div class="cuerpo">
-            <img src="./img/dolcegusto.jpg" alt="Capsulas Recargables Dolce Gusto">
-            <p>Porta Capsulas Nespresso.</p>
-            <p>Materiales Bamboo y Acrilico.</p>
-            <p>Capacidad 12 capsulas.</p>
-            <p class="precio">$ 5000</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-        <article>
-          <h3>Capsulas Recargables</h3>
-
-          <div class="cuerpo">
-            <img src="./img/nespresso.png" alt="Capsulas Recargables Nespresso">
-            <p>Porta Capsulas Nespresso.</p>
-            <p>Materiales Acrilico.</p>
-            <p>Capacidad 25 capsulas.</p>
-            <p class="precio">$ 5000</p>
-          </div>
-          <div class="pie">
-            <a href="#!">Comprar</a>
-          </div>
-        </article>
-      </section>
     </main>
 
     <footer>
@@ -227,5 +79,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="js/rubros.js"></script>
   </body>
 </html>

@@ -21,68 +21,28 @@
     </div>
     <nav>
 		<a href="index.html">Inicio</a>
-		<a href="productos.html">Productos</a>
-		<a href="accesorios.html">Accesorios</a>
+		<a class="activo"  href="dashboard.html" id="listado-link">Dashboard</a>
+		<a href="gastos.html">Cargar Gastos</a>
+		<a href="rubros.html">Rubros</a>
+		<a href="conceptos.html">Conceptos</a>
 		<a href="contacto.html">Contactenos</a>
 		<a href="login.html" style="display:none;">Log In</a>
-		<a class="activo"  href="dashboard.html" id="listado-link">Listado</a>
+		
 		<a href="index.html">Logout</a>
 	  </nav>
       <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
 
   </header>
 
-  <main>
-	<h2>Listado de Productos</h2>
-	<section>
-		<article id="listado">
-			
-		</article>
-		<div id="datos_anexos">
-			<div>
-				<H3>Tipos de Productos</H3>
-				<article id="selecttipoProducto">
-					<select id="selecttipoProducto">
-                        <option value="">Seleccione un tipo de producto</option>
-                    </select>
-				</article>
-			</div>
-			<div>
-				<h3>Proveedores</h3>
-				<article id="proveedores">
-					<select id="proveedores">
-                        <option value="">Seleccione una marca</option>
-                    </select>
-				</article>
-			</div>
-		</div>
-
-		
-		<h2>Agregar Producto Nuevo</h2>
-
-		<article id="producto-agregar">
-			<form action="/listado" method="POST" enctype="multipart/form-data" class="producto-form">
-					<label for="nombre">Nombre:</label>
-					<input type="text" name="nombre">
-					<label for="descripcion">Descripcion:</label>
-					<input type="text" name="descripcion">
-					<label for="precio">Precio:</label>
-					<input type="text" name="precio">
-					<label for="id_tipoProducto">Tipo de Producto:</label>
-					<select name="id_tipoProducto" id="selecttipoProductoForm">
-						<option value="">Seleccione un tipo de producto</option>
-					</select>
-					<label for="alias">Marca:</label>
-					<select name="alias" id="proveedoresForm">
-						<option value="">Seleccione una marca</option>
-					</select><br>
-					<input type="submit" value="Agregar">
-			</form><br>
-		</article>
-		
-	</section>
-		
-  </main>
+ <main>
+	<h2>DASHBOARD</h2>
+		<section>
+			<article id="dashboard>
+				
+			</article>
+	
+		</section>	
+ </main>
 
 		
 	<footer>
