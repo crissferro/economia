@@ -15,7 +15,7 @@ module.exports.getDashboard = async (req, res) => {
 
 
 // 🔹 RUBROS (Categorías)
-module.exports.cargarRubros = async (req, res) => {
+module.exports.getRubros = async (req, res) => {
     const [rubros] = await conn.query('SELECT * FROM rubros');
     res.json(rubros);
 };

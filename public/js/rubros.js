@@ -161,10 +161,16 @@ document.querySelector('body').onload = async () => {
         });
 
         if (!res.ok) {
-            window.location.href = "/login.html";
-            throw new Error("Problemas en login");
+            // Handle HTTP errors (4xx or 5xx)
+            const errorData = await res.json(); // Try to parse JSON error
+            console.error('Error from server:', errorData);
+            if (errorData.error) {
+                alert(`Error: ${errorData.error}`);
+            } else {
+                alert(`HTTP Error: ${res.status}`);
+            }
+            return; // Exit the function if there's an error
         }
-
 
         const datos = await res.json();
         let listaHTML = document.querySelector(`#listaRubros`);
@@ -188,6 +194,7 @@ document.querySelector('body').onload = async () => {
         });
     } catch (error) {
         console.error('Error al cargar listado de productos:', error);
+        alert("Ocurrió un error al cargar los rubros.");
     }
     /*
     

@@ -25,12 +25,39 @@ const uploadFile = multer({ storage });
 
 // Rutas protegidas con autenticación (requieren token válido)
 
-// Rubros
-router.get('/rubros', auth, controladores.getRubros || ((req, res) => res.status(500).send("Error: Función no definida")));
-router.post('/rubros', auth, controladores.crearRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
-router.put('/rubros/:id', auth, controladores.actualizarRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
-router.delete('/rubros/:id', auth, controladores.eliminarRubro || ((req, res) => res.status(500).send("Error: Función no definida")));
+// Helper function to send JSON error responses
+function sendErrorResponse(res, status, message) {
+	return res.status(status).json({ error: message });
+}
 
+// Rubros
+router.get('/rubros', auth, (req, res) => {
+	if (typeof controladores.getRubros !== 'function') {
+		return sendErrorResponse(res, 500, "Función getRubros no definida");
+	}
+	controladores.getRubros(req, res);
+});
+
+router.post('/rubros', auth, (req, res) => {
+	if (typeof controladores.crearRubro !== 'function') {
+		return sendErrorResponse(res, 500, "Función crearRubro no definida");
+	}
+	controladores.crearRubro(req, res);
+});
+
+router.put('/rubros/:id', auth, (req, res) => {
+	if (typeof controladores.actualizarRubro !== 'function') {
+		return sendErrorResponse(res, 500, "Función actualizarRubro no definida");
+	}
+	controladores.actualizarRubro(req, res);
+});
+
+router.delete('/rubros/:id', auth, (req, res) => {
+	if (typeof controladores.eliminarRubro !== 'function') {
+		return sendErrorResponse(res, 500, "Función eliminarRubro no definida");
+	}
+	controladores.eliminarRubro(req, res);
+});
 
 // Conceptos
 router.get('/conceptos', auth, controladores.getConceptos); // Ver listado de conceptos
