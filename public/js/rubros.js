@@ -1,18 +1,3 @@
-/*export const cargarRubros = async () => {
-    const token = getToken();
-    const listaRubrosDiv = document.getElementById('listaRubros');
-    const nombreRubroInput = document.getElementById('nombreRubro');
-    const agregarRubroButton = document.getElementById('agregarRubro');
-    //variables para el form de edicion
-    const editarRubroForm = document.getElementById('editarRubroForm');
-    const editarNombreRubroInput = document.getElementById('editarNombreRubro');
-    const guardarRubroButton = document.getElementById('guardarRubro');
-    const cancelarEditarRubroButton = document.getElementById('cancelarEditarRubro');
-    let rubroAEditar = null;
- */
-
-// codigo nuevo //
-
 document.getElementById('agregarRubro').addEventListener('click', async () => {
     const nombreRubro = document.getElementById('nombreRubro').value.trim();
     const token = localStorage.getItem('jwt-token');

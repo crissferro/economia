@@ -66,10 +66,43 @@ router.delete('/rubros/:id', auth, (req, res) => {
 });
 
 // Conceptos
-router.get('/conceptos', auth, controladores.getConceptos); // Ver listado de conceptos
-router.post('/conceptos', auth, controladores.crearConcepto); // Crear nuevo concepto
-router.put('/conceptos/:id', auth, controladores.actualizarConcepto); // Modificar concepto
-router.delete('/conceptos/:id', auth, controladores.eliminarConcepto); // Eliminar concepto
+
+// Rubros
+router.get('/conceptos', auth, (req, res) => {
+	if (typeof controladores.getConceptos !== 'function') {
+		return sendErrorResponse(res, 500, "Función getConceptos no definida");
+	}
+	controladores.getConceptos(req, res);
+});
+
+router.post('/conceptos', auth, async (req, res) => {
+	if (typeof controladores.crearConceptos !== 'function') {
+		return sendErrorResponse(res, 500, "Función creaConceptos no definida");
+	}
+	try {
+		await controladores.crearConceptos(req, res);
+	} catch (error) {
+		console.error("Error en la ruta /conceptos:", error);
+		res.status(500).json({ error: "Error interno del servidor" });
+	}
+});
+
+
+router.put('/conceptos/:id', auth, (req, res) => {
+	if (typeof controladores.actualizarConceptos !== 'function') {
+		return sendErrorResponse(res, 500, "Función actualizarConceptos no definida");
+	}
+	controladores.actualizarConceptos(req, res);
+});
+
+router.delete('/conceptos/:id', auth, (req, res) => {
+	if (typeof controladores.eliminarConcepto !== 'function') {
+		return sendErrorResponse(res, 500, "Función eliminarConcepto no definida");
+	}
+	controladores.eliminarConcepto(req, res);
+});
+
+
 
 // Carga de Gastos
 router.get('/cargaGastos', auth, controladores.getCargaGastos); // Ver formulario de carga de gastos

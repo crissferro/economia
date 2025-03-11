@@ -34,20 +34,6 @@ module.exports.crearRubro = async (req, res) => {
         res.status(500).json({ success: false, error: "Error al crear rubro" });
     }
 };
-/*
-module.exports.crearRubro = async (req, res) => {
-    const { nombre } = req.body;
-    console.log("Datos recibidos en el backend:", req.body); // 🔹 LOG
-
-    if (!nombre) return res.status(400).json({ error: 'El nombre del rubro es obligatorio' });
-
-    await conn.query('INSERT INTO rubros (nombre) VALUES (?)', [nombre]);
-    res.status(201).json({ mensaje: 'Rubro creado correctamente' });
-};
-
-*/
-
-
 
 module.exports.actualizarRubro = async (req, res) => {
     const { id } = req.params;
@@ -99,6 +85,8 @@ module.exports.eliminarConcepto = async (req, res) => {
     await conn.query('DELETE FROM conceptos WHERE id = ?', [id]);
     res.json({ mensaje: 'Concepto eliminado' });
 };
+
+
 
 // 🔹 GASTOS (Movimientos de dinero)
 module.exports.getCargaGastos = async (req, res) => {
