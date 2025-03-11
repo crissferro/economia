@@ -38,12 +38,18 @@ router.get('/rubros', auth, (req, res) => {
 	controladores.getRubros(req, res);
 });
 
-router.post('/rubros', auth, (req, res) => {
+router.post('/rubros', auth, async (req, res) => {
 	if (typeof controladores.crearRubro !== 'function') {
 		return sendErrorResponse(res, 500, "Función crearRubro no definida");
 	}
-	controladores.crearRubro(req, res);
+	try {
+		await controladores.crearRubro(req, res);
+	} catch (error) {
+		console.error("Error en la ruta /rubros:", error);
+		res.status(500).json({ error: "Error interno del servidor" });
+	}
 });
+
 
 router.put('/rubros/:id', auth, (req, res) => {
 	if (typeof controladores.actualizarRubro !== 'function') {

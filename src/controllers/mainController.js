@@ -20,6 +20,21 @@ module.exports.getRubros = async (req, res) => {
     res.json(rubros);
 };
 
+//agregar rubro
+
+module.exports.crearRubro = async (req, res) => {
+    try {
+        const sql = `INSERT INTO rubros (nombre) VALUES (?)`;
+        const [result] = await conn.query(sql, [req.body.nombre]);
+
+        console.log('Rubro agregado:', result);
+        res.status(201).json({ success: true, message: "Rubro creado correctamente", id: result.insertId });
+    } catch (error) {
+        console.error('Error al crear rubro:', error);
+        res.status(500).json({ success: false, error: "Error al crear rubro" });
+    }
+};
+/*
 module.exports.crearRubro = async (req, res) => {
     const { nombre } = req.body;
     console.log("Datos recibidos en el backend:", req.body); // 🔹 LOG
@@ -29,6 +44,9 @@ module.exports.crearRubro = async (req, res) => {
     await conn.query('INSERT INTO rubros (nombre) VALUES (?)', [nombre]);
     res.status(201).json({ mensaje: 'Rubro creado correctamente' });
 };
+
+*/
+
 
 
 module.exports.actualizarRubro = async (req, res) => {

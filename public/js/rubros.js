@@ -9,273 +9,160 @@
     const guardarRubroButton = document.getElementById('guardarRubro');
     const cancelarEditarRubroButton = document.getElementById('cancelarEditarRubro');
     let rubroAEditar = null;
-
-
-    document.querySelector('body').onload = async () => {
-        const token = localStorage.getItem('jwt-token');
-        console.log('Token from localStorage:', token);
-
-
-        try {
-            // Cargar rubros
-            const responseRubros = await fetch('/api/rubros', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const rubros = await responseRubros.json();
-
-            listaRubrosDiv.innerHTML = '';
-            rubros.forEach(rubro => {
-                const rubroElement = document.createElement('div');
-                rubroElement.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <p id="rubro-${rubro.id}" class="mb-0">${rubro.nombre}</p>
-                <div>
-                    <button class="btn btn-sm btn-warning editarRubro" data-id="${rubro.id}">Editar</button>
-                    <button class="btn btn-sm btn-danger eliminarRubro" data-id="${rubro.id}">Eliminar</button>
-                </div>
-             </div>
-            `;
-                listaRubrosDiv.appendChild(rubroElement);
-            });
-
-            // Agregar rubro
-            if (agregarRubroButton) {
-                agregarRubroButton.addEventListener('click', async () => {
-                    const nombreRubro = nombreRubroInput.value.trim();
-                    // Validar que el nombre no esté vacío
-                    if (nombreRubro === '') {
-                        alert('El nombre del rubro no puede estar vacío');
-                        return;
-                    }
-
-                    const response = await fetch('/api/rubros', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ nombre: nombreRubro })
-                    });
-
-                    //Limpiar el input.
-                    nombreRubroInput.value = '';
-                    if (response.ok) {
-                        cargarRubros();
-                    } else {
-                        const data = await response.json();
-                        alert(`Error: ${data.error}`);
-                    }
-                });
-            }
-
-            // Delegación de eventos para Editar y Eliminar rubros
-            listaRubrosDiv.addEventListener('click', async (event) => {
-                const target = event.target;
-                const rubroId = target.dataset.id;
-
-                if (target.classList.contains('editarRubro')) {
-                    // Obtener los datos del concepto seleccionado
-                    rubroAEditar = rubros.find(rubro => rubro.id == rubroId);
-                    // Mostrar el formulario y ocultar el parrafo
-                    editarRubroForm.style.display = 'block';
-                    document.getElementById(`rubro-${rubroId}`).style.display = 'none';
-                    // Completar el formulario con los datos del concepto
-                    editarNombreRubroInput.value = rubroAEditar.nombre;
-                    // Logica para guardar
-                    guardarRubroButton.addEventListener('click', async () => {
-                        const nuevoNombre = editarNombreRubroInput.value;
-
-                        try {
-                            const response = await fetch(`/api/rubros/${rubroId}`, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({ nombre: nuevoNombre })
-                            });
-
-                            if (response.ok) {
-                                // Ocultar el formulario
-                                editarRubroForm.style.display = 'none';
-                                // Mostrar el parrafo
-                                document.getElementById(`rubro-${rubroId}`).style.display = 'block';
-                                cargarRubros();
-                            } else {
-                                const data = await response.json();
-                                alert(data.error);
-                            }
-                        } catch (error) {
-                            console.error('Error:', error);
-                        }
-                    });
-                    // Logica para cancelar
-                    cancelarEditarRubroButton.addEventListener('click', () => {
-                        editarRubroForm.style.display = 'none';
-                        document.getElementById(`rubro-${rubroId}`).style.display = 'block';
-                    });
-                } else if (target.classList.contains('eliminarRubro')) {
-                    // Lógica para eliminar rubro
-                    try {
-                        const response = await fetch(`/api/rubros/${rubroId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
-
-                        if (response.ok) {
-                            cargarRubros();
-                        } else {
-                            const data = await response.json();
-                            alert(data.error);
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                }
-            });
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-}
-*/
+ */
 
 // codigo nuevo //
 
-document.querySelector('body').onload = async () => {
+document.getElementById('agregarRubro').addEventListener('click', async () => {
+    const nombreRubro = document.getElementById('nombreRubro').value.trim();
     const token = localStorage.getItem('jwt-token');
-    console.log('Token from localStorage:', token); // Verifico el token
 
-    // Cargar listado de rubros
+    if (!nombreRubro) {
+        alert('El nombre del rubro no puede estar vacío');
+        return;
+    }
+
     try {
-        const res = await fetch(`http://localhost:8080/rubros`, {
-            method: 'GET',
+        const response = await fetch('http://localhost:8080/rubros', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ nombre: nombreRubro })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al agregar rubro');
+        }
+
+        alert('Rubro agregado con éxito');
+        document.getElementById('nombreRubro').value = '';
+        cargarRubros(); // Actualiza la lista después de agregar
+    } catch (error) {
+        console.error('Error al agregar rubro:', error);
+        alert(error.message);
+    }
+});
+
+// Función para cargar rubros en la lista con botones de acción
+async function cargarRubros() {
+    try {
+        const response = await fetch('http://localhost:8080/rubros', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
             }
         });
 
-        if (!res.ok) {
-            // Handle HTTP errors (4xx or 5xx)
-            const errorData = await res.json(); // Try to parse JSON error
-            console.error('Error from server:', errorData);
-            if (errorData.error) {
-                alert(`Error: ${errorData.error}`);
-            } else {
-                alert(`HTTP Error: ${res.status}`);
-            }
-            return; // Exit the function if there's an error
+        if (!response.ok) {
+            throw new Error('Error al obtener rubros');
         }
 
-        const datos = await res.json();
-        let listaHTML = document.querySelector(`#listaRubros`);
-        listaHTML.innerHTML = `
+        const rubros = await response.json();
+        const listaRubros = document.getElementById('listaRubros');
+        listaRubros.innerHTML = ''; // Limpiar lista antes de agregar nuevos elementos
+
+        listaRubros.innerHTML = `
             <div class="list-header">
                 <h4>Id</h4>
                 <h4>Nombre</h4>
+                <h4>Acciones</h4>
             </div>
         `;
-        datos.forEach(registro => {
-            listaHTML.innerHTML += `
-                <form method="POST" action="/listado?_metodo=DELETE" class="list-item">
-                    <h5>${registro.id}</h5>
-                    <h5>${registro.nombre}</h5>
-                    <input type="hidden" name="idEliminar" value="${registro.id}">
-                    <div id="acciones" class="acciones">
-                        <h5><a href="/modificar/${registro.id}" class="btn">Modificar</a></h5>
-                        <h5><input type="submit" value="Eliminar" class="btn"></h5>
-                    </div>
-                </form>`;
+
+        rubros.forEach(rubro => {
+            const listItem = document.createElement('div');
+            listItem.classList.add('list-item');
+
+            listItem.innerHTML = `
+                <h5>${rubro.id}</h5>
+                <h5>${rubro.nombre}</h5>
+                <div class="acciones">
+                    <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}">Modificar</button>
+                    <button class="btn eliminar" data-id="${rubro.id}">Eliminar</button>
+                </div>
+            `;
+
+            listaRubros.appendChild(listItem);
         });
+
+        // Agregar eventos a los botones de Modificar y Eliminar
+        document.querySelectorAll('.modificar').forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                const rubroId = event.target.dataset.id;
+                const rubroNombre = event.target.dataset.nombre;
+                modificarRubro(rubroId, rubroNombre);
+            });
+        });
+
+        document.querySelectorAll('.eliminar').forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                const rubroId = event.target.dataset.id;
+                eliminarRubro(rubroId);
+            });
+        });
+
     } catch (error) {
-        console.error('Error al cargar listado de productos:', error);
-        alert("Ocurrió un error al cargar los rubros.");
+        console.error('Error al cargar rubros:', error);
     }
-    /*
-    
-            // Obtener elementos del DOM
-            const listaRubros = document.getElementById("lista-rubros");
-            const btnAgregarRubro = document.getElementById("btn-agregar-rubro");
-            const inputNombreRubro = document.getElementById("nombre-rubro");
-    
-            // Función para cargar rubros desde la API
-            /*function cargarRubros() {
-                fetch("http://localhost:8080/rubros", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                    .then(response => {
-                        if (response.status === 403) {
-                            throw new Error("Acceso denegado. Token inválido o expirado.");
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        listaRubros.innerHTML = ""; // Limpiar lista antes de agregar nuevos
-                        data.forEach(rubro => {
-                            const li = document.createElement("li");
-                            li.textContent = rubro.nombre;
-                            listaRubros.appendChild(li);
-                        });
-                    })
-                    .catch(error => {
-                        console.error("Error al cargar los rubros:", error);
-                    });
-            }
-    
-            // Función para agregar un nuevo rubro
-            function agregarRubro() {
-                const nombre = inputNombreRubro.value.trim();
-                if (nombre === "") {
-                    alert("El nombre del rubro no puede estar vacío.");
-                    return;
-                }
-    
-                fetch("http://localhost:8080/rubros", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ nombre })
-                })
-                    .then(response => {
-                        if (response.status === 403) {
-                            throw new Error("Acceso denegado. Token inválido o expirado.");
-                        }
-                        if (!response.ok) {
-                            throw new Error("Error al agregar el rubro.");
-                        }
-                        return response.json();
-                    })
-                    .then(() => {
-                        inputNombreRubro.value = ""; // Limpiar input
-                        cargarRubros(); // Actualizar lista de rubros
-                    })
-                    .catch(error => {
-                        console.error("Error al agregar rubro:", error);
-                    });
-            }
-    
-            // Asociar evento al botón si existe en el DOM
-            if (btnAgregarRubro) {
-                btnAgregarRubro.addEventListener("click", agregarRubro);
-            } else {
-                console.error("El botón 'btn-agregar-rubro' no se encontró en el DOM.");
-            }
-    
-            // Cargar rubros al iniciar
-            cargarRubros();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    
-        */
 }
+
+// Función para modificar un rubro
+function modificarRubro(id, nombreActual) {
+    const nuevoNombre = prompt("Ingrese el nuevo nombre del rubro:", nombreActual);
+    if (!nuevoNombre || nuevoNombre.trim() === '') {
+        alert('El nombre del rubro no puede estar vacío');
+        return;
+    }
+
+    const token = localStorage.getItem('jwt-token');
+
+    fetch(`http://localhost:8080/rubros/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nombre: nuevoNombre })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Error al modificar el rubro'); });
+            }
+            alert('Rubro modificado con éxito');
+            cargarRubros(); // Recargar lista
+        })
+        .catch(error => {
+            console.error('Error al modificar rubro:', error);
+            alert(error.message);
+        });
+}
+
+// Función para eliminar un rubro
+function eliminarRubro(id) {
+    if (!confirm("¿Seguro que deseas eliminar este rubro?")) return;
+
+    const token = localStorage.getItem('jwt-token');
+
+    fetch(`http://localhost:8080/rubros/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Error al eliminar el rubro'); });
+            }
+            alert('Rubro eliminado con éxito');
+            cargarRubros(); // Recargar lista
+        })
+        .catch(error => {
+            console.error('Error al eliminar rubro:', error);
+            alert(error.message);
+        });
+}
+
+// Cargar rubros cuando se carga la página
+document.addEventListener('DOMContentLoaded', cargarRubros);
