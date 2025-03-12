@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('nombreConcepto').value = '';
                 document.getElementById('rubroConcepto').value = '';
                 document.getElementById('tipoConcepto').value = '';
-                document.getElementById('requiereVencimiento').value = 'no';
+                document.getElementById('requiereVencimiento').value = '';
             }, 100);
 
 
@@ -114,6 +114,8 @@ async function cargarConceptos() {
             <div class="list-header">
                 <h4>Id</h4>
                 <h4>Nombre</h4>
+                <h4>Tipo</h4>
+                <h4>Vencimiento</h4>
                 <h4>Acciones</h4>
             </div>
         `;
@@ -125,6 +127,8 @@ async function cargarConceptos() {
             listItem.innerHTML = `
                 <h5>${concepto.id}</h5>
                 <h5>${concepto.nombre}</h5>
+                <h5>${concepto.tipo}</h5>
+                <h5>${concepto.requiere_vencimiento}</h5>
                 <div class="acciones">
                     <button class="btn modificar" data-id="${concepto.id}" data-nombre="${concepto.nombre}">Modificar</button>
                     <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
