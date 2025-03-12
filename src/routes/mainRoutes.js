@@ -65,9 +65,9 @@ router.delete('/rubros/:id', auth, (req, res) => {
 	controladores.eliminarRubro(req, res);
 });
 
-// Conceptos
 
-// Rubros
+
+// Conceptos
 router.get('/conceptos', auth, (req, res) => {
 	if (typeof controladores.getConceptos !== 'function') {
 		return sendErrorResponse(res, 500, "Función getConceptos no definida");
@@ -76,11 +76,11 @@ router.get('/conceptos', auth, (req, res) => {
 });
 
 router.post('/conceptos', auth, async (req, res) => {
-	if (typeof controladores.crearConceptos !== 'function') {
+	if (typeof controladores.crearConcepto !== 'function') {
 		return sendErrorResponse(res, 500, "Función creaConceptos no definida");
 	}
 	try {
-		await controladores.crearConceptos(req, res);
+		await controladores.crearConcepto(req, res);
 	} catch (error) {
 		console.error("Error en la ruta /conceptos:", error);
 		res.status(500).json({ error: "Error interno del servidor" });

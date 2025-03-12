@@ -35,10 +35,34 @@
       <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="mb-3">
-                    <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
-                    <input type="text" id="nombreConcepto" placeholder="Ingrese el nombre del Concepto">
-                </div>
+
+                    <div class="mb-3">
+                        <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
+                        <input type="text" id="nombreConcepto" placeholder="Ingrese el nombre del Concepto">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rubroConcepto" class="form-label">Nombre del Rubro</label>
+                        <select id="rubroConcepto" class="form-select">
+                            <option value="">Seleccione un rubro</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipoConcepto" class="form-label">Tipo de Concepto</label>
+                        <select id="tipoConcepto" class="form-select">
+                        <option value="ingreso">Ingreso</option>
+                        <option value="egreso">Egreso</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vencimientoConcepto" class="form-label">Requiere Fecha de Vencimiento</label>
+                        <select id="vencimientoConcepto" class="form-select">
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
+                        </select>
+                    </div>
+
+
                 <button id="agregarConcepto" class="btn btn-primary">Agregar Concepto</button>
                 <!-- Formulario oculto para editar -->
                 <div id="editarConceptoForm" style="display: none;" class="mt-3">

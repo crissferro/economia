@@ -56,18 +56,42 @@ module.exports.getConceptos = async (req, res) => {
 };
 
 module.exports.crearConcepto = async (req, res) => {
-    const { nombre, tipo, requiere_vencimiento, rubro_id } = req.body;
+    try {
+        const { rubro_id, nombre, tipo, requiere_vencimiento } = req.body;
+        //validaciones
+        /*if (!nombre || !tipo || !rubro_id) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
 
-    if (!nombre || !tipo || !rubro_id) {
-        return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        if (tipo !== 'ingreso' && tipo !== 'egreso') {
+            return res.status(400).json({ error: 'Tipo debe ser "ingreso" o "egreso"' });
+        }
+
+        // Verificar si el concepto ya existe en el mismo rubro
+        const [existe] = await pool.query(
+            "SELECT id FROM conceptos WHERE nombre = ? AND rubro_id = ?",
+            [nombre, rubro_id]
+        );
+
+        if (existe.length > 0) {
+            return res.status(400).json({ error: "El concepto ya existe en este rubro" });
+        }
+            */
+
+        //insertar nuevo concepto
+
+        const [result] = await conn.query(
+            'INSERT INTO conceptos (rubro_id, nombre, tipo, requiere_vencimiento) VALUES (?, ?, ?, ?)',
+            [rubro_id, nombre, tipo, requiere_vencimiento || 0]
+        );
+
+        res.status(201).json({ mensaje: 'Concepto creado con exito' });
     }
-
-    await conn.query(
-        'INSERT INTO conceptos (nombre, tipo, requiere_vencimiento, rubro_id) VALUES (?, ?, ?, ?)',
-        [nombre, tipo, requiere_vencimiento, rubro_id]
-    );
-    res.status(201).json({ mensaje: 'Concepto creado' });
-};
+    catch (error) {
+        console.error('Error al crear concepto:', error);
+        res.status(500).json({ error: 'Error al crear concepto' });
+    };
+}
 
 module.exports.actualizarConcepto = async (req, res) => {
     const { id } = req.params;
