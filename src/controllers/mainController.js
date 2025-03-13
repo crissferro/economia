@@ -15,13 +15,41 @@ module.exports.getDashboard = async (req, res) => {
 
 
 // 🔹 RUBROS (Categorías)
+
+// listar rubros
+
+module.exports = {
+    getRubros: async (req, res) => {
+        try {
+            const [rubro] = await conn.query('SELECT * FROM rubros');
+            res.json(rubro);
+        } catch (error) {
+            console.error('Error al obtener rubros:', error);
+            res.status(500).json({ error: 'Error al obtener rubros' });
+        }
+    }
+}
+
+/*
 module.exports.getRubros = async (req, res) => {
     const [rubros] = await conn.query('SELECT * FROM rubros');
     res.json(rubros);
 };
+*/
 
-//agregar rubro
+// Crear Rubro
 
+module.exports.crearRubro = async (req, res) => {
+    const sql = `
+        INSERT INTO rubros (nombre) VALUES (?)
+    `
+    const creado = await conn.query(sql, [req.body.nombre]);
+    console.log('Rubro agregado:', creado);
+    res.redirect(/rubros/)
+}
+
+
+/*
 module.exports.crearRubro = async (req, res) => {
     try {
         const sql = `INSERT INTO rubros (nombre) VALUES (?)`;
@@ -34,6 +62,9 @@ module.exports.crearRubro = async (req, res) => {
         res.status(500).json({ success: false, error: "Error al crear rubro" });
     }
 };
+*/
+
+//actualizar rubro
 
 module.exports.actualizarRubro = async (req, res) => {
     const { id } = req.params;
@@ -43,42 +74,30 @@ module.exports.actualizarRubro = async (req, res) => {
     res.json({ mensaje: 'Rubro actualizado' });
 };
 
+//eliminar rubro
+
 module.exports.eliminarRubro = async (req, res) => {
     const { id } = req.params;
     await conn.query('DELETE FROM rubros WHERE id = ?', [id]);
     res.json({ mensaje: 'Rubro eliminado' });
 };
 
+
+
 // 🔹 CONCEPTOS (Subcategorías dentro de un Rubro)
+
+//listar conceptos
+
 module.exports.getConceptos = async (req, res) => {
     const [conceptos] = await conn.query('SELECT * FROM conceptos');
     res.json(conceptos);
 };
 
+//agregar conceptos
+
 module.exports.crearConcepto = async (req, res) => {
     try {
         const { rubro_id, nombre, tipo, requiere_vencimiento } = req.body;
-        //validaciones
-        /*if (!nombre || !tipo || !rubro_id) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-        }
-
-        if (tipo !== 'ingreso' && tipo !== 'egreso') {
-            return res.status(400).json({ error: 'Tipo debe ser "ingreso" o "egreso"' });
-        }
-
-        // Verificar si el concepto ya existe en el mismo rubro
-        const [existe] = await pool.query(
-            "SELECT id FROM conceptos WHERE nombre = ? AND rubro_id = ?",
-            [nombre, rubro_id]
-        );
-
-        if (existe.length > 0) {
-            return res.status(400).json({ error: "El concepto ya existe en este rubro" });
-        }
-            */
-
-        //insertar nuevo concepto
 
         const [result] = await conn.query(
             'INSERT INTO conceptos (rubro_id, nombre, tipo, requiere_vencimiento) VALUES (?, ?, ?, ?)',
@@ -93,16 +112,34 @@ module.exports.crearConcepto = async (req, res) => {
     };
 }
 
+//modificar conceptos
+
 module.exports.actualizarConcepto = async (req, res) => {
     const { id } = req.params;
-    const { nombre, tipo, requiere_vencimiento } = req.body;
+    const { nombre, rubro_id, tipo, requiere_vencimiento } = req.body;
 
-    await conn.query(
-        'UPDATE conceptos SET nombre = ?, tipo = ?, requiere_vencimiento = ? WHERE id = ?',
-        [nombre, tipo, requiere_vencimiento, id]
-    );
-    res.json({ mensaje: 'Concepto actualizado' });
+    // Validar que todos los campos requeridos están presentes
+    if (!nombre || !rubro_id || !tipo || requiere_vencimiento === undefined) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    }
+
+    try {
+        // Ejecutar la consulta de actualización
+        await conn.query(
+            'UPDATE conceptos SET nombre = ?, rubro_id = ?, tipo = ?, requiere_vencimiento = ? WHERE id = ?',
+            [nombre, rubro_id, tipo, requiere_vencimiento, id]
+        );
+
+        res.json({ mensaje: 'Concepto actualizado correctamente' });
+
+    } catch (error) {
+        console.error('Error al actualizar concepto:', error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
 };
+
+
+//eliminar conceptos
 
 module.exports.eliminarConcepto = async (req, res) => {
     const { id } = req.params;
@@ -113,6 +150,9 @@ module.exports.eliminarConcepto = async (req, res) => {
 
 
 // 🔹 GASTOS (Movimientos de dinero)
+
+//listar gastos
+
 module.exports.getCargaGastos = async (req, res) => {
     const [gastos] = await conn.query(`
         SELECT g.id, g.descripcion, g.monto, g.fecha, g.pagado, c.nombre as concepto
@@ -121,6 +161,8 @@ module.exports.getCargaGastos = async (req, res) => {
     `);
     res.json(gastos);
 };
+
+//agregar gastos
 
 module.exports.crearGasto = async (req, res) => {
     const { descripcion, monto, fecha, pagado, concepto_id } = req.body;
@@ -136,6 +178,8 @@ module.exports.crearGasto = async (req, res) => {
     res.status(201).json({ mensaje: 'Gasto registrado' });
 };
 
+//modificar gastos
+
 module.exports.actualizarGasto = async (req, res) => {
     const { id } = req.params;
     const { descripcion, monto, fecha, pagado } = req.body;
@@ -147,13 +191,19 @@ module.exports.actualizarGasto = async (req, res) => {
     res.json({ mensaje: 'Gasto actualizado' });
 };
 
+//eliminar gastos
+
 module.exports.eliminarGasto = async (req, res) => {
     const { id } = req.params;
     await conn.query('DELETE FROM gastos WHERE id = ?', [id]);
     res.json({ mensaje: 'Gasto eliminado' });
 };
 
+
 // 🔹 LISTADO DE GASTOS
+
+//listar listado de gastos
+
 module.exports.getListado = async (req, res) => {
     const [listado] = await conn.query(`
         SELECT g.id, g.descripcion, g.monto, g.fecha, g.pagado, c.nombre as concepto, r.nombre as rubro
@@ -163,6 +213,8 @@ module.exports.getListado = async (req, res) => {
     `);
     res.json(listado);
 };
+
+// listado detallado de gastos
 
 module.exports.getDetalleGasto = async (req, res) => {
     const { id } = req.params;

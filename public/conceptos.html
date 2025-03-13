@@ -56,22 +56,42 @@
                     </div>
                     <div class="mb-3">
                         <label for="vencimientoConcepto" class="form-label">Requiere Fecha de Vencimiento</label>
-                        <select id="vencimientoConcepto" class="form-select">
-                            <option value="no">No</option>
-                            <option value="si">Sí</option>
+                        <select id="requiereVencimiento" class="form-select">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
                         </select>
                     </div>
 
 
                 <button id="agregarConcepto" class="btn btn-primary">Agregar Concepto</button>
                 <!-- Formulario oculto para editar -->
-                <div id="editarConceptoForm" style="display: none;" class="mt-3">
+                <div id="formularioEdicion" style="display:none;" class="mt-3">
                     <h3>Editar Concepto</h3>
                     <div class="mb-3">
-                        <label for="editarNombreConcepto" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="editarNombreConcepto" name="editarNombreConcepto">
+                        <label for="concepto-nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="concepto-nombre" name="editarNombreConcepto">
                     </div>
-                    <button id="guardarConcepto" class="btn btn-primary">Guardar Cambios</button>
+
+                    <div class="mb-3">
+                        <label for="concepto-rubro">Rubro:</label>
+    <select id="concepto-rubro">
+        <!-- Opciones cargadas dinámicamente -->
+    </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="concepto-tipo">Tipo:</label>
+    <select id="concepto-tipo">
+        <option value="ingreso">Ingreso</option>
+        <option value="egreso">Egreso</option>
+    </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="concepto-requiere-vencimiento">Requiere vencimiento:</label>
+    <input type="checkbox" id="concepto-requiere-vencimiento">
+                    </div>
+                    <button type="submit">Guardar cambios</button>
                     <button id="cancelarEditarConcepto" class="btn btn-secondary">Cancelar</button>
                 </div>
                 <div id="listaConceptos" class="mt-3">

@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nombreConcepto = document.getElementById('nombreConcepto')?.value.trim();
         const rubroSelect = document.getElementById('rubroConcepto');
         const tipoConcepto = document.getElementById('tipoConcepto')?.value;
-        const requiereVencimiento = document.getElementById('requiereVencimiento')?.value === "si" ? 1 : 0;
+        const requiereVencimiento = parseInt(document.getElementById('requiereVencimiento').value, 10);
 
         if (!rubroSelect) {
             console.error("Error: No se encontró el select rubroConcepto");
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('nombreConcepto').value = '';
                 document.getElementById('rubroConcepto').value = '';
                 document.getElementById('tipoConcepto').value = '';
-                document.getElementById('requiereVencimiento').value = '';
+                document.getElementById('requiereVencimiento').value = '0';
             }, 100);
 
 
@@ -92,98 +92,120 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Función para cargar conceptos en la lista con botones de acción
-async function cargarConceptos() {
-    try {
-        const response = await fetch('http://localhost:8080/conceptos', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
-            }
-        });
+function cargarConceptos() {
+    fetch('http://localhost:8080/conceptos', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+    })
+        .then(res => res.json())
+        .then(conceptos => {
+            const listaConceptos = document.getElementById('listaConceptos');
+            listaConceptos.innerHTML = '';
 
-        if (!response.ok) throw new Error('Error al obtener conceptos');
-
-        const conceptos = await response.json();
-        const listaConceptos = document.getElementById('listaConceptos');
-
-        if (!listaConceptos) {
-            console.error("Error: No se encontró la lista de conceptos");
-            return;
-        }
-
-        listaConceptos.innerHTML = `
-            <div class="list-header">
-                <h4>Id</h4>
-                <h4>Nombre</h4>
-                <h4>Tipo</h4>
-                <h4>Vencimiento</h4>
-                <h4>Acciones</h4>
-            </div>
-        `;
-
-        conceptos.forEach(concepto => {
-            const listItem = document.createElement('div');
-            listItem.classList.add('list-item');
-
-            listItem.innerHTML = `
+            conceptos.forEach(concepto => {
+                const listItem = document.createElement('div');
+                listItem.innerHTML = `
                 <h5>${concepto.id}</h5>
                 <h5>${concepto.nombre}</h5>
                 <h5>${concepto.tipo}</h5>
-                <h5>${concepto.requiere_vencimiento}</h5>
+                <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
                 <div class="acciones">
-                    <button class="btn modificar" data-id="${concepto.id}" data-nombre="${concepto.nombre}">Modificar</button>
+                    <button class="btn modificar" data-id="${concepto.id}">Modificar</button>
                     <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
                 </div>
             `;
+                listaConceptos.appendChild(listItem);
+            });
 
-            listaConceptos.appendChild(listItem);
-        });
-
-        document.querySelectorAll('.modificar').forEach(btn => {
-            btn.addEventListener('click', (event) => {
-                modificarConcepto(event.target.dataset.id, event.target.dataset.nombre);
+            // Agregar evento a los botones de modificar
+            document.querySelectorAll('.modificar').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const id = event.target.dataset.id;
+                    mostrarFormularioEdicion(id);
+                });
             });
         });
-
-        document.querySelectorAll('.eliminar').forEach(btn => {
-            btn.addEventListener('click', (event) => {
-                eliminarConcepto(event.target.dataset.id);
-            });
-        });
-
-    } catch (error) {
-        console.error('Error al cargar conceptos:', error);
-    }
 }
 
-// Función para modificar un concepto
-function modificarConcepto(id, nombreActual) {
-    const nuevoNombre = prompt("Ingrese el nuevo nombre del concepto:", nombreActual);
-    if (!nuevoNombre || nuevoNombre.trim() === '') {
-        alert('El nombre del concepto no puede estar vacío');
+
+// Función para mostrar el formulario debajo de la lista
+function mostrarFormularioEdicion(id) {
+    const formularioEdicion = document.getElementById('formularioEdicion');
+
+    // Obtener datos del concepto a modificar
+    fetch(`http://localhost:8080/conceptos/${id}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+    })
+        .then(res => res.json())
+        .then(concepto => {
+            document.getElementById('concepto-nombre').value = concepto.nombre;
+            document.getElementById('concepto-tipo').value = concepto.tipo;
+            document.getElementById('concepto-requiere-vencimiento').checked = concepto.requiere_vencimiento == 1;
+
+            // Cargar rubros en el select
+            fetch('http://localhost:8080/rubros', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+            })
+                .then(res => res.json())
+                .then(rubros => {
+                    const selectRubro = document.getElementById('concepto-rubro');
+                    selectRubro.innerHTML = ''; // Limpiar opciones anteriores
+                    rubros.forEach(rubro => {
+                        let option = document.createElement('option');
+                        option.value = rubro.id;
+                        option.textContent = rubro.nombre;
+                        if (rubro.id == concepto.rubro_id) {
+                            option.selected = true;
+                        }
+                        selectRubro.appendChild(option);
+                    });
+                });
+
+            // Guardar cambios
+            document.getElementById('formularioEdicion').querySelector('button[type="submit"]').onclick = () => {
+                modificarConcepto(id);
+            };
+
+            // Cancelar edición
+            document.getElementById('cancelarEditarConcepto').onclick = () => {
+                formularioEdicion.style.display = 'none'; // Oculta el formulario
+            };
+        });
+
+    formularioEdicion.style.display = 'block'; // Muestra el formulario
+}
+
+// Función para modificar en la API
+function modificarConcepto(id) {
+    const nuevoNombre = document.getElementById('concepto-nombre').value.trim();
+    const nuevoRubroId = document.getElementById('concepto-rubro').value;
+    const nuevoTipo = document.getElementById('concepto-tipo').value;
+    const nuevoRequiereVencimiento = document.getElementById('concepto-requiere-vencimiento').checked ? 1 : 0;
+
+    if (!nuevoNombre) {
+        alert('El nombre no puede estar vacío');
         return;
     }
-
-    const token = localStorage.getItem('jwt-token');
 
     fetch(`http://localhost:8080/conceptos/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
         },
-        body: JSON.stringify({ nombre: nuevoNombre })
+        body: JSON.stringify({
+            nombre: nuevoNombre,
+            rubro_id: nuevoRubroId,
+            tipo: nuevoTipo,
+            requiere_vencimiento: nuevoRequiereVencimiento
+        })
     })
         .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Error al modificar el concepto'); });
-            }
+            if (!response.ok) throw new Error('Error al modificar concepto');
             alert('Concepto modificado con éxito');
-            cargarConceptos();
+            cargarConceptos(); // Refresca lista
+            document.getElementById('formularioEdicion').style.display = 'none'; // Oculta el formulario
         })
-        .catch(error => {
-            console.error('Error al modificar concepto:', error);
-            alert(error.message);
-        });
+        .catch(error => alert(error.message));
 }
 
 // Función para eliminar un concepto

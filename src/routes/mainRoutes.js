@@ -3,9 +3,42 @@
 const express = require('express');
 const router = express.Router();
 const controladores = require('../controllers/mainController');
-const multer = require('multer');
+// const multer = require('multer');
 const path = require('path');
 const auth = require('../config/auth'); // Middleware de autenticación
+
+
+// Rubros
+
+router.get('/rubros', auth, controladores.getRubros);
+router.post('/rubros', auth, controladores.crearRubro);
+router.put('/rubros/:id', auth, controladores.actualizarRubro);
+router.delete('/rubros/:id', auth, controladores.eliminarRubro);
+
+
+
+
+// Carga de Gastos
+router.get('/cargaGastos', auth, controladores.getCargaGastos); // Ver formulario de carga de gastos
+router.post('/cargaGastos', auth, controladores.crearGasto); // Crear nuevo gasto
+router.put('/cargaGastos/:id', auth, controladores.actualizarGasto); // Modificar gasto
+router.delete('/cargaGastos/:id', auth, controladores.eliminarGasto); // Eliminar gasto
+
+// Listado de Gastos
+router.get('/listado', auth, controladores.getListado); // Ver listado general de gastos
+router.get('/listado/:id', auth, controladores.getDetalleGasto); // Ver detalle de gasto específico
+
+// Ruta para el Dashboard
+// Si tu API es REST, probablemente devolverás JSON o una vista específica
+//router.get('/dashboard', controladores.getDashboard);
+
+
+
+
+
+//codigo viejo ralizando modificaciones
+
+/*
 
 // Verificar si controladores está bien importado
 if (!controladores) {
@@ -13,6 +46,7 @@ if (!controladores) {
 }
 
 // Configuración de almacenamiento para archivos (si se requiere)
+/*
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, 'public/uploads/'); // Cambiado a "uploads" para futuros comprobantes
@@ -22,6 +56,7 @@ const storage = multer.diskStorage({
 	}
 });
 const uploadFile = multer({ storage });
+
 
 // Rutas protegidas con autenticación (requieren token válido)
 
@@ -102,20 +137,8 @@ router.delete('/conceptos/:id', auth, (req, res) => {
 	controladores.eliminarConcepto(req, res);
 });
 
+*/
 
 
-// Carga de Gastos
-router.get('/cargaGastos', auth, controladores.getCargaGastos); // Ver formulario de carga de gastos
-router.post('/cargaGastos', auth, uploadFile.single('archivo'), controladores.crearGasto); // Crear nuevo gasto
-router.put('/cargaGastos/:id', auth, controladores.actualizarGasto); // Modificar gasto
-router.delete('/cargaGastos/:id', auth, controladores.eliminarGasto); // Eliminar gasto
-
-// Listado de Gastos
-router.get('/listado', auth, controladores.getListado); // Ver listado general de gastos
-router.get('/listado/:id', auth, controladores.getDetalleGasto); // Ver detalle de gasto específico
-
-// Ruta para el Dashboard
-// Si tu API es REST, probablemente devolverás JSON o una vista específica
-router.get('/dashboard', controladores.getDashboard);
 
 module.exports = router;

@@ -18,7 +18,7 @@
         <a href="index.html">
           <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
   
-        <h1>Solo Caps</h1>
+        <h1>Gastos Familiares</h1>
       </div>
       <nav>
         <a href="index.html">Inicio</a>
@@ -36,16 +36,16 @@
     <main>
       <h2>Gestión de Rubros</h2>
       <!--carrusel boostrap inicio-->
-      <div class="container">
+      <article id="rubro-agregar">
+        <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h2>Rubros</h2>
                 <div class="mb-3">
                     <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
                     <input type="text" id="nombreRubro" placeholder="Ingrese el nombre del rubro">
                 </div>
-                <button id="agregarRubro" class="btn btn-primary">Agregar Rubro</button>
-                <!-- Formulario oculto para editar -->
+                <input type="submit" value="Agregar Rubro" id="agregarRubro" class="btn btn-primary">
+                                <!-- Formulario oculto para editar -->
                 <div id="editarRubroForm" style="display: none;" class="mt-3">
                     <h3>Editar Rubro</h3>
                     <div class="mb-3">
@@ -61,6 +61,8 @@
             </div>
         </div>
     </div>
+      </article>
+      
 
       <!--fin de carrusel-->
     </main>

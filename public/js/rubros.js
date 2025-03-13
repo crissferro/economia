@@ -1,3 +1,55 @@
+document.querySelector('body').onload = async () => {
+    const token = localStorage.getItem('jwt-token');
+    console.log('Token from localStorage:', token); // Verifico el token
+
+
+    // Cargar listado de Rubros
+
+    try {
+        const res = await fetch('http://localhost:8080/rubros', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        /*
+                if (!response.ok) {
+                    window.location.href = "/login.html";
+                    throw new Error("Problemas en login");
+                }
+        */
+        const datos = await res.json();
+        let listaHTML = document.querySelector(`#rubro-agregar`);
+        listaHTML.innerHTML = `
+                <div class="list-header">
+                    <h4>Nombre</h4>
+                    <h4>Acciones</h4>
+                </div>
+            `;
+        datos.forEach(registro => {
+            listaHTML.innerHTML += `
+                    <form method="POST" action="/rubros?_metodo=DELETE" class="list-item">
+                        <h5>${registro.nombre}</h5>
+                        <input type="hidden" name="idEliminar" value="${registro.id}">
+                        <div id="acciones" class="acciones">
+                            <h5><a href="/modificar/${registro.id}" class="btn">Modificar</a></h5>
+                            <h5><input type="submit" value="Eliminar" class="btn"></h5>
+                        </div>
+                    </form>`;
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Seccion de Carga de Rubros
+
+
+
+
+/*
 document.getElementById('agregarRubro').addEventListener('click', async () => {
     const nombreRubro = document.getElementById('nombreRubro').value.trim();
     const token = localStorage.getItem('jwt-token');
@@ -75,9 +127,15 @@ async function cargarRubros() {
         // Agregar eventos a los botones de Modificar y Eliminar
         document.querySelectorAll('.modificar').forEach(btn => {
             btn.addEventListener('click', (event) => {
-                const rubroId = event.target.dataset.id;
-                const rubroNombre = event.target.dataset.nombre;
-                modificarRubro(rubroId, rubroNombre);
+                const id = event.target.dataset.id;
+                const nombre = event.target.dataset.nombre;
+                const tipo = event.target.dataset.tipo;
+                const requiereVencimiento = event.target.dataset.requiere_vencimiento;
+                const rubroId = event.target.dataset.rubro_id;
+
+                console.log("Modificando concepto:", { id, nombre, tipo, requiereVencimiento, rubroId });
+
+                modificarConcepto(id, nombre, tipo, requiereVencimiento, rubroId);
             });
         });
 
@@ -151,3 +209,4 @@ function eliminarRubro(id) {
 
 // Cargar rubros cuando se carga la página
 document.addEventListener('DOMContentLoaded', cargarRubros);
+*/
