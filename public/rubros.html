@@ -1,87 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  
     <link rel="stylesheet" href="css/estilo.css">
     <script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
-  
     <title>SoloCaps</title>
     <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
-  </head>
-
-  <body>
+</head>
+<body>
     <header>
-      <div>
-        <a href="index.html">
-          <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
-  
-        <h1>Gastos Familiares</h1>
-      </div>
-      <nav>
-        <a href="index.html">Inicio</a>
-        <a href="dashboard.html" id="listado-link">Dashboard</a>
-        <a href="gastos.html">Cargar Gastos</a>
-        <a class="activo" href="rubros.html">Rubros</a>
-        <a href="conceptos.html">Conceptos</a>
-        <a href="contacto.html">Contactenos</a>
-        <a href="login.html" style="display:none;">Log In</a>
-        
-        <a href="index.html">Logout</a>
-      </nav>
-      <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
+        <div>
+            <a href="index.html">
+                <img src="./img/logo.png" alt="Logo de Solo Caps">
+            </a>
+            <h1>Gastos Familiares</h1>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="dashboard.html" id="listado-link">Dashboard</a>
+            <a href="gastos.html">Cargar Gastos</a>
+            <a class="activo" href="rubros.html">Rubros</a>
+            <a href="conceptos.html">Conceptos</a>
+            <a href="contacto.html">Contactenos</a>
+            <a href="login.html" style="display:none;">Log In</a>
+            <a href="index.html">Logout</a>
+        </nav>
     </header>
     <main>
-      <h2>Gestión de Rubros</h2>
-      <!--carrusel boostrap inicio-->
-      <article id="rubro-agregar">
+        <h2>Gestión de Rubros</h2>
         <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="mb-3">
-                    <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
-                    <input type="text" id="nombreRubro" placeholder="Ingrese el nombre del rubro">
-                </div>
-                <input type="submit" value="Agregar Rubro" id="agregarRubro" class="btn btn-primary">
-                                <!-- Formulario oculto para editar -->
-                <div id="editarRubroForm" style="display: none;" class="mt-3">
-                    <h3>Editar Rubro</h3>
-                    <div class="mb-3">
-                        <label for="editarNombreRubro" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="editarNombreRubro" name="editarNombreRubro">
+            <section>
+                <h3>Agregar Rubro</h3>
+                <article id="rubro-agregar">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
+                                <input type="text" id="nombreRubro" placeholder="Ingrese el nombre del rubro">
+                            </div>
+                            <input type="submit" value="Agregar Rubro" id="agregarRubro" class="btn btn-primary">
+                        </div>
                     </div>
-                    <button id="guardarRubro" class="btn btn-primary">Guardar Cambios</button>
-                    <button id="cancelarEditarRubro" class="btn btn-secondary">Cancelar</button>
-                </div>
-                <div id="listaRubros" class="mt-3">
-                    <!-- Aquí se mostrará la lista de rubros -->
-                </div>
-            </div>
+                </article>
+            </section>
+            <section>
+                <h3>Listado de Rubros</h3>
+                <article id="editarRubroForm">
+                    <div id="listaRubros" class="mt-3">
+                    </div>
+                </article>
+            </section>
         </div>
-    </div>
-      </article>
-      
-
-      <!--fin de carrusel-->
     </main>
-
     <footer>
-      <div class="footer">
-        <a class="redsoc" href="#"><i class="fa-brands fa-facebook"></i></a>
-        <a class="redsoc" href="#"><i class="fa-brands fa-twitter"></i></a>
-        <a class="redsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
-        <a class="redsoc" href="#"><i class="fa-brands fa-pinterest"></i></a>
-        <a class="redsoc" href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-        <p>Derechos reservados @2024</p>
-      </div>
+        <div class="footer">
+            <a class="redsoc" href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-twitter"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-pinterest"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            <p>Derechos reservados @2024</p>
+        </div>
     </footer>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-    <script src="js/rubros.js"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="js/rubros/rubros.js"></script>
+</body>
 </html>
