@@ -359,7 +359,7 @@ textarea {
 
 .acciones {
   display: flex;
-  flex-direction: column;
+  /*flex-direction: column;*/
 }
 
 #acciones .btn {

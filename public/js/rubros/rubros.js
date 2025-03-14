@@ -68,8 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 listItem.innerHTML = `
                     <h5>${rubro.nombre}</h5>
                     <div class="acciones">
+                        <div>
                         <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}">Modificar</button>
+                        </div>
+                        <div>
                         <button class="btn eliminar" data-id="${rubro.id}">Eliminar</button>
+                        </div>
+                        
                     </div>
                 `;
 
