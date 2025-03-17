@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/estilo.css">
     <script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
   
-    <title>SoloCaps</title>
+    <title>Economia Familiar</title>
     <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
   </head>
   
@@ -18,7 +18,7 @@
         <a href="index.html">
           <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
   
-        <h1>Solo Caps</h1>
+        <h1>Economia Familiar</h1>
       </div>
       <nav>
         <a href="index.html">Inicio</a>
@@ -26,7 +26,7 @@
         <a class="activo"  href="gastos.html">Cargar Gastos</a>
         <a href="rubros.html">Rubros</a>
         <a href="conceptos.html">Conceptos</a>
-        <a href="contacto.html">Contactenos</a>
+        <a href="listado_gastos.html">Listdo de Gastos</a>
         <a href="login.html" style="display:none;">Log In</a>
         
         <a href="index.html">Logout</a>
@@ -34,92 +34,63 @@
       <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
     </header>
     <main>
+      <h2>Gestión de Gastos</h2>
+
       <div class="container">
-        <h2>Gastos</h2>
-        <!-- Formulario para agregar un nuevo gasto -->
-        <form id="agregarGastoForm">
-            <div class="mb-3">
-                <label for="montoGasto" class="form-label">Monto</label>
-                <input type="number" class="form-control" id="montoGasto" name="montoGasto" required>
+        <section>
+            <h3>Agregar Gastos</h3>
+            <article id="concepto-agregar">
+                <div class="row justify-content-center">
+                <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="importeGasto" class="form-label">Importe del Gasto</label>
+                            <input type="text" id="importeGasto" placeholder="Ingrese el importe del Gasto">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
+                            <select id="nombreConcepto" class="form-select">
+                                <option value="">Seleccione un concepto</option>
+                            </select>
+                                            <!--Se muestra el tipo de concepto(ingreso/egreso)-->
+                        <p id="tipoConcepto"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="mesGasto" class="form-label">Mes</label>
+                            <select id="mesGasto" class="form-select">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                          <label for="anioGasto" class="form-label">Año</label>
+                          <input type="number" class="form-control" id="anioGasto" name="anioGasto" required>
+                      </div>
+                        <div class="mb-3" id="fechaVencimientoDiv" style="display: none;">
+                          <label for="fechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
+                          <input type="date" class="form-control" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
+                      </div>
+
+
+                    <button id="agregarGasto" class="btn btn-primary">Agregar Gasto</button>
+
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="conceptoGasto" class="form-label">Concepto</label>
-                <select class="form-select" id="conceptoGasto" name="conceptoGasto" required>
-                    <!-- Opciones de conceptos se cargarán aquí dinámicamente -->
-                </select>
-                <!--Se muestra el tipo de concepto(ingreso/egreso)-->
-                <p id="tipoConceptoTexto"></p>
-            </div>
-            <div class="mb-3" id="fechaVencimientoDiv" style="display: none;">
-                <label for="fechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
-                <input type="date" class="form-control" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
-            </div>
-            <div class="mb-3">
-                <label for="mesGasto" class="form-label">Mes</label>
-                <select class="form-select" id="mesGasto" name="mesGasto" required>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="anioGasto" class="form-label">Año</label>
-                <input type="number" class="form-control" id="anioGasto" name="anioGasto" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Agregar Gasto</button>
-        </form>
-        <!-- Formulario para editar un gasto -->
-        <form id="editarGastoForm" style="display: none;">
-            <input type="hidden" id="editarGastoId" name="editarGastoId">
-            <div class="mb-3">
-                <label for="editarMontoGasto" class="form-label">Monto</label>
-                <input type="number" class="form-control" id="editarMontoGasto" name="editarMontoGasto" required>
-            </div>
-            <div class="mb-3">
-                <label for="editarConceptoGasto" class="form-label">Concepto</label>
-                <select class="form-select" id="editarConceptoGasto" name="editarConceptoGasto" required>
-                    <!-- Opciones de conceptos se cargarán aquí dinámicamente -->
-                </select>
-                <!--Se muestra el tipo de concepto(ingreso/egreso)-->
-                <p id="editarTipoConceptoTexto"></p>
-            </div>
-            <div class="mb-3" id="editarFechaVencimientoDiv" style="display: none;">
-                <label for="editarFechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
-                <input type="date" class="form-control" id="editarFechaVencimientoGasto" name="editarFechaVencimientoGasto">
-            </div>
-            <div class="mb-3">
-                <label for="editarMesGasto" class="form-label">Mes</label>
-                  <select class="form-select" id="editarMesGasto" name="editarMesGasto" required>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="editarAnioGasto" class="form-label">Año</label>
-                <input type="number" class="form-control" id="editarAnioGasto" name="editarAnioGasto" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Editar Gasto</button>
-            <button type="button" class="btn btn-secondary" id="cancelarEditarGasto">Cancelar</button>
-        </form>
+            </article>
+            
+
+        </section>
+
     </div>
     </main>
     <footer>
@@ -137,5 +108,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="js/gastos/gastos.js"></script>
   </body>
 </html>

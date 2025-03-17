@@ -1,10 +1,17 @@
+
 const { conn } = require('../../db/dbconnection');
 
-module.exports.getCargaGastos = async (req, res) => {
-    const [gastos] = await conn.query(`
-        SELECT g.id, g.descripcion, g.monto, g.fecha, g.pagado, c.nombre as concepto
+module.exports = {
+    getGastos: async (req, res) => {
+        try {
+            const [gastos] = await conn.query(`SELECT g.id, g.concepto_id, g.monto, g.fecha_vencimiento, g.pagado, g.mes, g.anio, c.nombre as concepto
         FROM gastos g
-        JOIN conceptos c ON g.concepto_id = c.id
-    `);
-    res.json(gastos);
-};
+        JOIN conceptos c ON g.concepto_id = c.id`);
+            res.json(gastos);
+        } catch (error) {
+            console.error('Error al obtener gastos:', error);
+            res.status(500).json({ error: 'Error al obtener gastos' });
+        }
+    }
+}
+

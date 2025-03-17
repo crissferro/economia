@@ -1,52 +1,95 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const secciones = document.querySelectorAll('.tarjeta');
-    secciones.forEach(seccion => {
-        const tipo = seccion.getAttribute('data-tipo');
-        fetchProductos(tipo, seccion);
-    });
-});
-
-async function fetchProductos(tipo, seccion) {
+// Cargar lista de conceptos dinámicamente
+async function cargarConceptos() {
     try {
-        const response = await fetch('/api/productos');
-        const productos = await response.json();
+        const response = await fetch('http://localhost:8080/conceptos', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+        });
 
-        let productosFiltrados;
+        if (!response.ok) throw new Error('Error al obtener conceptos');
 
-        switch (tipo) {
-            case 'capsulas':
-                productosFiltrados = productos.filter(producto => producto.id_tipoProducto === 1);
-                break;
-            case 'cafeEspecialidad':
-                productosFiltrados = productos.filter(producto => producto.id_tipoProducto === 3);
-                break;
-            case 'tazas':
-                productosFiltrados = productos.filter(producto => producto.id_tipoProducto === 2);
-                break;
-            case 'portacapsulas':
-                productosFiltrados = productos.filter(producto => producto.id_tipoProducto === 4);
-                break;
-            case 'capsulasRecargables':
-                productosFiltrados = productos.filter(producto => producto.id_tipoProducto === 5);
-                break;
-            default:
-                productosFiltrados = [];
+        const conceptos = await response.json();
+        const conceptoSelect = document.getElementById('nombreConcepto');
+
+        if (!conceptoSelect) {
+            console.error("Error: No se encontró el select nombreConcepto");
+            return;
         }
 
-        seccion.innerHTML = productosFiltrados.map(producto => `
-            <article>
-                <h3>${producto.nombre}</h3>
-                <div class="cuerpo">
-                    <img src="/img/${producto.imagen}" alt="${producto.nombre}">
-                    <p>${producto.descripcion}</p>
-                    <p class="precio">$${producto.precio}</p>
-                </div>
-                <div class="pie">
-                    <a href="#!">Comprar</a>
-                </div>
-            </article>
-        `).join('');
+        // Limpiar antes de agregar opciones
+        conceptoSelect.innerHTML = '<option value="">Seleccione un concepto</option>';
+
+        conceptos.forEach(concepto => {
+            let option = document.createElement('option');
+            option.value = concepto.id;
+            option.textContent = concepto.nombre;
+            option.dataset.requiereVencimiento = concepto.requiere_vencimiento; // Para controlar si se muestra la fecha de vencimiento
+            conceptoSelect.appendChild(option);
+        });
+
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error al cargar conceptos:', error);
     }
 }
+
+// Mostrar u ocultar el campo de fecha de vencimiento según el concepto seleccionado
+document.getElementById('nombreConcepto').addEventListener('change', function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const requiereVencimiento = selectedOption.dataset.requiereVencimiento === "1";
+    document.getElementById('fechaVencimientoDiv').style.display = requiereVencimiento ? 'block' : 'none';
+});
+
+// Evento para agregar un nuevo gasto
+document.addEventListener('DOMContentLoaded', () => {
+    cargarConceptos();
+
+    document.querySelector("#agregarGasto")?.addEventListener('click', async () => {
+        const conceptoId = document.getElementById('nombreConcepto')?.value.trim();
+        const monto = document.getElementById('importeGasto')?.value.trim();
+        const mes = document.getElementById('mesGasto')?.value;
+        const anio = document.getElementById('anioGasto')?.value;
+        const fechaVencimiento = document.getElementById('fechaVencimientoGasto')?.value || null;
+        const token = localStorage.getItem('jwt-token');
+
+        if (!conceptoId || !monto || !mes || !anio) {
+            alert('Todos los campos son obligatorios');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/gastos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    monto,
+                    mes,
+                    anio,
+                    concepto_id: conceptoId,
+                    fecha_vencimiento: fechaVencimiento,
+                    pagado: false
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al agregar Gasto');
+            }
+
+            alert('Gasto agregado con éxito');
+            setTimeout(() => {
+                document.getElementById('importeGasto').value = '';
+                document.getElementById('nombreConcepto').value = '';
+                document.getElementById('mesGasto').value = '1';
+                document.getElementById('anioGasto').value = new Date().getFullYear();
+                document.getElementById('fechaVencimientoGasto').value = '';
+                document.getElementById('fechaVencimientoDiv').style.display = 'none';
+            }, 100);
+
+        } catch (error) {
+            console.error('Error al agregar gasto:', error);
+            alert(error.message);
+        }
+    });
+});
