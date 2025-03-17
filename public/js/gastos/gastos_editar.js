@@ -14,10 +14,10 @@ function cargarDatosGasto(id) {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
     })
         .then(res => res.json())
-        .then(gasto => {
-            document.getElementById('gastos-nombre').value = gasto.concepto;
-            document.getElementById('gastos-tipo').value = gasto.tipo;
-            document.getElementById('gastos-requiere-vencimiento').checked = gasto.requiere_vencimiento == 1;
+        .then(gastos => {
+            document.getElementById('gastos-nombre').value = gastos.concepto;
+            document.getElementById('gastos-tipo').value = gastos.tipo;
+            document.getElementById('gastos-requiere-vencimiento').checked = gastos.requiere_vencimiento == 1;
 
             // Cargar rubros en el select
             fetch('http://localhost:8080/rubros', {
