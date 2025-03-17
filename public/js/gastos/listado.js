@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.modificar').forEach(btn => {
                 btn.addEventListener('click', (event) => {
                     const id = event.target.dataset.id;
-                    mostrarFormularioEdicion(id);
+                    abrirVentanaEdicion(id);
                 });
             });
 
@@ -79,85 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Función para mostrar el formulario debajo de la lista
-    function mostrarFormularioEdicion(id) {
-        const formularioEdicion = document.getElementById('formularioEdicion');
+    // Función para abrir una nueva ventana con el formulario de edición
+    function abrirVentanaEdicion(id) {
+        const url = `editar_gastos.html?id=${id}`; // Página de edición
+        const opciones = 'width=500,height=600,top=100,left=100,resizable=yes,scrollbars=yes';
+        const ventanaEdicion = window.open(url, 'EditarGastos', opciones);
 
-        // Obtener datos del concepto a modificar
-        fetch(`http://localhost:8080/gastos/${id}`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-        })
-            .then(res => res.json())
-            .then(concepto => {
-                document.getElementById('concepto-nombre').value = concepto.nombre;
-                document.getElementById('concepto-tipo').value = concepto.tipo;
-                document.getElementById('concepto-requiere-vencimiento').checked = concepto.requiere_vencimiento == 1;
-
-                // Cargar rubros en el select
-                fetch('http://localhost:8080/gastos', {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-                })
-                    .then(res => res.json())
-                    .then(rubros => {
-                        const selectRubro = document.getElementById('concepto-rubro');
-                        selectRubro.innerHTML = ''; // Limpiar opciones anteriores
-                        rubros.forEach(rubro => {
-                            let option = document.createElement('option');
-                            option.value = rubro.id;
-                            option.textContent = rubro.nombre;
-                            if (rubro.id == concepto.rubro_id) {
-                                option.selected = true;
-                            }
-                            selectRubro.appendChild(option);
-                        });
-                    });
-
-                // Guardar cambios
-                document.getElementById('formularioEdicion').querySelector('button[type="submit"]').onclick = () => {
-                    modificarConcepto(id);
-                };
-
-                // Cancelar edición
-                document.getElementById('cancelarEditarConcepto').onclick = () => {
-                    formularioEdicion.style.display = 'none'; // Oculta el formulario
-                };
-            });
-
-        formularioEdicion.style.display = 'block'; // Muestra el formulario
-    }
-
-    // Función para modificar en la API
-    function modificarConcepto(id) {
-        const nuevoNombre = document.getElementById('concepto-nombre').value.trim();
-        const nuevoRubroId = document.getElementById('concepto-rubro').value;
-        const nuevoTipo = document.getElementById('concepto-tipo').value;
-        const nuevoRequiereVencimiento = document.getElementById('concepto-requiere-vencimiento').checked ? 1 : 0;
-
-        if (!nuevoNombre) {
-            alert('El nombre no puede estar vacío');
-            return;
-        }
-
-        fetch(`http://localhost:8080/gastos/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
-            },
-            body: JSON.stringify({
-                nombre: nuevoNombre,
-                rubro_id: nuevoRubroId,
-                tipo: nuevoTipo,
-                requiere_vencimiento: nuevoRequiereVencimiento
-            })
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Error al modificar concepto');
-                alert('Concepto modificado con éxito');
-                cargarConceptos(); // Refresca lista
-                document.getElementById('formularioEdicion').style.display = 'none'; // Oculta el formulario
-            })
-            .catch(error => alert(error.message));
+        // Cuando se cierra la ventana, recargar la lista de gastos
+        const chequeoCierre = setInterval(() => {
+            if (ventanaEdicion.closed) {
+                clearInterval(chequeoCierre);
+                getGastos(); // Refresca la lista después de modificar
+            }
+        }, 1000);
     }
 
     // Función para eliminar un gasto
