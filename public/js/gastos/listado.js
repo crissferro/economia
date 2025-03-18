@@ -5,18 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getGastos() {
         const token = localStorage.getItem('jwt-token');
         try {
-            const response = await fetch('http://localhost:8080/gastos', {
+            const res = await fetch('http://localhost:8080/gastos', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
             });
 
-            if (!response.ok) {
+            if (!res.ok) {
                 throw new Error('Error al obtener gastos');
             }
 
-            const gastos = await response.json();
+            const gastos = await res.json();
             const listaGastos = document.getElementById('listaGastos');
             listaGastos.innerHTML = ''; // Limpiar lista antes de agregar nuevos elementos
 
@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
             gastos.forEach(gastos => {
                 const listItem = document.createElement('div');
                 listItem.classList.add('list-item');
+                // Cambiar color si está pagado
+                if (gastos.pagado) {
+                    listItem.classList.add('pagado');
+                }
                 // Formatear la fecha de vencimiento
                 let fechaVenc = gastos.fecha_vencimiento
                     ? new Date(gastos.fecha_vencimiento).toLocaleDateString('es-AR')
@@ -47,13 +51,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h5>${gastos.concepto}</h5>
                     <h5>${gastos.monto}</h5>
                     <h5>${fechaVenc}</h5>
-                    <h5>${gastos.pagado}</h5>
+                    <input type="checkbox" class="chkPagado" data-id="${gastos.id}" ${gastos.pagado ? 'checked' : ''}>
                     <div class="acciones">
                         <button class="btn modificar" data-id="${gastos.id}">Modificar</button>
                         <button class="btn eliminar" data-id="${gastos.id}">Eliminar</button>
                     </div>
                 `;
+
+
                 listaGastos.appendChild(listItem);
+            });
+
+            // Eventos para los checkboxes de pago
+            document.querySelectorAll('.chkPagado').forEach(chk => {
+                chk.addEventListener('change', (event) => {
+                    const id = event.target.dataset.id;
+                    const pagado = event.target.checked;
+                    actualizarEstadoPago(id, pagado);
+                });
             });
 
             // Agregar evento a los botones de modificar
@@ -76,6 +91,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    async function actualizarEstadoPago(id, pagado) {
+        const token = localStorage.getItem('jwt-token');
+        try {
+            const res = await fetch(`http://localhost:8080/gastos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ pagado: pagado ? 1 : 0 })
+            });
+
+            if (!res.ok) {
+                throw new Error('Error al actualizar el estado de pago');
+            }
+
+            console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
+            getGastos(); // Refrescar la lista
+
+        } catch (error) {
+            console.error('Error al actualizar estado de pago:', error);
+        }
+    }
 
 
 
@@ -104,9 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || 'Error al eliminar el Gasto'); });
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.error || 'Error al eliminar el Gasto'); });
                 }
                 alert('Gasto eliminado con éxito');
                 getGastos();
