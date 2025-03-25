@@ -6,6 +6,7 @@ const conceptosRoutes = require('./src/routes/conceptosRoutes');
 const gastosRoutes = require('./src/routes/gastosRoutes');
 const login = require('./src/routes/loginRoutes.js')
 const auth = require('./src/config/auth.js')
+const dashboardRoutes = require('./src/routes/dashboardRoutes');
 
 const app = express()
 const port = process.env.PORT || 8080; // Corrección en la asignación del puerto
@@ -22,6 +23,7 @@ app.use(override('_metodo'))
 app.use('/rubros', rubrosRoutes);
 app.use('/conceptos', conceptosRoutes);
 app.use('/gastos', gastosRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 
 // Configurar sesión antes de las rutas

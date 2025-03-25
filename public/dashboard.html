@@ -1,65 +1,68 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	  
-		<link rel="stylesheet" href="css/estilo.css">
-		<script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
-	  
-		<title>SoloCaps</title>
-		<link rel="icon" type="image/x-icon" href="./img/favicon.ico">
-	</head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
+    <title>Gastos Familiares</title>
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+</head>
 <body>
-  <header>
-    <div>
-      <a href="index.html">
-        <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
-
-      <h1>DASHBOARD</h1>
+	<header>
+        <div>
+            <a href="index.html">
+                <img src="./img/logo.png" alt="Logo de Solo Caps">
+            </a>
+            <h1>Gastos Familiares</h1>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="dashboard.html" id="listado-link">Dashboard</a>
+            <a href="gastos.html">Cargar Gastos</a>
+            <a href="rubros.html">Rubros</a>
+            <a class="activo"  href="conceptos.html">Conceptos</a>
+            <a href="listado_gastos.html">Listdo de Gastos</a>
+            <a href="login.html" style="display:none;">Log In</a>
+            
+            <a href="index.html">Logout</a>
+        </nav>
+    </header>
+	<main>
+		    <div class="dashboard">
+        <h2>Resumen de Ingresos y Egresos</h2>
+        
+        <div class="filtros">
+            <label for="mes">Mes:</label>
+            <select id="mes"></select>
+            <label for="anio">Año:</label>
+            <select id="anio"></select>
+        </div>
+        
+        <div class="cards">
+            <div class="card ingresos">
+                <h3>Ingresos</h3>
+                <p id="totalIngresos">$0</p>
+            </div>
+            <div class="card egresos">
+                <h3>Egresos</h3>
+                <p id="totalEgresos">$0</p>
+            </div>
+        </div>
     </div>
-    <nav>
-		<a href="index.html">Inicio</a>
-		<a class="activo"  href="dashboard.html" id="listado-link">Dashboard</a>
-		<a href="gastos.html">Cargar Gastos</a>
-		<a href="rubros.html">Rubros</a>
-		<a href="conceptos.html">Conceptos</a>
-		<a href="listado_gastos.html">Listdo de Gastos</a>
-		<a href="login.html" style="display:none;">Log In</a>
-		
-		<a href="index.html">Logout</a>
-	  </nav>
-      <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
-
-  </header>
-
- <main>
-	<h2>DASHBOARD</h2>
-		<section>
-			<article id="dashboard>
-				
-			</article>
-	
-		</section>	
- </main>
-
-		
-	<footer>
-		<div class="footer">
-			<a class="redsoc" href="#"><i class="fa-brands fa-facebook"></i></a>
-			<a class="redsoc" href="#"><i class="fa-brands fa-twitter"></i></a>
-			<a class="redsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
-			<a class="redsoc" href="#"><i class="fa-brands fa-pinterest"></i></a>
-			<a class="redsoc" href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-			<p>Derechos reservados @2024</p>
-		</div>
-	</footer>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-			crossorigin="anonymous">
-		</script>
-		
-		<script src="js/dashboard.js"></script>
+	</main>
+    <footer>
+        <div class="footer">
+            <a class="redsoc" href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-twitter"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-pinterest"></i></a>
+            <a class="redsoc" href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            <p>Derechos reservados @2025</p>
+        </div>
+    </footer>
+    
+    <script src="js/dashboard/dashboard.js"></script>
 </body>
 </html>
