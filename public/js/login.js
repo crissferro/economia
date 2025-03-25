@@ -17,5 +17,5 @@ const login = async () => {
     const data = await resp.json();
 
     localStorage.setItem("jwt-token", data.token);
-    window.location.href = "/rubros.html";
+    window.location.href = "/dashboard.html";
 };

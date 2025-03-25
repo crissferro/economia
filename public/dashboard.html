@@ -19,10 +19,10 @@
         </div>
         <nav>
             <a href="index.html">Inicio</a>
-            <a href="dashboard.html" id="listado-link">Dashboard</a>
+            <a  class="activo" href="dashboard.html">Dashboard</a>
             <a href="gastos.html">Cargar Gastos</a>
             <a href="rubros.html">Rubros</a>
-            <a class="activo"  href="conceptos.html">Conceptos</a>
+            <a href="conceptos.html">Conceptos</a>
             <a href="listado_gastos.html">Listdo de Gastos</a>
             <a href="login.html" style="display:none;">Log In</a>
             
@@ -30,27 +30,50 @@
         </nav>
     </header>
 	<main>
-		    <div class="dashboard">
-        <h2>Resumen de Ingresos y Egresos</h2>
+        <div class="container">
+            <div class="dashboard">
+                <h2>Resumen de Ingresos y Egresos</h2>
+
+                <section>
+                    <div class="filtros">
+                        <label for="mes">Mes:</label>
+                        <select id="mes"></select>
+                        <label for="anio">Año:</label>
+                        <select id="anio"></select>
+                    </div>
+                </section>
+                <section class="tarjeta">
+                    <article>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body saldo">
+                                <h3 class="titulo">Resumen</h3>
+                                <p class="cuerpo" id="totalResumen"></p>
+                            </div>
+                        </div>
+                        </article>
+                </section>
         
-        <div class="filtros">
-            <label for="mes">Mes:</label>
-            <select id="mes"></select>
-            <label for="anio">Año:</label>
-            <select id="anio"></select>
-        </div>
-        
-        <div class="cards">
-            <div class="card ingresos">
-                <h3>Ingresos</h3>
-                <p id="totalIngresos">$0</p>
+                <section class="tarjeta">
+                    <article>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body ingresos">
+                                <h3 class="titulo">Ingresos</h3>
+                                <p class="cuerpo" id="totalIngresos"></p>
+                            </div>
+                        </div>
+                        </article>
+                        <article>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body egresos">
+                                <h3 class="titulo">Egresos</h3>
+                                <p class="cuerpo" id="totalEgresos"></p>
+                            </div>
+                        </div>
+                        </article>
+                </section>
             </div>
-            <div class="card egresos">
-                <h3>Egresos</h3>
-                <p id="totalEgresos">$0</p>
-            </div>
         </div>
-    </div>
+		    
 	</main>
     <footer>
         <div class="footer">
