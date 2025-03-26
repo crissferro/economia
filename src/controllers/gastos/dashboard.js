@@ -77,7 +77,7 @@ module.exports.getResumen = async (req, res) => {
         const ingresos = Number(result[0]?.total_ingresos || 0);
         const egresos = Number(result[0]?.total_egresos || 0);
 
-        const totalResumen = ingresos + egresos;
+        const totalResumen = ingresos - egresos;
 
 
         res.json({
