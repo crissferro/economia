@@ -116,16 +116,72 @@ section {
   margin: auto;
 }
 
-.filtros {
+ /*  dashoard   */
+
+.dashboard .filtros {
   width: 100%;
   margin-bottom: 24px;
-  }
+  margin-bottom: 24px;
+}
+.card {
+  width: 200px;
+  height: 300px;
+  margin: 10px;
 
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Inner padding */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+  color: white; /* Text color */
+  margin: 10px 0; /* Space between cards */
+
+}
+
+
+.dashboard .tarjeta {
+  display: flex;
+  justify-content: center;
+  width: 400px;
+  height: 100px;
+  text-align: center; 
+}
+
+.dashboard .tarjeta .h3 {
+  font-size: 24px;
+  padding: 10px 10px 0 10px;
+}
+
+.dashboard .tarjeta .saldo {
+  background-color: rgb(173, 247, 247);
+  border-radius: 20px;
+  width: 300px;
+  height: 100px;
+  margin-bottom: 24px;
+}
+
+.dashboard .tarjeta .ingresos {
+  background-color: rgb(185, 214, 156);
+  border-radius: 20px;
+  width: 150px;
+  height: 100px;
+  margin-top: 24px;
+}
+
+.dashboard .tarjeta .egresos {
+  background-color: rgb(243, 163, 179);
+  border-radius: 20px;
+  width: 150px;
+  height: 100px;
+  margin-top: 24px;
+}
+
+
+/*    fin dashboard       */
+/*
 .tarjeta {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
+  
 }
 
 .tarjeta h2 {
@@ -136,6 +192,7 @@ section {
   margin-bottom: 32px;
 }
 
+/*
 .tarjeta article {
   display: flex;
   flex-direction: column;
@@ -146,11 +203,7 @@ section {
   border-radius: 15px;
 }
 
-.tarjeta article h3 {
-  font-size: 24px;
-  padding: 10px 10px 0 10px;
-  ;
-}
+
 
 .tarjeta article img {
   width: 320px;
@@ -159,7 +212,7 @@ section {
   border-radius: 0px 0px 0px 0px;
 }
 
-.tarjeta article .cuerpo {
+.tarjeta .card .cuerpo {
   padding: 10px;
   flex: 1 1 100%;
 }
@@ -463,6 +516,9 @@ form input[type="submit"]:hover {
 #acciones a:hover {
   background-color: #b392ac;
 }
+
+
+
 
 
 
