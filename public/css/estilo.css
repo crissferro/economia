@@ -109,143 +109,66 @@ header nav a:hover {
   object-fit: cover;
 }
 
-/*........inicio card......*/
+/*........inicio DASHBOARD......*/
 
 section {
   max-width: 1200px;
   margin: auto;
 }
 
- /*  dashoard   */
-
-.dashboard .filtros {
-  width: 100%;
-  margin-bottom: 24px;
-  margin-bottom: 24px;
-}
-.card {
-  width: 200px;
-  height: 300px;
-  margin: 10px;
-
-  border-radius: 8px; /* Rounded corners */
-  padding: 20px; /* Inner padding */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-  color: white; /* Text color */
-  margin: 10px 0; /* Space between cards */
-
-}
-
-
-.dashboard .tarjeta {
-  display: flex;
-  justify-content: center;
-  width: 400px;
-  height: 100px;
-  text-align: center; 
-}
-
-.dashboard .tarjeta .h3 {
-  font-size: 24px;
-  padding: 10px 10px 0 10px;
-}
-
-.dashboard .tarjeta .saldo {
-  background-color: rgb(173, 247, 247);
-  border-radius: 20px;
-  width: 300px;
-  height: 100px;
-  margin-bottom: 24px;
-}
-
-.dashboard .tarjeta .ingresos {
-  background-color: rgb(185, 214, 156);
-  border-radius: 20px;
-  width: 150px;
-  height: 100px;
-  margin-top: 24px;
-}
-
-.dashboard .tarjeta .egresos {
-  background-color: rgb(243, 163, 179);
-  border-radius: 20px;
-  width: 150px;
-  height: 100px;
-  margin-top: 24px;
-}
-
-
-/*    fin dashboard       */
-/*
-.tarjeta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  
-}
-
-.tarjeta h2 {
-  width: 100%;
-  color: #202630;
-  font-size: 24px;
-  margin-top: 32px;
-  margin-bottom: 32px;
-}
-
-/*
-.tarjeta article {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: auto;
-  border: 1px solid lightgray;
-  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
-  border-radius: 15px;
-}
-
-
-
-.tarjeta article img {
-  width: 320px;
-  height: 340px;
-  object-fit: cover;
-  border-radius: 0px 0px 0px 0px;
-}
-
-.tarjeta .card .cuerpo {
-  padding: 10px;
-  flex: 1 1 100%;
-}
-
-.tarjeta article .precio {
-  font-size: 25px;
-  font-weight: 500;
-  font-family: 'introbold';
-}
-
-.tarjeta article .pie {
-  background: #d1b3c4;
-  border-radius: 0 0 15px 15px;
-  padding: 10px;
+.dashboard {
+  max-width: 800px;
+  margin: 20px auto;
   text-align: center;
 }
 
-.tarjeta article .pie a {
-  text-decoration: none;
-  color: white;
+.dashboard h2 {
+  text-align: left;
 }
 
-.tarjeta article .pie a::after {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  content: ""
+.filtros {
+  margin-bottom: 20px;
 }
 
-.tarjeta article:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+}
+
+.card.saldo {
+  width: 100%;
+  background-color: rgb(173, 247, 247);
+}
+
+.ingresos-egresos {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.card.ingresos,
+.card.egresos {
+  flex: 1;
+}
+
+.card.ingresos {
+  background-color: rgb(185, 214, 156);
+}
+
+.card.egresos {
+  background-color: rgb(243, 163, 179);
 }
 
 /*........fin card......*/
