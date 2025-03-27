@@ -26,7 +26,7 @@
         <a class="activo"  href="gastos.html">Cargar Gastos</a>
         <a href="rubros.html">Rubros</a>
         <a href="conceptos.html">Conceptos</a>
-        <a href="listado_gastos.html">Listdo de Gastos</a>
+        <a href="listado_gastos.html">Listado de Gastos</a>
         <a href="login.html" style="display:none;">Log In</a>
         
         <a href="index.html">Logout</a>
@@ -35,27 +35,26 @@
     </header>
     <main>
       <h2>Gestión de Gastos</h2>
-
-      <div class="container">
-        <section>
-            <h3>Agregar Gastos</h3>
-            <article id="concepto-agregar">
-                <div class="row justify-content-center">
-                <div class="col-md-8">
-                        <div class="mb-3">
+      <section id="agregar_gasto">
+       
+          <h3>Agregar Gastos</h3>
+          <div class="formulario">
+                <form id="concepto-agregar">
+              
                             <label for="importeGasto" class="form-label">Importe del Gasto</label>
-                            <input type="text" id="importeGasto" placeholder="Ingrese el importe del Gasto">
-                        </div>
-                        <div class="mb-3">
+                            <input type="text" class="form-control" id="importeGasto" placeholder="Ingrese el importe del Gasto">
+                        
+                        
                             <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
                             <select id="nombreConcepto" class="form-select">
                                 <option value="">Seleccione un concepto</option>
                             </select>
-                                            <!--Se muestra el tipo de concepto(ingreso/egreso)-->
-                        <p id="tipoConcepto"></p>
-                        </div>
+                          
+                            <!--Se muestra el tipo de concepto(ingreso/egreso)-->
+                            <p id="tipoConcepto"></p>
+                       
 
-                        <div class="mb-3">
+                        
                             <label for="mesGasto" class="form-label">Mes</label>
                             <select id="mesGasto" class="form-select">
                             <option value="1">Enero</option>
@@ -71,27 +70,29 @@
                             <option value="11">Noviembre</option>
                             <option value="12">Diciembre</option>
                             </select>
-                        </div>
-                        <div class="mb-3">
+                        
+                        
                           <label for="anioGasto" class="form-label">Año</label>
                           <input type="number" class="form-control" id="anioGasto" name="anioGasto" required>
-                      </div>
-                        <div class="mb-3" id="fechaVencimientoDiv" style="display: none;">
+                      
+                        <div id="fechaVencimientoDiv" style="display: none;">
                           <label for="fechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
                           <input type="date" class="form-control" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
-                      </div>
+                        </div>
 
+                        <div>
+                          <button id="agregarGasto" class="btn btn-primary">Agregar Gasto</button>
+                        </div>
+                    
 
-                    <button id="agregarGasto" class="btn btn-primary">Agregar Gasto</button>
-
-                </div>
-            </div>
-            </article>
+              
+          </form>
+         
             
+        </div>
 
-        </section>
-
-    </div>
+      </section>
+      
     </main>
     <footer>
       <div class="footer">

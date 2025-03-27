@@ -23,7 +23,7 @@
             <a href="gastos.html">Cargar Gastos</a>
             <a href="rubros.html">Rubros</a>
             <a class="activo"  href="conceptos.html">Conceptos</a>
-            <a href="listado_gastos.html">Listdo de Gastos</a>
+            <a href="listado_gastos.html">Listado de Gastos</a>
             <a href="login.html" style="display:none;">Log In</a>
             
             <a href="index.html">Logout</a>
@@ -32,12 +32,11 @@
     <main>
         <h2>Gestión de Conceptos</h2>
 
-      <div class="container">
-        <section>
-            <h3>Agregar Concepto</h3>
-            <article id="concepto-agregar">
-                <div class="row justify-content-center">
-                <div class="col-md-8">
+        <section id="agregar_gasto">
+            
+            <div class="formulario">
+                <form id="concepto-agregar">
+
                         <div class="mb-3">
                             <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
                             <input type="text" id="nombreConcepto" placeholder="Ingrese el nombre del Concepto">
@@ -64,53 +63,55 @@
                             </select>
                         </div>
 
-
                     <button id="agregarConcepto" class="btn btn-primary">Agregar Concepto</button>
 
-                </div>
+                    </form>
             </div>
-            </article>
-            
-
+ 
         </section>
 
-        <section>
-                        <!-- Formulario oculto para editar -->
-                <div id="formularioEdicion" style="display:none;" class="mt-3">
-                    <h3>Editar Concepto</h3>
-                    <div class="mb-3">
-                        <label for="concepto-nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="concepto-nombre" name="editarNombreConcepto">
-                    </div>
+        <section class="formulario_edicion">
+         
+                    <!-- Formulario oculto para editar -->
+                <form id="formularioEdicion" style="display:none;">
+                    <h2>Editar Concepto</h2>
+                    
+                    <label for="concepto-nombre">Nombre</label>
+                    <input type="text" id="concepto-nombre" name="editarNombreConcepto">
+                  
 
-                    <div class="mb-3">
-                        <label for="concepto-rubro">Rubro:</label>
+                   
+                    <label for="concepto-rubro">Rubro:</label>
                     <select id="concepto-rubro">
                         <!-- Opciones cargadas dinámicamente -->
                     </select>
-                    </div>
+                  
 
-                    <div class="mb-3">
-                                    <label for="concepto-tipo">Tipo:</label>
+              
+                    <label for="concepto-tipo">Tipo:</label>
                     <select id="concepto-tipo">
                         <option value="ingreso">Ingreso</option>
                         <option value="egreso">Egreso</option>
                     </select>
-                    </div>
+            
 
-                    <div class="mb-3">
-                        <label for="concepto-requiere-vencimiento">Requiere vencimiento:</label>
-                        <input type="checkbox" id="concepto-requiere-vencimiento">
+                    <label for="concepto-requiere-vencimiento">Requiere vencimiento:</label>
+                    <input type="checkbox" id="concepto-requiere-vencimiento">
+                    
+                    <div>
+                        <button type="submit">Guardar cambios</button>
+                            <button id="cancelarEditarConcepto">Cancelar</button>
                     </div>
-                    <button type="submit">Guardar cambios</button>
-                    <button id="cancelarEditarConcepto" class="btn btn-secondary">Cancelar</button>
-                </div>
+                    
+                </form>
+        
+                        
         </section>
-
-        <section>
-            <h3>Listado de Conceptos</h3>
+        <h2>Listado de Conceptos</h2>
+        <section id="listadoConceptos">
+            
             <article>
-            <div id="listaConceptos" class="mt-3">
+            <div id="listaConceptos" >
                     <!-- Aquí se mostrará la lista de Conceptos -->
             </div>            
             
@@ -119,7 +120,7 @@
 
         </section>
 
-    </div>
+
                 
     </main>
     <footer>
