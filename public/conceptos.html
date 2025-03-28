@@ -32,30 +32,31 @@
     <main>
         <h2>Gestión de Conceptos</h2>
 
-        <section id="agregar_gasto">
+        <section class="agregar">
             
-            <div class="formulario">
-                <form id="concepto-agregar">
+            <div class="orden">
+                <h3>Agregar Concepto</h3>
+                <form>
 
-                        <div class="mb-3">
+                        <div>
                             <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
                             <input type="text" id="nombreConcepto" placeholder="Ingrese el nombre del Concepto">
                         </div>
-                        <div class="mb-3">
+                        <div>
                             <label for="rubroConcepto" class="form-label">Nombre del Rubro</label>
                             <select id="rubroConcepto" class="form-select">
                                 <option value="">Seleccione un rubro</option>
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div>
                             <label for="tipoConcepto" class="form-label">Tipo de Concepto</label>
                             <select id="tipoConcepto" class="form-select">
                             <option value="ingreso">Ingreso</option>
                             <option value="egreso">Egreso</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div>
                             <label for="vencimientoConcepto" class="form-label">Requiere Fecha de Vencimiento</label>
                             <select id="requiereVencimiento" class="form-select">
                                 <option value="1">Si</option>
@@ -63,9 +64,9 @@
                             </select>
                         </div>
 
-                    <button id="agregarConcepto" class="btn btn-primary">Agregar Concepto</button>
+                        <button id="agregarConcepto">Agregar Concepto</button>
 
-                    </form>
+                </form>
             </div>
  
         </section>
@@ -74,7 +75,7 @@
          
                     <!-- Formulario oculto para editar -->
                 <form id="formularioEdicion" style="display:none;">
-                    <h2>Editar Concepto</h2>
+                    <h3>Editar Concepto</h3>
                     
                     <label for="concepto-nombre">Nombre</label>
                     <input type="text" id="concepto-nombre" name="editarNombreConcepto">
@@ -103,25 +104,19 @@
                             <button id="cancelarEditarConcepto">Cancelar</button>
                     </div>
                     
-                </form>
+                </form>   
+        </section>
         
-                        
-        </section>
-        <h2>Listado de Conceptos</h2>
-        <section id="listadoConceptos">
-            
-            <article>
-            <div id="listaConceptos" >
-                    <!-- Aquí se mostrará la lista de Conceptos -->
-            </div>            
-            
-            </article>
-
-
-        </section>
-
-
+        <section>
+            <article class="listado">
+                <h3>Listado de Conceptos</h3>
                 
+                <div id="listaConceptos" >
+                        <!-- Aquí se mostrará la lista de Conceptos -->
+                </div>            
+        
+            </article>
+        </section> 
     </main>
     <footer>
         <div class="footer">

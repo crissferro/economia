@@ -114,6 +114,7 @@ header nav a:hover {
 section {
   max-width: 1200px;
   margin: auto;
+  margin-top: 16px;
 }
 
 .dashboard {
@@ -199,7 +200,7 @@ footer {
 
 
 
-/*.........formulario gastos...........*/
+/*.........formulario Agregar...........*/
 
 
 h2 {
@@ -212,7 +213,7 @@ h2 {
   margin-bottom: 32px;
 }
 
-#agregar_gasto {
+.agregar {
   width: 1000px;
   padding: 16px;
   margin: auto;
@@ -223,12 +224,17 @@ h2 {
   justify-content: space-between;
 }
 
-.formulario{
+
+
+
+.orden {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
   }
+
+.agregar .orden h3 {
+  margin-bottom: 16px;
+}
 
 form label {
   width: 72px;
@@ -271,18 +277,16 @@ form input[type="submit"]:hover {
   transform: scale(1.2);
 }
 
+/*.........FIN formulario  Agregar...........*/
 
-/*.........FIN formulario gastos...........*/
 
-#listadoConceptos {
-  width: 1000px;
-  padding: 16px;
-  margin: auto;
-  border: 1px solid lightgray;
-  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
-  border-radius: 15px;
 
-}
+
+
+
+
+
+
 
 .formulario_edicion {
   display: flex;
@@ -355,28 +359,20 @@ form input[type="submit"]:hover {
   transform: scale(1.2);
 }
 
-/*
-#formularioEdicion button {
-  margin-top: 16px;
-  width: 200px;
-  height: 50px;
-  border: none;
-}
-*/
+
 
 
 
 /*.........INICIO LISTADO...........*/
-
-/* muestra el listado de productos */
-#listaGastos {
-  max-height: 400px;
-  /* Ajusta esta altura según tus necesidades */
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-top: 20px;
+.listado {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
 }
+
 
 .list-header, .list-item {
   display: flex;
@@ -403,7 +399,7 @@ form input[type="submit"]:hover {
 
 .acciones {
   display: flex;
-  /*flex-direction: column;*/
+  
 }
 
 #acciones .btn {
@@ -440,136 +436,12 @@ form input[type="submit"]:hover {
   background-color: #b392ac;
 }
 
+/*.........Fin Listados...........*/
 
 
 
 
 
-/*  sector Tipo Producto y Proveedores   */
-
-#datos_anexos {
-  margin-top: 50px;
-  display: flex;
-  justify-content: space-around;
-  display: none;
-}
-
-#datos_anexos h3 {
-  font-size: 15px;
-}
-
-.list-datos_anexos-header, .list-datos_anexos-item {
-  display: flex;
-  justify-content: space-around;
-  align-items: left;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  width: 500px;
-}
-
-.list-datos_anexos-header {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-.list-datos_anexos-header h4 {
-  font-size: 15px;
-}
-
-.list-datos_anexos-item h5 {
-  margin: 0;
-  flex: 1;
-  font-size: 15px;
-}
-
-
-/* sector agregar producto */
-
-#producto-agregar {
-  width: 1000px;
-  padding: 16px;
-  margin: auto;
-  border: 1px solid lightgray;
-  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
-  border-radius: 15px;
-}
-
-
-#producto-agregar form label {
-  width: 72px;
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: auto;
-}
-
-
-#producto-agregar form a {
-  text-decoration: none;
-  color: white;
-}
-
-#producto-agregar form a::after {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  content: ""
-}
-
-#producto-agregar form input[type="submit"] {
-  border: none;
-  border-radius: 10px;
-  background-color: #d1b3c4;
-  font-family: 'introbold';
-  color: white;
-  font-weight: 500;
-  font-size: 25px;
-  width: 150px;
-  height: 40px;
-}
-
-#producto-agregar form input[type="submit"]:hover {
-  border: none;
-  background-color: #b392ac;
-  transform: scale(1.2);
-}
-
-#producto-agregar .btn {
-  width: 200px;
-  height: 50px;
-  border: none;
-  border-radius: 10px;
-  background-color: #d1b3c4;
-  font-family: 'introbold';
-  color: white;
-  font-weight: 400;
-  font-size: 20px;
-  text-align: center;
-  line-height: 40px;
-  /* Centrar verticalmente el texto */
-  text-decoration: none;
-  /* Para los enlaces */
-  display: inline-block;
-  /* Para los enlaces */
-}
-
-#producto-agregar .btn:hover {
-  background-color: #d1b3c4;
-  transform: scale(1.2);
-}
-
-/* Estilos específicos para los enlaces */
-#producto-agregar a {
-  text-decoration: none;
-  display: inline-block;
-}
-
-#login-registro a:hover {
-  background-color: #b392ac;
-}
 /*.........Inicio Pagina Modificar...........*/
 
 #gasto-modificar {
@@ -630,7 +502,7 @@ form input[type="submit"]:hover {
 }
 
 /*.........Fin Pagina Modificar...........*/
-/*.........FIN LISTADO...........*/
+
 
 /*..........INICIO LOGIN REGISTRO ...............*/
 

@@ -35,18 +35,19 @@
     </header>
     <main>
       <h2>Gestión de Gastos</h2>
-      <section id="agregar_gasto">
-       
+      <section class="agregar">
+        <div class="orden">
+          
           <h3>Agregar Gastos</h3>
-          <div class="formulario">
-                <form id="concepto-agregar">
+
+                <form>
               
-                            <label for="importeGasto" class="form-label">Importe del Gasto</label>
-                            <input type="text" class="form-control" id="importeGasto" placeholder="Ingrese el importe del Gasto">
+                            <label for="importeGasto">Importe del Gasto</label>
+                            <input type="text" id="importeGasto" placeholder="Ingrese el importe del Gasto">
                         
                         
-                            <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
-                            <select id="nombreConcepto" class="form-select">
+                            <label for="nombreConcepto">Nombre del Concepto</label>
+                            <select id="nombreConcepto">
                                 <option value="">Seleccione un concepto</option>
                             </select>
                           
@@ -55,8 +56,8 @@
                        
 
                         
-                            <label for="mesGasto" class="form-label">Mes</label>
-                            <select id="mesGasto" class="form-select">
+                            <label for="mesGasto">Mes</label>
+                            <select id="mesGasto">
                             <option value="1">Enero</option>
                             <option value="2">Febrero</option>
                             <option value="3">Marzo</option>
@@ -72,16 +73,16 @@
                             </select>
                         
                         
-                          <label for="anioGasto" class="form-label">Año</label>
-                          <input type="number" class="form-control" id="anioGasto" name="anioGasto" required>
+                          <label for="anioGasto">Año</label>
+                          <input type="number" id="anioGasto" name="anioGasto" required>
                       
                         <div id="fechaVencimientoDiv" style="display: none;">
-                          <label for="fechaVencimientoGasto" class="form-label">Fecha de Vencimiento</label>
-                          <input type="date" class="form-control" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
+                          <label for="fechaVencimientoGasto" >Fecha de Vencimiento</label>
+                          <input type="date" id="fechaVencimientoGasto" name="fechaVencimientoGasto">
                         </div>
 
                         <div>
-                          <button id="agregarGasto" class="btn btn-primary">Agregar Gasto</button>
+                          <button id="agregarGasto">Agregar Gasto</button>
                         </div>
                     
 

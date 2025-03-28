@@ -30,29 +30,33 @@
     </header>
     <main>
         <h2>Gestión de Rubros</h2>
-        <div class="container">
-            <section>
+ 
+            <section class="agregar">
+                <div class="orden">
                 <h3>Agregar Rubro</h3>
                 <article id="rubro-agregar">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="nombreRubro" class="form-label">Nombre del Rubro</label>
+            
+                        <form>
+                            <div>
+                                <label for="nombreRubro">Nombre del Rubro</label>
                                 <input type="text" id="nombreRubro" placeholder="Ingrese el nombre del rubro">
                             </div>
-                            <input type="submit" value="Agregar Rubro" id="agregarRubro" class="btn btn-primary">
-                        </div>
-                    </div>
+                            <input type="submit" value="Agregar Rubro" id="agregarRubro">
+                        </form>
+                   
                 </article>
+            </div>
             </section>
             <section>
+                <article class="listado">
                 <h3>Listado de Rubros</h3>
-                <article id="editarRubroForm">
-                    <div id="listaRubros" class="mt-3">
+                
+                    <div id="listaRubros">
+                        <!-- Aquí se mostrará la lista de Rubros -->
                     </div>
                 </article>
             </section>
-        </div>
+
     </main>
     <footer>
         <div class="footer">
