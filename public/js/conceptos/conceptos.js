@@ -106,9 +106,8 @@ function cargarConceptos() {
                     <h4>Tipo</h4>
                     <h4>Requiere Vencimiento</h4>
                     <h4>Acciones</h4>
-                </div>`
-
-                ;
+                </div>
+                `;
 
             conceptos.forEach(concepto => {
                 const listItem = document.createElement('div');

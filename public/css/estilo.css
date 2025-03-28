@@ -271,7 +271,7 @@ form input[type="number"] {
   display: inline-block;
 }
 
-form input[type="submit"] {
+form input[type="button"] {
   width: 50%;
   margin-top: 32px;
   border: none;
@@ -285,7 +285,7 @@ form input[type="submit"] {
   height: 40px;
 }
 
-form input[type="submit"]:hover {
+form input[type="button"]:hover {
   border: none;
   background-color: #b392ac;
   transform: scale(1.2);
