@@ -1,0 +1,48 @@
+<%- include('partials/head') %>
+	<body>
+		<header>
+			<div>
+			  <a href="index.html">
+				<img src="../img/logo.png" alt="Logo de Solo Caps"></a>
+		
+			  <h1>Solo Caps</h1>
+			</div>
+			<nav>
+			  <a class="activo" href="index.html">Inicio</a>
+			  <a href="productos.html">Productos</a>
+			  <a href="accesorios.html">Accesorios</a>
+			  <a href="contacto.html">Contactenos</a>
+			  <a href="listado.html">Listado</a>
+			</nav>
+			  
+		
+		  </header>
+
+		  <main>
+				<h2>Modificar Concepto</h2>
+				<div id="concepto-modificar">
+					<form action="/modificar?_metodo=PUT" method="POST" class="gastos-form">
+						<label for="importe">Importe:</label>
+						<input type="number" name="importe" value="<%= gastos.monto %>">
+						<label for="descripcion">Descripcion:</label>
+						<input type="text" name="descripcion" value="<%= gastos.concepto %>">
+						<label for="anio">Año:</label>
+						<input type="number" name="anio" value="<%= gastos.anio %>">
+						<label for="mes">Mes:</label>
+						<input type="number" name="mes" value="<%= gastos.mes %>">
+						<label for="fecha_vencimiento">Fecha Vencimiento:</label>
+						<input type="number" name="fecha_vencimiento" value="<%= gastos.fecha_vencimiento %>">
+
+
+						<input type="hidden" name="idMod" value="<%= registro.id %>"><br>
+						<input type="submit" value="Actualizar" class="btn">
+					</form>
+					<div id="btn-cancelar">
+						<a href="/conceptos.html" class="btn">Cancelar</a>
+					</div>
+				</div>
+				
+		  </main>
+
+
+<%- include('partials/footer') %>

@@ -36,7 +36,9 @@
             
             <div class="orden">
                 <h3>Agregar Concepto</h3>
-                <form>
+                
+<article class="formulario" id="concepto-agregar">
+    <form>
 
                         <div>
                             <label for="nombreConcepto" class="form-label">Nombre del Concepto</label>
@@ -64,47 +66,14 @@
                             </select>
                         </div>
 
-                        <button id="agregarConcepto">Agregar Concepto</button>
+                        <input type="submit" value="Agregar Concepto" id="agregarConcepto">
 
                 </form>
+</article>
+
+                
             </div>
  
-        </section>
-
-        <section class="formulario_edicion">
-         
-                    <!-- Formulario oculto para editar -->
-                <form id="formularioEdicion" style="display:none;">
-                    <h3>Editar Concepto</h3>
-                    
-                    <label for="concepto-nombre">Nombre</label>
-                    <input type="text" id="concepto-nombre" name="editarNombreConcepto">
-                  
-
-                   
-                    <label for="concepto-rubro">Rubro:</label>
-                    <select id="concepto-rubro">
-                        <!-- Opciones cargadas dinámicamente -->
-                    </select>
-                  
-
-              
-                    <label for="concepto-tipo">Tipo:</label>
-                    <select id="concepto-tipo">
-                        <option value="ingreso">Ingreso</option>
-                        <option value="egreso">Egreso</option>
-                    </select>
-            
-
-                    <label for="concepto-requiere-vencimiento">Requiere vencimiento:</label>
-                    <input type="checkbox" id="concepto-requiere-vencimiento">
-                    
-                    <div>
-                        <button type="submit">Guardar cambios</button>
-                            <button id="cancelarEditarConcepto">Cancelar</button>
-                    </div>
-                    
-                </form>   
         </section>
         
         <section>
