@@ -109,27 +109,25 @@ header nav a:hover {
   object-fit: cover;
 }
 
-/*........inicio DASHBOARD......*/
-
 section {
   max-width: 1200px;
   margin: auto;
   margin-top: 16px;
 }
 
-.dashboard {
-  max-width: 800px;
+.filtros {
   margin: 20px auto;
   text-align: center;
 }
 
-.dashboard h2 {
+
+/*........inicio DASHBOARD......*/
+
+
+h2 {
   text-align: left;
 }
 
-.filtros {
-  margin-bottom: 20px;
-}
 
 .tarjeta {
   display: flex;
@@ -155,7 +153,7 @@ section {
 .ingresos-egresos {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 400px;
   gap: 20px;
 }
 

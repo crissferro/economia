@@ -32,6 +32,35 @@
     <main>
         <h2>Pago de Gastos</h2>
 
+        <section class="filtros">
+            <div>
+                <label for="mes">Mes:</label>
+                <select id="mes"></select>
+                <label for="anio">Año:</label>
+                <select id="anio"></select>
+
+                <label for="rubro">Rubro:</label>
+                <select id="rubro">
+                    <option value="">Todos</option>
+                    <!-- Opciones generadas dinámicamente desde la BD -->
+                </select>
+            
+                <label for="concepto">Concepto:</label>
+                <select id="concepto">
+                    <option value="">Todos</option>
+                    <!-- Opciones generadas dinámicamente desde la BD -->
+                </select>
+            
+                <label for="pagado">Pagado:</label>
+                <select id="pagado">
+                    <option value="">Todos</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+            
+                <button type="button" id="aplicarFiltros">Aplicar</button>
+            </div>
+        </section>
         <section>
             <article class="listado">
                 <h3>Listado de Gastos</h3>

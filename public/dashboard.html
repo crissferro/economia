@@ -30,9 +30,8 @@
         </nav>
     </header>
 	<main>
-        <div class="dashboard">
+        
             <h2>Resumen de Ingresos y Egresos</h2>
-
             <section class="filtros">
                 <div>
                     <label for="mes">Mes:</label>
@@ -41,29 +40,30 @@
                     <select id="anio"></select>
                 </div>
             </section>
-            <section class="tarjeta">
-                <article class="card saldo">
-                    <header>
-                        <h3 class="titulo">Resumen</h3>
-                    </header>
-                    <p class="cuerpo" id="totalResumen"></p>
-                </article>
-<div class="ingresos-egresos">
-    <article class="card ingresos">
-                    <header>
-                        <h3 class="titulo">Ingresos</h3>
-                    </header>
-                    <p class="cuerpo" id="totalIngresos"></p>
-                </article>
+        <div class="agregar">
 
-                <article class="card egresos">
-                    <header>
-                        <h3 class="titulo">Egresos</h3>
-                    </header>
-                    <p class="cuerpo" id="totalEgresos"></p>
-                </article>
-</div>
-                
+            <section class="tarjeta">
+                    <article class="card saldo">
+                        <header>
+                            <h3 class="titulo">Resumen</h3>
+                        </header>
+                        <p class="cuerpo" id="totalResumen"></p>
+                    </article>
+                    <div class="ingresos-egresos">
+                        <article class="card ingresos">
+                            <header>
+                                <h3 class="titulo">Ingresos</h3>
+                            </header>
+                            <p class="cuerpo" id="totalIngresos"></p>
+                        </article>
+
+                        <article class="card egresos">
+                            <header>
+                                <h3 class="titulo">Egresos</h3>
+                            </header>
+                            <p class="cuerpo" id="totalEgresos"></p>
+                        </article>
+                    </div>
             </section>
         </div>
 	</main>
