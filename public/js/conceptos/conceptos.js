@@ -118,19 +118,12 @@ function cargarConceptos() {
                 <h5>${concepto.tipo}</h5>
                 <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
                 <div class="acciones">
-                    <button class="btn modificar" data-id="${concepto.id}">Modificar</button>
+                <button class="modificar-btn" data-id="<%= concepto.id %>">Modificar</button>    
+                <a href="/modificar/${concepto.id}" class="btn modificar">Modificar</a>
                     <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
                 </div>
             `;
                 listaConceptos.appendChild(listItem);
-            });
-
-            // Agregar evento a los botones de modificar
-            document.querySelectorAll('.modificar').forEach(btn => {
-                btn.addEventListener('click', (event) => {
-                    const id = event.target.dataset.id;
-                    mostrarFormularioEdicion(id);
-                });
             });
 
             document.querySelectorAll('.eliminar').forEach(btn => {
@@ -142,88 +135,6 @@ function cargarConceptos() {
         });
 
 
-}
-
-
-// Función para mostrar el formulario debajo de la lista
-function mostrarFormularioEdicion(id) {
-    const formularioEdicion = document.getElementById('formularioEdicion');
-
-    // Obtener datos del concepto a modificar
-    fetch(`http://localhost:8080/conceptos/${id}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-    })
-        .then(res => res.json())
-        .then(concepto => {
-            document.getElementById('concepto-nombre').value = concepto.nombre;
-            document.getElementById('concepto-tipo').value = concepto.tipo;
-            document.getElementById('concepto-requiere-vencimiento').checked = concepto.requiere_vencimiento == 1;
-
-            // Cargar rubros en el select
-            fetch('http://localhost:8080/rubros', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-            })
-                .then(res => res.json())
-                .then(rubros => {
-                    const selectRubro = document.getElementById('concepto-rubro');
-                    selectRubro.innerHTML = ''; // Limpiar opciones anteriores
-                    rubros.forEach(rubro => {
-                        let option = document.createElement('option');
-                        option.value = rubro.id;
-                        option.textContent = rubro.nombre;
-                        if (rubro.id == concepto.rubro_id) {
-                            option.selected = true;
-                        }
-                        selectRubro.appendChild(option);
-                    });
-                });
-
-            // Guardar cambios
-            document.getElementById('formularioEdicion').querySelector('button[type="submit"]').onclick = () => {
-                modificarConcepto(id);
-            };
-
-            // Cancelar edición
-            document.getElementById('cancelarEditarConcepto').onclick = () => {
-                formularioEdicion.style.display = 'none'; // Oculta el formulario
-            };
-        });
-
-    formularioEdicion.style.display = 'block'; // Muestra el formulario
-}
-
-// Función para modificar en la API
-function modificarConcepto(id) {
-    const nuevoNombre = document.getElementById('concepto-nombre').value.trim();
-    const nuevoRubroId = document.getElementById('concepto-rubro').value;
-    const nuevoTipo = document.getElementById('concepto-tipo').value;
-    const nuevoRequiereVencimiento = document.getElementById('concepto-requiere-vencimiento').checked ? 1 : 0;
-
-    if (!nuevoNombre) {
-        alert('El nombre no puede estar vacío');
-        return;
-    }
-
-    fetch(`http://localhost:8080/conceptos/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('jwt-token')}`
-        },
-        body: JSON.stringify({
-            nombre: nuevoNombre,
-            rubro_id: nuevoRubroId,
-            tipo: nuevoTipo,
-            requiere_vencimiento: nuevoRequiereVencimiento
-        })
-    })
-        .then(response => {
-            if (!response.ok) throw new Error('Error al modificar concepto');
-            alert('Concepto modificado con éxito');
-            cargarConceptos(); // Refresca lista
-            document.getElementById('formularioEdicion').style.display = 'none'; // Oculta el formulario
-        })
-        .catch(error => alert(error.message));
 }
 
 // Función para eliminar un concepto
@@ -248,3 +159,39 @@ function eliminarConcepto(id) {
             alert(error.message);
         });
 }
+
+
+// Función para modificar un concepto
+// Esta función se ejecuta al hacer clic en el botón "Modificar" de cada concepto
+document.addEventListener("DOMContentLoaded", function () {
+    const modificarBotones = document.querySelectorAll(".modificar-btn");
+
+    modificarBotones.forEach(boton => {
+        boton.addEventListener("click", function () {
+            const id = this.getAttribute("data-id");
+            const token = localStorage.getItem('jwt-token');
+
+            if (!token) {
+                alert("No tienes sesión iniciada. Inicia sesión para continuar.");
+                return;
+            }
+
+            // Redirigir a la página de modificación con el token en la cabecera
+            fetch(`http://localhost:8080/modificar/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Error al obtener el concepto");
+                    return response.json();
+                })
+                .then(data => {
+                    // Redirigir con los datos del concepto
+                    window.location.href = `/modificar/${id}`;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+    });
+});

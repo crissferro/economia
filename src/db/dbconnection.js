@@ -20,13 +20,13 @@ module.exports = {
 /*
 
 const pool = mysql.createPool({
-	host: 'mysql-solocaps.alwaysdata.net',
-	user: 'solocaps',
-	password: 'Qwerty1234Admin',
-	database: 'solocaps_db',
-	port: 3306,
-	waitForConnections: true,
-	connectionLimit: 10,
-	queueLimit: 0,
+    host: 'mysql-solocaps.alwaysdata.net',
+    user: 'solocaps',
+    password: 'Qwerty1234Admin',
+    database: 'solocaps_db',
+    port: 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 })
-	*/
+    */

@@ -15,6 +15,7 @@ router.post('/', auth, conceptosAgregar.crearConcepto);
 router.put('/:id', auth, conceptosModificar.actualizarConcepto);
 router.delete('/:id', auth, conceptosEliminar.eliminarConcepto);
 router.get('/', auth, conceptosListar.getConceptos);
+router.get('/modificar/:id', auth, conceptosModificar.getModificar)
 
 
 
