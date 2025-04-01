@@ -21,14 +21,18 @@
 		  <main>
 				<h2>Modificar Concepto</h2>
 				<div id="concepto-modificar">
-					<form id="modificar-concepto-form">
-						<input type="hidden" id="concepto-id" value="<%= concepto.id %>">
-						
+					<form action="/modificar?_metodo=PUT" method="POST" class="concepto-form">
+												
 						<label for="nombre">Nombre:</label>
 						<input type="text" id="nombre" value="<%= concepto.nombre %>">
 					
-						<label for="rubro">Rubro:</label>
-						<input type="text" id="rubro" value="<%= concepto.rubro_id %>">
+						<label for="id_rubro">Rubro:</label>
+						<select name="id_rubro" id="selectRubroForm">
+							<option value="">Seleccione un Rubro</option>
+							<% tiposProducto.forEach(tipo => { %>
+								<option value="<%= tipo.id %>" <%= registro.id_rubro === rubro.id ? 'selected' : '' %>><%= rubro.nombre %></option>
+							<% }) %>
+						</select>
 					
 						<label for="tipo">Tipo:</label>
 						<select id="tipo">
@@ -38,45 +42,15 @@
 					
 						<label for="requiere_vencimiento">Requiere vencimiento:</label>
 						<input type="checkbox" id="requiere_vencimiento" <%= concepto.requiere_vencimiento ? 'checked' : '' %> >
-					
-						<button type="submit">Guardar Cambios</button>
+						
+						<input type="hidden" name="idMod" value="<%= registro.id %>"><br>
+						<input type="submit" value="Actualizar" class="btn">
 					</form>
 					<div id="btn-cancelar">
 						<a href="/conceptos.html" class="btn">Cancelar</a>
 					</div>
 				</div>
 
-				<script>
-					document.getElementById("modificar-concepto-form").addEventListener("submit", function (event) {
-						event.preventDefault();
-				
-						const id = document.getElementById("concepto-id").value;
-						const nombre = document.getElementById("nombre").value;
-						const rubro_id = document.getElementById("rubro").value;
-						const tipo = document.getElementById("tipo").value;
-						const requiere_vencimiento = document.getElementById("requiere_vencimiento").checked ? 1 : 0;
-				
-						const token = localStorage.getItem("jwt-token");
-				
-						fetch(`/conceptos/${id}`, {
-							method: "PUT",
-							headers: {
-								"Authorization": `Bearer ${token}`,
-								"Content-Type": "application/json"
-							},
-							body: JSON.stringify({ nombre, rubro_id, tipo, requiere_vencimiento })
-						})
-						.then(response => {
-							if (!response.ok) throw new Error("Error al actualizar el concepto");
-							return response.json();
-						})
-						.then(data => {
-							alert(data.mensaje);
-							window.location.href = "/conceptos";
-						})
-						.catch(error => console.error("Error:", error));
-					});
-				</script>
 				
 		  </main>
 

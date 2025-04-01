@@ -118,13 +118,22 @@ function cargarConceptos() {
                 <h5>${concepto.tipo}</h5>
                 <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
                 <div class="acciones">
-                <button class="modificar-btn" data-id="<%= concepto.id %>">Modificar</button>    
-                <a href="/modificar/${concepto.id}" class="btn modificar">Modificar</a>
-                    <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
+                <button class="btn modificar modificar-btn" data-id="${concepto.id}">Modificar</button>
+                <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
                 </div>
             `;
                 listaConceptos.appendChild(listItem);
             });
+
+
+            // Asignar evento a los botones de modificar
+document.querySelectorAll('.modificar-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        modificarConcepto(this.dataset.id);
+    });
+});
+
+            // Asignar evento a los botones de eliminar
 
             document.querySelectorAll('.eliminar').forEach(btn => {
                 btn.addEventListener('click', (event) => {
@@ -136,6 +145,13 @@ function cargarConceptos() {
 
 
 }
+
+// Función para modificar un concepto
+function modificarConcepto(conceptoId) {
+    window.location.href = `/modificar/${conceptoId}`;
+}
+
+
 
 // Función para eliminar un concepto
 function eliminarConcepto(id) {
@@ -161,37 +177,7 @@ function eliminarConcepto(id) {
 }
 
 
-// Función para modificar un concepto
-// Esta función se ejecuta al hacer clic en el botón "Modificar" de cada concepto
-document.addEventListener("DOMContentLoaded", function () {
-    const modificarBotones = document.querySelectorAll(".modificar-btn");
 
-    modificarBotones.forEach(boton => {
-        boton.addEventListener("click", function () {
-            const id = this.getAttribute("data-id");
-            const token = localStorage.getItem('jwt-token');
 
-            if (!token) {
-                alert("No tienes sesión iniciada. Inicia sesión para continuar.");
-                return;
-            }
 
-            // Redirigir a la página de modificación con el token en la cabecera
-            fetch(`http://localhost:8080/modificar/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error("Error al obtener el concepto");
-                    return response.json();
-                })
-                .then(data => {
-                    // Redirigir con los datos del concepto
-                    window.location.href = `/modificar/${id}`;
-                })
-                .catch(error => console.error("Error:", error));
-        });
-    });
-});
+    ;
