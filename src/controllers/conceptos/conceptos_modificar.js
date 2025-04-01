@@ -16,7 +16,7 @@ module.exports = {
             const [modificar] = await conn.query(`SELECT * FROM conceptos WHERE id=?`, req.params.id);
             const [rubros] = await conn.query('SELECT * FROM rubros');
 
-            res.render('modificar', {
+            res.render('modificar_concepto', {
                 tituloDePagina: 'Página para Modificar Conceptos',
                 registro: modificar[0],
                 rubros

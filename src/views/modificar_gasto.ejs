@@ -1,48 +1,89 @@
-<%- include('partials/head') %>
-	<body>
-		<header>
-			<div>
-			  <a href="index.html">
-				<img src="../img/logo.png" alt="Logo de Solo Caps"></a>
-		
-			  <h1>Solo Caps</h1>
-			</div>
-			<nav>
-			  <a class="activo" href="index.html">Inicio</a>
-			  <a href="productos.html">Productos</a>
-			  <a href="accesorios.html">Accesorios</a>
-			  <a href="contacto.html">Contactenos</a>
-			  <a href="listado.html">Listado</a>
-			</nav>
-			  
-		
-		  </header>
+		  <%- include('./partials/head') %>
+    <body>
+        <header>
+            <div>
+                <a href="/">
+                    <img src="/img/logo.png" alt="Logo de Solo Caps"></a>
 
-		  <main>
-				<h2>Modificar Gasto</h2>
-				<div id="gastos-modificar">
-					<form action="/modificar?_metodo=PUT" method="POST" class="gastos-form">
-						<label for="importe">Importe:</label>
-						<input type="number" name="importe" value="<%= gastos.monto %>">
-						<label for="descripcion">Descripcion:</label>
-						<input type="text" name="descripcion" value="<%= gastos.concepto %>">
-						<label for="anio">Año:</label>
-						<input type="number" name="anio" value="<%= gastos.anio %>">
-						<label for="mes">Mes:</label>
-						<input type="number" name="mes" value="<%= gastos.mes %>">
-						<label for="fecha_vencimiento">Fecha Vencimiento:</label>
-						<input type="number" name="fecha_vencimiento" value="<%= gastos.fecha_vencimiento %>">
+                <h1>Solo Caps</h1>
+            </div>
+            <nav>
+                <a href="/">Inicio</a>
+                <a href="/dashboard.html" id="listado-link">Dashboard</a>
+                <a href="/gastos.html">Cargar Gastos</a>
+                <a href="/rubros.html">Rubros</a>
+                <a href="/conceptos.html">Conceptos</a>
+                <a class="activo" href="/listado_gastos.html">Listado de Gastos</a>
+                <a href="/login.html" style="display:none;">Log In</a>
+
+                <a href="/">Logout</a>
+            </nav>
 
 
-						<input type="hidden" name="idMod" value="<%= registro.id %>"><br>
-						<input type="submit" value="Actualizar" class="btn">
-					</form>
-					<div id="btn-cancelar">
-						<a href="/listado_gastos.html" class="btn">Cancelar</a>
-					</div>
-				</div>
-				
-		  </main>
+        </header>
+
+        <main>
+            <h2>Modificar Gasto</h2>
+            <div id="modificar">
+                <form action="/gastos/<%= registro.id %>?_metodo=PUT" method="POST">
+                    <input type="hidden" name="idMod" value="<%= registro.id %>">
+                    <label for="nombreConcepto">Concepto:</label>
+                    <select id="nombreConcepto" name="concepto_id" required>
+                    </select><br>
+
+                    <label for="importeGasto">Importe:</label>
+                    <input type="number" id="importeGasto" name="monto" value="<%= registro.monto %>" required><br>
+
+                    <label for="mesGasto">Mes:</label>
+                    <select id="mesGasto" name="mes" required>
+                        <option value="1" <%= registro.mes == 1 ? 'selected' : '' %>>Enero</option>
+                        <option value="2" <%= registro.mes == 2 ? 'selected' : '' %>>Febrero</option>
+                        <option value="3" <%= registro.mes == 3 ? 'selected' : '' %>>Marzo</option>
+                        <option value="4" <%= registro.mes == 4 ? 'selected' : '' %>>Abril</option>
+                        <option value="5" <%= registro.mes == 5 ? 'selected' : '' %>>Mayo</option>
+                        <option value="6" <%= registro.mes == 6 ? 'selected' : '' %>>Junio</option>
+                        <option value="7" <%= registro.mes == 7 ? 'selected' : '' %>>Julio</option>
+                        <option value="8" <%= registro.mes == 8 ? 'selected' : '' %>>Agosto</option>
+                        <option value="9" <%= registro.mes == 9 ? 'selected' : '' %>>Septiembre</option>
+                        <option value="10" <%= registro.mes == 10 ? 'selected' : '' %>>Octubre</option>
+                        <option value="11" <%= registro.mes == 11 ? 'selected' : '' %>>Noviembre</option>
+                        <option value="12" <%= registro.mes == 12 ? 'selected' : '' %>>Diciembre</option>
+                    </select><br>
+
+                    <label for="anioGasto">Año:</label>
+                    <input type="number" id="anioGasto" name="anio" value="<%= registro.anio %>" required><br>
+
+                    <div id="fechaVencimientoDiv">
+                        <label for="fechaVencimientoGasto">Fecha de Vencimiento:</label>
+                        <input type="date" id="fechaVencimientoGasto" name="fecha_vencimiento" value="<%= registro.fecha_vencimiento %>"><br>
+                    </div>
+
+                    <label for="pagado">Pagado:</label>
+                    <select id="pagado" name="pagado">
+                        <option value="0" <%= registro.pagado === 0 ? 'selected' : '' %>>No</option>
+                        <option value="1" <%= registro.pagado === 1 ? 'selected' : '' %>>Sí</option>
+                    </select><br>
+
+                    <button type="submit">Actualizar</button>
+                </form>
+                <div id="btn-cancelar">
+                    <a href="/listado_gastos.html" class="btn">Cancelar</a>
+                </div>
+            </div>
 
 
-<%- include('partials/footer') %>
+        </main>
+
+
+        <%- include('./partials/footer') %>
+        <script src="/js/gastos/gastos.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const gastoId = '<%= registro.id %>';
+                const conceptoIdSeleccionado = '<%= registro.concepto_id %>';
+                cargarConceptosEdit(conceptoIdSeleccionado);
+            });
+        </script>
+    </body>
+
+ 

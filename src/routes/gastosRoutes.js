@@ -13,9 +13,10 @@ const gastosListar = require('../controllers/gastos/gastos_listar');
 // Carga de Gastos
 router.get('/', gastosListar.getGastos); // Ver listado de gastos
 router.post('/', auth, gastosAgregar.crearGasto); // Crear nuevo gasto
-router.put('/:id', auth, gastosModificar.actualizarGasto); // Modificar gasto
+router.put('/:id', gastosModificar.actualizarGasto); // Modificar gasto
 router.delete('/:id', gastosEliminar.eliminarGasto); // Eliminar gasto
 
+router.get('/modificar/:id', gastosModificar.getModificar);
 
 
 module.exports = router;

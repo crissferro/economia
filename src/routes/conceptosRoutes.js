@@ -12,10 +12,10 @@ const conceptosListar = require('../controllers/conceptos/conceptos_listar');
 // Carga de Conceptos
 
 router.post('/', auth, conceptosAgregar.crearConcepto);
-router.put('/:id', auth, conceptosModificar.actualizarConcepto);
+router.put('/:id', conceptosModificar.actualizarConcepto);
 router.delete('/:id', auth, conceptosEliminar.eliminarConcepto);
 router.get('/', auth, conceptosListar.getConceptos);
-router.get('/modificar/:id', conceptosModificar.getModificar)
+router.get('/modificar/:id', conceptosModificar.getModificar);
 
 
 

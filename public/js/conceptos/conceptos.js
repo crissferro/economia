@@ -29,6 +29,63 @@ async function cargarRubros() {
     }
 }
 
+// Función para cargar conceptos en la lista con botones de acción
+function cargarConceptos() {
+    fetch('http://localhost:8080/conceptos', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+    })
+        .then(res => res.json())
+        .then(conceptos => {
+            const listaConceptos = document.getElementById('listaConceptos');
+            listaConceptos.innerHTML = `
+            <div class="list-header">
+                    <h4>Id</h4>
+                    <h4>Nombre</h4>
+                    <h4>Tipo</h4>
+                    <h4>Requiere Vencimiento</h4>
+                    <h4>Acciones</h4>
+                </div>
+                `;
+
+            conceptos.forEach(concepto => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('list-item');
+                listItem.innerHTML = `
+                <h5>${concepto.id}</h5>
+                <h5>${concepto.nombre}</h5>
+                <h5>${concepto.tipo}</h5>
+                <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
+                <div class="acciones">
+                <button class="btn modificar modificar-btn" data-id="${concepto.id}">Modificar</button>
+                <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
+                </div>
+            `;
+                listaConceptos.appendChild(listItem);
+            });
+
+
+            // Asignar evento a los botones de modificar
+            document.querySelectorAll('.modificar-btn').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const conceptoId = event.target.dataset.id;
+                    modificarConcepto(conceptoId);
+                });
+            });
+
+            // Asignar evento a los botones de eliminar
+
+            document.querySelectorAll('.eliminar').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const conceptoId = event.target.dataset.id;
+                    eliminarConcepto(conceptoId);
+                });
+            });
+        });
+
+
+}
+
+
 // Evento para agregar un nuevo concepto
 document.addEventListener('DOMContentLoaded', () => {
     cargarRubros();
@@ -91,64 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Función para cargar conceptos en la lista con botones de acción
-function cargarConceptos() {
-    fetch('http://localhost:8080/conceptos', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-    })
-        .then(res => res.json())
-        .then(conceptos => {
-            const listaConceptos = document.getElementById('listaConceptos');
-            listaConceptos.innerHTML = `
-            <div class="list-header">
-                    <h4>Id</h4>
-                    <h4>Nombre</h4>
-                    <h4>Tipo</h4>
-                    <h4>Requiere Vencimiento</h4>
-                    <h4>Acciones</h4>
-                </div>
-                `;
 
-            conceptos.forEach(concepto => {
-                const listItem = document.createElement('div');
-                listItem.classList.add('list-item');
-                listItem.innerHTML = `
-                <h5>${concepto.id}</h5>
-                <h5>${concepto.nombre}</h5>
-                <h5>${concepto.tipo}</h5>
-                <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
-                <div class="acciones">
-                <button class="btn modificar modificar-btn" data-id="${concepto.id}">Modificar</button>
-                <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
-                </div>
-            `;
-                listaConceptos.appendChild(listItem);
-            });
-
-
-            // Asignar evento a los botones de modificar
-document.querySelectorAll('.modificar-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-        modificarConcepto(this.dataset.id);
-    });
-});
-
-            // Asignar evento a los botones de eliminar
-
-            document.querySelectorAll('.eliminar').forEach(btn => {
-                btn.addEventListener('click', (event) => {
-                    const conceptoId = event.target.dataset.id;
-                    eliminarConcepto(conceptoId);
-                });
-            });
-        });
-
-
-}
 
 // Función para modificar un concepto
-function modificarConcepto(conceptoId) {
-    window.location.href = `/modificar/${conceptoId}`;
+function modificarConcepto(id) {
+    window.location.href = `/conceptos/modificar/${id}`;
 }
 
 
@@ -180,4 +184,4 @@ function eliminarConcepto(id) {
 
 
 
-    ;
+;

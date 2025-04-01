@@ -1,50 +1,55 @@
-<%- include('partials/head') %>
+<%- include('./partials/head') %>
 	<body>
 		<header>
 			<div>
-			  <a href="index.html">
-				<img src="../img/logo.png" alt="Logo de Solo Caps"></a>
+			  <a href="/">
+				<img src="/img/logo.png" alt="Logo de Solo Caps"></a>
 		
 			  <h1>Solo Caps</h1>
 			</div>
 			<nav>
-			  <a class="activo" href="index.html">Inicio</a>
-			  <a href="productos.html">Productos</a>
-			  <a href="accesorios.html">Accesorios</a>
-			  <a href="contacto.html">Contactenos</a>
-			  <a href="listado.html">Listado</a>
+				<a href="index.html">Inicio</a>
+				<a href="dashboard.html" id="listado-link">Dashboard</a>
+				<a href="gastos.html">Cargar Gastos</a>
+				<a href="rubros.html">Rubros</a>
+				<a class="activo" href="conceptos.html">Conceptos</a>
+				<a href="listado_gastos.html">Listado de Gastos</a>
+				<a href="login.html" style="display:none;">Log In</a>
+				
+				<a href="index.html">Logout</a>
 			</nav>
 			  
 		
-		  </header>
+		</header>
 
 		  <main>
 				<h2>Modificar Concepto</h2>
-				<div id="concepto-modificar">
-					<form action="/modificar?_metodo=PUT" method="POST" class="concepto-form">
-												
+				<div id="modificar">
+					<form action="/conceptos/<%= registro.id %>?_metodo=PUT" method="POST">
+						<input type="hidden" name="idMod" value="<%= registro.id %>">
 						<label for="nombre">Nombre:</label>
-						<input type="text" id="nombre" value="<%= concepto.nombre %>">
-					
-						<label for="id_rubro">Rubro:</label>
-						<select name="id_rubro" id="selectRubroForm">
-							<option value="">Seleccione un Rubro</option>
-							<% tiposProducto.forEach(tipo => { %>
-								<option value="<%= tipo.id %>" <%= registro.id_rubro === rubro.id ? 'selected' : '' %>><%= rubro.nombre %></option>
-							<% }) %>
-						</select>
-					
+						<input type="text" id="nombre" name="nombre" value="<%= registro.nombre %>" required><br>
+				
+						<label for="rubro_id">Rubro:</label>
+						<select id="rubro_id" name="rubro_id" required>
+							<% rubros.forEach(rubro => { %>
+								<option value="<%= rubro.id %>" <%= rubro.id === registro.rubro_id ? 'selected' : '' %>><%= rubro.nombre %></option>
+							<% }); %>
+						</select><br>
+				
 						<label for="tipo">Tipo:</label>
-						<select id="tipo">
-							<option value="ingreso" <%= concepto.tipo === 'ingreso' ? 'selected' : '' %>>Ingreso</option>
-							<option value="egreso" <%= concepto.tipo === 'egreso' ? 'selected' : '' %>>Egreso</option>
-						</select>
-					
-						<label for="requiere_vencimiento">Requiere vencimiento:</label>
-						<input type="checkbox" id="requiere_vencimiento" <%= concepto.requiere_vencimiento ? 'checked' : '' %> >
-						
-						<input type="hidden" name="idMod" value="<%= registro.id %>"><br>
-						<input type="submit" value="Actualizar" class="btn">
+							<select id="tipo" name="tipo" required>
+								<option value="Ingreso" <%= registro.tipo == 'Ingreso' ? 'selected' : '' %>>Ingreso</option>
+								<option value="Egreso" <%= registro.tipo == 'Egreso' ? 'selected' : '' %>>Egreso</option>
+							</select><br>
+				
+						<label for="requiere_vencimiento">Requiere Vencimiento:</label>
+						<select id="requiere_vencimiento" name="requiere_vencimiento">
+							<option value="0" <%= registro.requiere_vencimiento === 0 ? 'selected' : '' %>>No</option>
+							<option value="1" <%= registro.requiere_vencimiento === 1 ? 'selected' : '' %>>Sí</option>
+						</select><br>
+				
+						<button type="submit">Actualizar</button>
 					</form>
 					<div id="btn-cancelar">
 						<a href="/conceptos.html" class="btn">Cancelar</a>
@@ -53,6 +58,13 @@
 
 				
 		  </main>
+		</body>
 
-
-<%- include('partials/footer') %>
+<%- include('./partials/footer') %>
+<script src="/js/conceptos/conceptos.js"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const rubroIdSeleccionado = '<%= registro.rubro_id %>';
+		cargarRubros(rubroIdSeleccionado);
+	});
+</script>

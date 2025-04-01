@@ -35,7 +35,7 @@ app.use(session({
 
 // Definir rutas
 app.use('/login', login) // /login/login o /login/registro
-app.use('/', auth) // Middleware de autenticación (si es necesario)
+//app.use('/', auth) // Middleware de autenticación (si es necesario)
 //app.use('/', rutas) // Rutas generales
 
 // Middleware para manejar errores 404

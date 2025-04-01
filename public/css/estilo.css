@@ -462,11 +462,9 @@ form select {
 
 
 
-
-
 /*.........Inicio Pagina Modificar...........*/
 
-#gasto-modificar {
+#modificar {
   width: 1000px;
   padding: 16px;
   margin: auto;
@@ -475,7 +473,7 @@ form select {
   border-radius: 15px;
 }
 
-#gasto-modificar form label {
+#modificar form label {
   width: 72px;
   font-weight: bold;
   display: flex;
@@ -484,7 +482,7 @@ form select {
   width: auto;
 }
 
-#gasto-modificar .btn {
+#modificar .btn {
   width: 200px;
   height: 50px;
   border: none;
@@ -503,18 +501,18 @@ form select {
   /* Para los enlaces */
 }
 
-#gasto-modificar .btn:hover {
+#modificar .btn:hover {
   background-color: #d1b3c4;
   transform: scale(1.2);
 }
 
 /* Estilos específicos para los enlaces */
-#gasto-modificar a {
+#modificar a {
   text-decoration: none;
   display: inline-block;
 }
 
-#gasto-modificar a:hover {
+#modificar a:hover {
   background-color: #b392ac;
 }
 
@@ -523,7 +521,7 @@ form select {
   margin-top: 20px;
 }
 
-/*.........Fin Pagina Modificar...........*/
+/*..........Fin Modificar ...............*/
 
 
 /*..........INICIO LOGIN REGISTRO ...............*/

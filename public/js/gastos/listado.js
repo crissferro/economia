@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const mesSelect = document.getElementById("mes");
     const anioSelect = document.getElementById("anio");
 
@@ -123,18 +123,11 @@ async function actualizarEstadoPago(id, pagado) {
     }
 }
 
-function abrirVentanaEdicion(id) {
-    const url = `editar_gastos.html?id=${id}`;
-    const opciones = 'width=500,height=600,top=100,left=100,resizable=yes,scrollbars=yes';
-    const ventanaEdicion = window.open(url, 'EditarGastos', opciones);
 
-    const chequeoCierre = setInterval(() => {
-        if (ventanaEdicion.closed) {
-            clearInterval(chequeoCierre);
-            getGastos();
-        }
-    }, 1000);
+function abrirVentanaEdicion(id) {
+    window.location.href = `/gastos/modificar/${id}`;
 }
+
 
 function eliminarGasto(id) {
     if (!confirm("¿Seguro que deseas eliminar este gasto?")) return;

@@ -93,3 +93,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+async function cargarConceptosEdit(conceptoIdSeleccionado = null) {
+    try {
+        const response = await fetch('http://localhost:8080/conceptos', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+        });
+
+        if (!response.ok) throw new Error('Error al obtener conceptos');
+
+        const conceptos = await response.json();
+        const conceptoSelect = document.getElementById('nombreConcepto');
+
+        if (!conceptoSelect) {
+            console.error("Error: No se encontró el select nombreConcepto");
+            return;
+        }
+
+        // Limpiar antes de agregar opciones
+        conceptoSelect.innerHTML = '<option value="">Seleccione un concepto</option>';
+
+        conceptos.forEach(concepto => {
+            let option = document.createElement('option');
+            option.value = concepto.id;
+            option.textContent = concepto.nombre;
+            option.dataset.requiereVencimiento = concepto.requiere_vencimiento; // Para controlar si se muestra la fecha de vencimiento
+            if (conceptoIdSeleccionado == concepto.id) {
+                option.selected = true;
+            }
+            conceptoSelect.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar conceptos:', error);
+    }
+}
+
