@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const anioSelect = document.getElementById("anio");
     const totalIngresos = document.getElementById("totalIngresos");
     const totalEgresos = document.getElementById("totalEgresos");
+    const totalResumen = document.getElementById("totalResumen");
+    const rubrosTable = document.getElementById("rubrosTable");
+    const rubrosChartCanvas = document.getElementById("rubrosChart").getContext("2d");
+    let rubrosChart;
 
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth() + 1;
@@ -32,18 +36,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
             });
             if (!res.ok) throw new Error('Error al obtener dashboard');
-            // const res = await fetch(`http://localhost:8080/resumen?mes=${mes}&anio=${anio}`);
             const data = await res.json();
-            if (data.ingresos !== undefined && data.egresos !== undefined) {
-                totalResumen.textContent = `$${data.totalResumen}`;
-                totalIngresos.textContent = `$${data.ingresos}`;
-                totalEgresos.textContent = `$${data.egresos}`;
-            } else {
-                console.error("Datos inválidos recibidos:", data);
-            }
+
+            totalResumen.textContent = `$${data.totalResumen}`;
+            totalIngresos.textContent = `$${data.ingresos}`;
+            totalEgresos.textContent = `$${data.egresos}`;
+            actualizarTablaRubros(data.rubros);
+            actualizarGraficoRubros(data.rubros);
         } catch (error) {
             console.error("Error al cargar el resumen:", error);
         }
+    }
+
+    function actualizarTablaRubros(rubros) {
+        rubrosTable.innerHTML = "<tr><th>Rubro</th><th>Total</th></tr>";
+        rubros.forEach(rubro => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${rubro.rubro}</td><td>$${rubro.total}</td>`;
+            rubrosTable.appendChild(row);
+        });
+    }
+
+    function actualizarGraficoRubros(rubros) {
+        if (rubrosChart) {
+            rubrosChart.destroy();
+        }
+        rubrosChart = new Chart(rubrosChartCanvas, {
+            type: 'pie',
+            data: {
+                labels: rubros.map(r => r.rubro),
+                datasets: [{
+                    data: rubros.map(r => r.total),
+                    backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff", "#ff9f40"]
+                }]
+            }
+        });
     }
 
     mesSelect.addEventListener("change", cargarResumen);
