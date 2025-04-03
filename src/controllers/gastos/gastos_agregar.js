@@ -10,18 +10,20 @@ module.exports.crearGasto = async (req, res) => {
     try {
         // Obtener el tipo de concepto desde la tabla 'conceptos'
         const [result] = await conn.query('SELECT tipo FROM conceptos WHERE id = ?', [concepto_id]);
-
         const tipo = result[0].tipo;  // "ingreso" o "egreso"
 
-
+        // Obtener la fecha actual en formato YYYY-MM-DD
+        const fechaHoy = new Date().toISOString().split('T')[0];
 
         await conn.query(
-            'INSERT INTO gastos (monto, mes, anio, fecha_vencimiento, pagado, concepto_id, tipo) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [monto, mes, anio, fecha_vencimiento || null, pagado || false, concepto_id, tipo]
+            'INSERT INTO gastos (fecha, monto, mes, anio, fecha_vencimiento, pagado, concepto_id, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [fechaHoy, monto, mes, anio, fecha_vencimiento || null, pagado || false, concepto_id, tipo]
         );
+
         res.status(201).json({ mensaje: 'Gasto registrado' });
     } catch (error) {
         console.error("Error al insertar gasto:", error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+

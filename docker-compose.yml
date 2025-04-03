@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    image: backend_gastos  # Puedes cambiarlo según el nombre de tu imagen
+    container_name: backend_gastos
+    restart: always
+    depends_on:
+      - frontend
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - red_gastos
+
+  frontend:
+    image: frontend_gastos  # Puedes cambiarlo según el nombre de tu imagen
+    container_name: frontend_gastos
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - red_gastos
+
+networks:
+  red_gastos:
