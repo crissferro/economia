@@ -57,8 +57,8 @@ header div img {
 header div h1 {
   font-family: 'introbold';
   font-size: 48px;
-  color: #735d78;
-  text-shadow: 1px 1px 2px #666;
+  color: #1c8381;
+  text-shadow: 1px 1px 2px #0a2e2d;
   margin: 0;
   /* Elimina márgenes predeterminados para un control mejor */
   padding: 20px;
@@ -66,7 +66,7 @@ header div h1 {
 }
 
 header nav {
-  background-color: #e8c2ca;
+  background-color: #1c8381;
   height: 50px;
   display: flex;
   justify-content: center;
@@ -82,13 +82,13 @@ header nav a {
 }
 
 header nav a:hover {
-  background-color: #b392ac;
+  background-color: #1c8381;
   color: white;
   border-radius: 10px;
 }
 
 .activo {
-  background-color: #b392ac;
+  background-color: #83811c;
 }
 
 /*.........fin menu...........*/
@@ -185,7 +185,7 @@ h2 {
 /*.........FOOTER...........*/
 
 footer {
-  background-color: #e8c2ca;
+  background-color: #1c8381;
   padding: 10px;
   text-align: center;
   margin-top: 56px;
@@ -274,7 +274,7 @@ form input[type="button"] {
   margin-top: 32px;
   border: none;
   border-radius: 10px;
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   font-family: 'introbold';
   color: white;
   font-weight: 500;
@@ -285,7 +285,7 @@ form input[type="button"] {
 
 form input[type="button"]:hover {
   border: none;
-  background-color: #b392ac;
+  background-color: #1c8381;
   transform: scale(1.2);
 }
 
@@ -366,7 +366,7 @@ form select {
   margin-top: 32px;
   border: none;
   border-radius: 10px;
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   font-family: 'introbold';
   color: white;
   font-weight: 500;
@@ -448,6 +448,12 @@ form select {
   transform: scale(1.2);
 }
 
+.list-item.pagado {
+  background-color: #d4edda; /* Verde claro */
+  color: #155724; /* Verde oscuro */
+  font-weight: bold;
+}
+
 /* Estilos específicos para los enlaces */
 #acciones a {
   text-decoration: none;
@@ -487,7 +493,7 @@ form select {
   height: 50px;
   border: none;
   border-radius: 10px;
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   font-family: 'introbold';
   color: white;
   font-weight: 400;
@@ -502,7 +508,7 @@ form select {
 }
 
 #modificar .btn:hover {
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   transform: scale(1.2);
 }
 
@@ -513,7 +519,7 @@ form select {
 }
 
 #modificar a:hover {
-  background-color: #b392ac;
+  background-color: #1c8381;
 }
 
 
@@ -552,7 +558,7 @@ form select {
   height: 50px;
   border: none;
   border-radius: 10px;
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   font-family: 'introbold';
   color: white;
   font-weight: 400;
@@ -567,7 +573,7 @@ form select {
 }
 
 #login-registro .btn:hover {
-  background-color: #d1b3c4;
+  background-color: #1c8381;
   transform: scale(1.2);
 }
 

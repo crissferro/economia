@@ -19,15 +19,11 @@
       <a href="index.html">
         <img src="./img/logo.png" alt="Logo de Solo Caps"></a>
 
-      <h1>Solo Caps</h1>
+      <h1>Economía Doméstica</h1>
     </div>
     <nav>
       <a class="activo" href="index.html">Inicio</a>
-      <a href="productos.html" style="display:none;">Productos</a>
-      <a href="accesorios.html" style="display:none;">Accesorios</a>
-      <a href="contacto.html" style="display:none;">Contactenos</a>
       <a href="login.html">Log In</a>
-      <a href="listado.html" id="listado-link" style="display:none;">Listado</a>
       <a href="/logout" style="display:none;">Logout</a>
     </nav>
       <!-- <img class="carrito" src="./img/img-nuevas/carrito.png" alt="" /> -->
@@ -64,78 +60,20 @@
 
     <!--PRODUCTOS-->
     <section id="capsulas" class="tarjeta">
-      <h2>Las Cápsulas más Buscadas</h2>
+      <h2>Debes hacer log-in</h2>
       <article>
-        <h3>Capsula cappucino Nescafe</h3>
-        <div class="cuerpo">
-            <img src="./img/nescafe_capuccino.webp" alt="Capsula Nescafe Capucino">
-            <p>Capsula cappucino Nescafe</p>
-            <p>Cantidad: 16</p>
-        </div>
-        <div class="pie"> <a href="productos.html">Más Información</a></div>
+        <div id="login-registro">
+          <form action="" method="POST" enctype="application/x-www-form-urlencoded" id="registro">
+          <label>Usuario: <input type="text" name="username"></label>
+          <label>Contraseña: <input type="text" name="password"></label>
+          <button type="button" onclick="login()" class="btn">Login</button>
+        </form>
       </article>
-      <article>
-        <h3>STARBUCKS House Blend</h3>
-          <div class="cuerpo">
-            <img src="./img/starbuckscapsulas2.webp" alt="Capsula Starbucks Nespresso">
-            <p>Capsula STARBUCKS tostado medio </p>
-            <p>Cantidad: 10</p>
-          </div>
-          <div class="pie"><a href="productos.html">Más Información</a></div>
-      </article>
-      <article>
-        <h3>STARBUCKS Americano</h3>
-          <img src="./img/starbucksamericana.png" alt="Capsula Nescafe Starbucks">
-        
-          <div class="cuerpo">
-            <p>Capsula STARBUCKS tostado medio</p>
-            <p>Cantidad: 12</p>
-          </div>
-             <div class="pie"> 
-            <a href="productos.html">Más Información</a>
-          </div>
-      </article>
-    </section>
-    <!--ACCESORIOS-->
-    <section id="accesorios" class="tarjeta">
-      <h2>Los Accesorios más Buscados</h2>
-      <article>
-        <h3>Taza Nespresso</h3>
-        <div class="cuerpo">
-          <img src="img/tazas_nespresso.png" alt="Taza Nespresso">
-          <p>Taza Nespresso.</p>
-          <p>Touch, suave al tacto.</p>
-          <p>Contenido 2 unidades.</p>
-        </div>
-        <div class="pie">  
-          <a href="accesorios.html">Más Información</a>
-        </div>
-      </article>
-      <article>
-        <h3>Porta Capsulas Nespresso</h3>
-        <div class="cuerpo">
-          <img src="img/porta_capsulas3.jpg" alt="Porta Capsulas Nespresso">
 
-            <p>Porta Capsulas Nespresso.</p>
-            <p>Materiales Acrilico.</p>
-            <p>Capacidad 25 capsulas.</p>
-        </div>
-        <div class="pie"><a href="accesorios.html">Más Información</a></div>
-            
-          
-      </article>
-      <article>
-        <h3>Porta Capsulas Dolce Gusto</h3>
-        <div class="cuerpo">
-          <img src="img/porta_capsulas8.jpg" alt="Porta Capsulas Dolce Gusto">
-
-            <p>Porta Capsulas Dolce Gusto.</p>
-            <p>Materiales Metal con Iman.</p>
-            <p>Capacidad 14 capsulas.</p>
-        </div>
-        <div class="pie"><a href="accesorios.html">Más Información</a></div>
-      </article>
     </section>
+
+
+
 
   </main>
   <footer>

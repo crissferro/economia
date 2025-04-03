@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h5>${rubro.nombre}</h5>
                     <div class="acciones">
                         <div>
-                        <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}">Modificar</button>
+                        <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}"><i class="fas fa-edit"></i></button>
                         </div>
                         <div>
-                        <button class="btn eliminar" data-id="${rubro.id}">Eliminar</button>
+                        <button class="btn eliminar" data-id="${rubro.id}"><i class="fas fa-trash"></i></button>
                         </div>
                         
                     </div>

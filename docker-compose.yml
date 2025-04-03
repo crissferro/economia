@@ -2,20 +2,22 @@ version: '3.8'
 
 services:
   backend:
-    image: backend_gastos  # Puedes cambiarlo según el nombre de tu imagen
+    image: backend_gastos
     container_name: backend_gastos
     restart: always
     depends_on:
       - frontend
     env_file:
       - .env
+    environment:
+      - NODE_ENV=production # 🔹 Asegura que el backend use producción
     ports:
       - "8080:8080"
     networks:
       - red_gastos
 
   frontend:
-    image: frontend_gastos  # Puedes cambiarlo según el nombre de tu imagen
+    image: frontend_gastos
     container_name: frontend_gastos
     restart: always
     ports:

@@ -56,8 +56,8 @@ function cargarConceptos() {
                 <h5>${concepto.tipo}</h5>
                 <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
                 <div class="acciones">
-                <button class="btn modificar modificar-btn" data-id="${concepto.id}">Modificar</button>
-                <button class="btn eliminar" data-id="${concepto.id}">Eliminar</button>
+                <button class="btn modificar modificar-btn" data-id="${concepto.id}"><i class="fas fa-edit"></i></button>
+                <button class="btn eliminar" data-id="${concepto.id}"><i class="fas fa-trash"></i></button>
                 </div>
             `;
                 listaConceptos.appendChild(listItem);

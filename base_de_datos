@@ -58,7 +58,7 @@ CREATE TABLE `gastos` (
   `pagado` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
-
+ALTER TABLE gastos ADD COLUMN fecha_pago DATE NULL;
 -- --------------------------------------------------------
 
 --
