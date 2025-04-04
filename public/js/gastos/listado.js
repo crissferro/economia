@@ -26,14 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
         anioSelect.appendChild(option);
     }
 
-    // Cargar Rubros y Conceptos dinámicamente
     cargarRubros();
     cargarConceptos();
-
-    // Cargar gastos al inicio sin filtros
     getGastos();
 
-    // Evento para aplicar filtros
     aplicarBtn.addEventListener("click", () => {
         console.log("Botón de aplicar filtros presionado");
 
@@ -47,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pagado: pagadoSelect.value
         };
 
-        // Solo enviar rubro_id si tiene un valor válido
         if (rubroSeleccionado) {
             filtros.rubro_id = rubroSeleccionado;
         }
@@ -56,7 +51,22 @@ document.addEventListener('DOMContentLoaded', () => {
         getGastos(filtros);
     });
 
-    // Delegación de eventos en la lista de gastos
+    let ordenAscendente = true;
+
+    document.getElementById("ordenarVencimiento").addEventListener("click", () => {
+        ordenAscendente = !ordenAscendente;
+
+        if (window.ultimosGastos) {
+            const gastosOrdenados = [...window.ultimosGastos].sort((a, b) => {
+                const fechaA = new Date(a.fecha_vencimiento || '2100-01-01');
+                const fechaB = new Date(b.fecha_vencimiento || '2100-01-01');
+                return ordenAscendente ? fechaA - fechaB : fechaB - fechaA;
+            });
+
+            renderizarGastos(gastosOrdenados);
+        }
+    });
+
     document.getElementById('listaGastos').addEventListener('click', (event) => {
         if (event.target.classList.contains('chkPagado')) {
             const id = event.target.dataset.id;
@@ -131,20 +141,18 @@ async function cargarConceptos() {
 }
 
 async function getGastos(filtros = {}) {
-    console.log("Ejecutando getGastos con filtros:", filtros); // <- Debug
+    console.log("Ejecutando getGastos con filtros:", filtros);
 
     const token = localStorage.getItem('jwt-token');
 
-    // 🔹 Filtrar solo los valores que NO están vacíos
     const filtrosLimpios = Object.fromEntries(
         Object.entries(filtros).filter(([_, value]) => value !== "")
     );
 
-    // Construir la URL con los filtros como query parameters
     const params = new URLSearchParams(filtrosLimpios).toString();
     const url = `http://localhost:8080/gastos?${params}`;
 
-    console.log("URL generada para la petición:", url); // 🔍 Debugging
+    console.log("URL generada para la petición:", url);
 
     try {
         const res = await fetch(url, {
@@ -156,53 +164,56 @@ async function getGastos(filtros = {}) {
 
         if (!res.ok) throw new Error('Error al obtener gastos');
 
-
-
         const gastos = await res.json();
 
-        console.log("Gastos recibidos:", gastos); // <- Debug
+        console.log("Gastos recibidos:", gastos);
 
-        const listaGastos = document.getElementById('listaGastos');
-        listaGastos.innerHTML = `
-            <div class="list-header">
-                <h4>Año</h4>
-                <h4>Mes</h4>
-                <h4>Concepto</h4>
-                <h4>Monto</h4>
-                <h4>Vencimiento</h4>
-                <h4>Pagado</h4>
-                <h4>Fecha Pago</h4>
-                <h4>Acciones</h4>
-            </div>`;
-
-        gastos.forEach(gasto => {
-            let fechaVenc = gasto.fecha_vencimiento
-                ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
-                : 'Sin fecha';
-
-            let fechaPago = gasto.fecha_pago
-                ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
-                : '-';
-
-            listaGastos.innerHTML += `
-                <div class="list-item ${gasto.pagado ? 'pagado' : ''}">
-                    <h5>${gasto.anio}</h5>
-                    <h5>${gasto.mes}</h5>
-                    <h5>${gasto.concepto}</h5>
-                    <h5>${gasto.monto}</h5>
-                    <h5>${fechaVenc}</h5>
-                    <input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}>
-                    <h5>${fechaPago}</h5>
-                    <div class="acciones">
-                        <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
-                        <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></i></button>
-                    </div>
-                </div>`;
-        });
+        window.ultimosGastos = gastos;
+        renderizarGastos(gastos);
 
     } catch (error) {
         console.error('Error al cargar gastos:', error);
     }
+}
+
+function renderizarGastos(gastos) {
+    const listaGastos = document.getElementById('listaGastos');
+    listaGastos.innerHTML = `
+        <div class="list-header">
+            <h4>Año</h4>
+            <h4>Mes</h4>
+            <h4>Concepto</h4>
+            <h4>Monto</h4>
+            <h4>Vencimiento</h4>
+            <h4>Pagado</h4>
+            <h4>Fecha Pago</h4>
+            <h4>Acciones</h4>
+        </div>`;
+
+    gastos.forEach(gasto => {
+        let fechaVenc = gasto.fecha_vencimiento
+            ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
+            : 'Sin fecha';
+
+        let fechaPago = gasto.fecha_pago
+            ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
+            : '-';
+
+        listaGastos.innerHTML += `
+            <div class="list-item ${gasto.pagado ? 'pagado' : ''}">
+                <h5>${gasto.anio}</h5>
+                <h5>${gasto.mes}</h5>
+                <h5>${gasto.concepto}</h5>
+                <h5>${gasto.monto}</h5>
+                <h5>${fechaVenc}</h5>
+                <input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}>
+                <h5>${fechaPago}</h5>
+                <div class="acciones">
+                    <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
+                    <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+    });
 }
 
 async function actualizarEstadoPago(id, pagado) {
@@ -220,7 +231,7 @@ async function actualizarEstadoPago(id, pagado) {
         if (!res.ok) throw new Error('Error al actualizar el estado de pago');
 
         console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
-        getGastos(); // Refrescar la lista
+        getGastos();
 
     } catch (error) {
         console.error('Error al actualizar estado de pago:', error);

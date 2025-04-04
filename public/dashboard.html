@@ -66,26 +66,33 @@
                     </div>
             </section>
         </div>
-        <section class="resumen-rubros">
-            <h2>Resumen por Rubro</h2>
+        <h2>Resumen de Egresos por Rubro</h2>
+        <div class="agregar2">
+            <section class="resumen-rubros">
+                <article>
+                                <table class="table table-striped" id="rubrosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Rubro</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Aquí se llenarán los datos dinámicamente -->
+                                </tbody>
+                            </table>
+                </article>
+                <article class="grafico">
+                    <!-- Gráfico de torta -->
+                    <canvas id="rubrosChart" width="500" height="500"></canvas>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                </article>
+            </section>
+        </div>
         
-            <!-- Tabla de resumen por rubro -->
-            <table class="table table-striped" id="rubrosTable">
-                <thead>
-                    <tr>
-                        <th>Rubro</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se llenarán los datos dinámicamente -->
-                </tbody>
-            </table>
         
-            <!-- Gráfico de torta -->
-            <canvas id="rubrosChart"></canvas>
-        </section>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        
 
 	</main>
     <footer>

@@ -10,6 +10,11 @@ const dashboardRoutes = require('./src/routes/dashboardRoutes');
 
 const app = express()
 const port = process.env.PORT || 8080; // Corrección en la asignación del puerto
+// 👇 Agregá esto ANTES de tus rutas
+app.use(express.json());
+
+const telegramRoutes = require('./src/routes/telegram');
+app.use('/api/telegram', telegramRoutes);
 
 // Configurar EJS como motor de vistas
 app.set('view engine', 'ejs')

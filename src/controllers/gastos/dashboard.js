@@ -17,15 +17,15 @@ module.exports.getResumen = async (req, res) => {
             [mesActual, anioActual]
         );
 
-        // Obtener resumen por rubro
+        // Obtener resumen por rubro (solo egresos)
         const [rubros] = await conn.query(`
-            SELECT c.rubro_id, r.nombre AS rubro, SUM(g.monto) AS total
-            FROM gastos g
-            JOIN conceptos c ON g.concepto_id = c.id
-            JOIN rubros r ON c.rubro_id = r.id
-            WHERE g.mes = ? AND g.anio = ?
-            GROUP BY c.rubro_id, r.nombre
-            HAVING total > 0;`,
+    SELECT c.rubro_id, r.nombre AS rubro, SUM(g.monto) AS total
+    FROM gastos g
+    JOIN conceptos c ON g.concepto_id = c.id
+    JOIN rubros r ON c.rubro_id = r.id
+    WHERE g.mes = ? AND g.anio = ? AND c.tipo = 'egreso'
+    GROUP BY c.rubro_id, r.nombre
+    HAVING total > 0;`,
             [mesActual, anioActual]
         );
 

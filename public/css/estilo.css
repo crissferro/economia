@@ -170,6 +170,43 @@ h2 {
   background-color: rgb(243, 163, 179);
 }
 
+
+
+.agregar2 {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+  text-align: center;
+}
+
+.resumen-rubros {
+  width: 100%;
+
+}
+
+.agregar2 .resumen-rubros .table {
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.grafico {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#grafico canvas, #rubrosChart {
+  width: 500px !important;
+  height: 500px !important;
+}
+
 /*........fin card......*/
 
 
@@ -223,6 +260,9 @@ h2 {
   align-items: center; /* Centra los elementos horizontalmente */
   text-align: center;
 }
+
+
+
 
 h3 {
   align-self: flex-start; /* Alinea el título a la izquierda */
