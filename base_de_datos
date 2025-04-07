@@ -66,6 +66,7 @@ CREATE TABLE `gastos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 ALTER TABLE gastos ADD COLUMN fecha_pago DATE NULL;
+ALTER TABLE gastos ADD COLUMN users_id INT;
 -- --------------------------------------------------------
 
 --
@@ -126,6 +127,8 @@ ALTER TABLE `rubros`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
+
+ALTER TABLE users ADD COLUMN chat_id VARCHAR(20);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
