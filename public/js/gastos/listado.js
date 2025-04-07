@@ -68,117 +68,125 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('listaGastos').addEventListener('click', (event) => {
-        if (event.target.classList.contains('chkPagado')) {
-            const id = event.target.dataset.id;
-            const pagado = event.target.checked;
+        // Checkbox de pagado
+        const chk = event.target.closest('.chkPagado');
+        if (chk) {
+            const id = chk.dataset.id;
+            const pagado = chk.checked;
             actualizarEstadoPago(id, pagado);
+            return;
         }
 
-        if (event.target.classList.contains('modificar')) {
-            const id = event.target.dataset.id;
+        // Botón modificar
+        const btnModificar = event.target.closest('.modificar');
+        if (btnModificar) {
+            const id = btnModificar.dataset.id;
             abrirVentanaEdicion(id);
+            return;
         }
 
-        if (event.target.classList.contains('eliminar')) {
-            const id = event.target.dataset.id;
+        // Botón eliminar
+        const btnEliminar = event.target.closest('.eliminar');
+        if (btnEliminar) {
+            const id = btnEliminar.dataset.id;
             eliminarGasto(id);
         }
     });
-});
 
-async function cargarRubros() {
-    const rubroSelect = document.getElementById("rubro");
-    if (!rubroSelect) return;
 
-    const token = localStorage.getItem('jwt-token');
+    async function cargarRubros() {
+        const rubroSelect = document.getElementById("rubro");
+        if (!rubroSelect) return;
 
-    try {
-        const res = await fetch('http://localhost:8080/rubros', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const token = localStorage.getItem('jwt-token');
 
-        if (!res.ok) throw new Error('Error al cargar rubros');
+        try {
+            const res = await fetch('http://localhost:8080/rubros', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        const rubros = await res.json();
-        rubros.forEach(rubro => {
-            const option = document.createElement("option");
-            option.value = rubro.id;
-            option.textContent = rubro.nombre;
-            rubroSelect.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error al cargar rubros:', error);
+            if (!res.ok) throw new Error('Error al cargar rubros');
+
+            const rubros = await res.json();
+            rubros.forEach(rubro => {
+                const option = document.createElement("option");
+                option.value = rubro.id;
+                option.textContent = rubro.nombre;
+                rubroSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error al cargar rubros:', error);
+        }
     }
-}
 
-async function cargarConceptos() {
-    const conceptoSelect = document.getElementById("concepto");
-    if (!conceptoSelect) return;
+    async function cargarConceptos() {
+        const conceptoSelect = document.getElementById("concepto");
+        if (!conceptoSelect) return;
 
-    const token = localStorage.getItem('jwt-token');
+        const token = localStorage.getItem('jwt-token');
 
-    try {
-        const res = await fetch('http://localhost:8080/conceptos', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        try {
+            const res = await fetch('http://localhost:8080/conceptos', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        if (!res.ok) throw new Error('Error al cargar conceptos');
+            if (!res.ok) throw new Error('Error al cargar conceptos');
 
-        const conceptos = await res.json();
-        conceptos.forEach(concepto => {
-            const option = document.createElement("option");
-            option.value = concepto.id;
-            option.textContent = concepto.nombre;
-            conceptoSelect.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error al cargar conceptos:', error);
+            const conceptos = await res.json();
+            conceptos.forEach(concepto => {
+                const option = document.createElement("option");
+                option.value = concepto.id;
+                option.textContent = concepto.nombre;
+                conceptoSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error al cargar conceptos:', error);
+        }
     }
-}
 
-async function getGastos(filtros = {}) {
-    console.log("Ejecutando getGastos con filtros:", filtros);
+    async function getGastos(filtros = {}) {
+        console.log("Ejecutando getGastos con filtros:", filtros);
 
-    const token = localStorage.getItem('jwt-token');
+        const token = localStorage.getItem('jwt-token');
 
-    const filtrosLimpios = Object.fromEntries(
-        Object.entries(filtros).filter(([_, value]) => value !== "")
-    );
+        const filtrosLimpios = Object.fromEntries(
+            Object.entries(filtros).filter(([_, value]) => value !== "")
+        );
 
-    const params = new URLSearchParams(filtrosLimpios).toString();
-    const url = `http://localhost:8080/gastos?${params}`;
+        const params = new URLSearchParams(filtrosLimpios).toString();
+        const url = `http://localhost:8080/gastos?${params}`;
 
-    console.log("URL generada para la petición:", url);
+        console.log("URL generada para la petición:", url);
 
-    try {
-        const res = await fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        try {
+            const res = await fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        if (!res.ok) throw new Error('Error al obtener gastos');
+            if (!res.ok) throw new Error('Error al obtener gastos');
 
-        const gastos = await res.json();
+            const gastos = await res.json();
 
-        console.log("Gastos recibidos:", gastos);
+            console.log("Gastos recibidos:", gastos);
 
-        window.ultimosGastos = gastos;
-        renderizarGastos(gastos);
+            window.ultimosGastos = gastos;
+            renderizarGastos(gastos);
 
-    } catch (error) {
-        console.error('Error al cargar gastos:', error);
+        } catch (error) {
+            console.error('Error al cargar gastos:', error);
+        }
     }
-}
 
-function renderizarGastos(gastos) {
-    const listaGastos = document.getElementById('listaGastos');
-    listaGastos.innerHTML = `
+    function renderizarGastos(gastos) {
+        const listaGastos = document.getElementById('listaGastos');
+        listaGastos.innerHTML = `
         <div class="list-header">
             <h4>Año</h4>
             <h4>Mes</h4>
@@ -190,16 +198,16 @@ function renderizarGastos(gastos) {
             <h4>Acciones</h4>
         </div>`;
 
-    gastos.forEach(gasto => {
-        let fechaVenc = gasto.fecha_vencimiento
-            ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
-            : 'Sin fecha';
+        gastos.forEach(gasto => {
+            let fechaVenc = gasto.fecha_vencimiento
+                ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
+                : 'Sin fecha';
 
-        let fechaPago = gasto.fecha_pago
-            ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
-            : '-';
+            let fechaPago = gasto.fecha_pago
+                ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
+                : '-';
 
-        listaGastos.innerHTML += `
+            listaGastos.innerHTML += `
             <div class="list-item ${gasto.pagado ? 'pagado' : ''}">
                 <h5>${gasto.anio}</h5>
                 <h5>${gasto.mes}</h5>
@@ -213,51 +221,52 @@ function renderizarGastos(gastos) {
                     <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
-    });
-}
-
-async function actualizarEstadoPago(id, pagado) {
-    const token = localStorage.getItem('jwt-token');
-    try {
-        const res = await fetch(`http://localhost:8080/gastos/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ pagado: pagado ? 1 : 0 })
         });
-
-        if (!res.ok) throw new Error('Error al actualizar el estado de pago');
-
-        console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
-        getGastos();
-
-    } catch (error) {
-        console.error('Error al actualizar estado de pago:', error);
     }
-}
 
-function abrirVentanaEdicion(id) {
-    window.location.href = `/gastos/modificar/${id}`;
-}
+    async function actualizarEstadoPago(id, pagado) {
+        const token = localStorage.getItem('jwt-token');
+        try {
+            const res = await fetch(`http://localhost:8080/gastos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ pagado: pagado ? 1 : 0 })
+            });
 
-function eliminarGasto(id) {
-    if (!confirm("¿Seguro que deseas eliminar este gasto?")) return;
+            if (!res.ok) throw new Error('Error al actualizar el estado de pago');
 
-    const token = localStorage.getItem('jwt-token');
-
-    fetch(`http://localhost:8080/gastos/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
-        .then(res => {
-            if (!res.ok) return res.json().then(err => { throw new Error(err.error || 'Error al eliminar el Gasto'); });
-            alert('Gasto eliminado con éxito');
+            console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
             getGastos();
+
+        } catch (error) {
+            console.error('Error al actualizar estado de pago:', error);
+        }
+    }
+
+    function abrirVentanaEdicion(id) {
+        window.location.href = `/gastos/modificar/${id}`;
+    }
+
+    function eliminarGasto(id) {
+        if (!confirm("¿Seguro que deseas eliminar este gasto?")) return;
+
+        const token = localStorage.getItem('jwt-token');
+
+        fetch(`http://localhost:8080/gastos/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
         })
-        .catch(error => {
-            console.error('Error al eliminar Gasto:', error);
-            alert(error.message);
-        });
-}
+            .then(res => {
+                if (!res.ok) return res.json().then(err => { throw new Error(err.error || 'Error al eliminar el Gasto'); });
+                alert('Gasto eliminado con éxito');
+                getGastos();
+            })
+            .catch(error => {
+                console.error('Error al eliminar Gasto:', error);
+                alert(error.message);
+            });
+    }
+});

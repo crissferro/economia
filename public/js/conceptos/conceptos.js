@@ -67,7 +67,7 @@ function cargarConceptos() {
             // Asignar evento a los botones de modificar
             document.querySelectorAll('.modificar-btn').forEach(btn => {
                 btn.addEventListener('click', (event) => {
-                    const conceptoId = event.target.dataset.id;
+                    const conceptoId = event.currentTarget.dataset.id; // 👈 Este es el cambio
                     modificarConcepto(conceptoId);
                 });
             });
