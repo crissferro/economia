@@ -22,7 +22,13 @@ async function notificarVencimientos() {
 
         const mensajes = gastos.map(gasto => {
             const fechaVenc = new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR');
-            const mensaje = `📌 Tenés un gasto próximo a vencer:\n\n📋 *${gasto.concepto}*\n💰 $${gasto.monto}\n📅 Vence el ${fechaVenc}`;
+            const mensaje = `
+            📌 Tenés un gasto próximo a vencer:\n\n
+            🧾 ID: ${gasto.id}\n
+            📋 *${gasto.concepto}*\n
+            💰 $${gasto.monto}\n
+            📅 Vence el ${fechaVenc}
+            `;
             console.log(`🔔 Enviando mensaje a ${gasto.chat_id}: ${mensaje}`);
             return enviarNotificacion(gasto.chat_id, mensaje);
         });

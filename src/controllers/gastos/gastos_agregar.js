@@ -2,6 +2,7 @@ const { conn } = require('../../db/dbconnection');
 
 module.exports.crearGasto = async (req, res) => {
     const { monto, mes, anio, fecha_vencimiento, concepto_id, pagado } = req.body;
+    const userId = req.user.id; // ✅ ID del usuario autenticado
 
     if (!monto || !mes || !anio || !concepto_id) {
         return res.status(400).json({ error: 'Todos los campos obligatorios' });
@@ -16,8 +17,8 @@ module.exports.crearGasto = async (req, res) => {
         const fechaHoy = new Date().toISOString().split('T')[0];
 
         await conn.query(
-            'INSERT INTO gastos (fecha, monto, mes, anio, fecha_vencimiento, pagado, concepto_id, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [fechaHoy, monto, mes, anio, fecha_vencimiento || null, pagado || false, concepto_id, tipo]
+            'INSERT INTO gastos (fecha, monto, mes, anio, fecha_vencimiento, pagado, concepto_id, tipo, users_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [fechaHoy, monto, mes, anio, fecha_vencimiento || null, pagado || false, concepto_id, tipo, userId]
         );
 
         res.status(201).json({ mensaje: 'Gasto registrado' });
