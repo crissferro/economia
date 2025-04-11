@@ -2,13 +2,13 @@ let backendUrl = '';
 
 async function obtenerBackendUrlYIniciar() {
     try {
-        const res = await fetch('/config/config');
+        const res = await fetch('/config');
         const data = await res.json();
         backendUrl = data.backendUrl;
 
         cargarRubros();
         cargarConceptos();
-        setearEventos(); // si tenés esta función definida, buenísimo
+        //setearEventos(); // si tenés esta función definida, buenísimo
     } catch (error) {
         console.error('Error al obtener backendUrl:', error);
     }
