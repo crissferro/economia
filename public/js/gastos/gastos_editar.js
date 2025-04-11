@@ -1,7 +1,9 @@
+let backendUrl;
+
 // Cargar lista de conceptos dinámicamente en el formulario de edición
 async function cargarConceptosEdit(idGasto) {
     try {
-        const response = await fetch('http://localhost:8080/conceptos', {
+        const response = await fetch(`${backendUrl}/conceptos`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
         });
 
@@ -15,7 +17,6 @@ async function cargarConceptosEdit(idGasto) {
             return;
         }
 
-        // Limpiar antes de agregar opciones
         conceptoSelect.innerHTML = '<option value="">Seleccione un concepto</option>';
 
         conceptos.forEach(concepto => {
@@ -26,7 +27,6 @@ async function cargarConceptosEdit(idGasto) {
             conceptoSelect.appendChild(option);
         });
 
-        // Cargar datos del gasto después de llenar el select
         if (idGasto) {
             await cargarDatosGasto(idGasto);
         }
@@ -43,19 +43,15 @@ async function cargarDatosGasto(id) {
         return;
     }
 
-    console.log(`Obteniendo datos del gasto con ID: ${id}`);
-
     try {
-        const response = await fetch(`http://localhost:8080/gastos/${id}`, {
+        const response = await fetch(`${backendUrl}/gastos/${id}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
         });
 
         if (!response.ok) throw new Error('Error al obtener datos del gasto');
 
         const gasto = await response.json();
-        console.log("Datos del gasto recibidos:", gasto);
 
-        // Verificar si los datos del gasto son válidos antes de asignarlos
         if (!gasto || Object.keys(gasto).length === 0) {
             throw new Error("El objeto de gasto está vacío o es inválido");
         }
@@ -67,7 +63,6 @@ async function cargarDatosGasto(id) {
         document.getElementById('fechaVencimientoGasto').value = gasto.fecha_vencimiento || '';
         document.getElementById('fechaVencimientoDiv').checked = gasto.requiere_vencimiento == 1;
 
-        // Cargar rubros después de obtener los datos del gasto
         await cargarConceptosEdit(gasto.rubro_id);
 
     } catch (error) {
@@ -90,7 +85,7 @@ async function modificarGasto(id) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/gastos/${id}`, {
+        const response = await fetch(`${backendUrl}/gastos/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +106,7 @@ async function modificarGasto(id) {
         }
 
         alert('Gasto modificado con éxito');
-        window.location.reload(); // Recargar la página para actualizar los datos
+        window.location.reload();
 
     } catch (error) {
         console.error('Error al modificar gasto:', error);
@@ -126,17 +121,25 @@ document.getElementById('nombreConcepto').addEventListener('change', function ()
     document.getElementById('fechaVencimientoDiv').style.display = requiereVencimiento ? 'block' : 'none';
 });
 
-// Evento para enviar el formulario de modificación
+// Evento para cargar backendUrl y datos
 document.addEventListener('DOMContentLoaded', async () => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    try {
+        const configRes = await fetch('/config');
+        const configData = await configRes.json();
+        backendUrl = configData.backendUrl;
 
-    if (id) {
-        await cargarConceptosEdit(id);
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        if (id) {
+            await cargarConceptosEdit(id);
+        }
+
+        document.getElementById('formularioEdicion')?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            await modificarGasto(id);
+        });
+    } catch (error) {
+        console.error("Error al cargar configuración:", error);
     }
-
-    document.getElementById('formularioEdicion')?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        await modificarGasto(id);
-    });
 });

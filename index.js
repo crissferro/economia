@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const override = require('method-override');
 const path = require('path');
+require('dotenv').config();
 
 const rubrosRoutes = require('./src/routes/rubrosRoutes');
 const conceptosRoutes = require('./src/routes/conceptosRoutes');
@@ -10,9 +11,13 @@ const login = require('./src/routes/loginRoutes');
 const auth = require('./src/config/auth');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const telegramRoutes = require('./src/routes/telegram');
+const configRoutes = require('./src/routes/configRoutes'); // Esto estaba bien
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+// ✅ CORREGIDO: Usar / directamente para que /config esté disponible correctamente
+app.use('/', configRoutes);
 
 // Middlewares generales
 app.use(express.json());
@@ -32,6 +37,13 @@ app.use(session({
 // Motor de vistas EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+
+// Agregamos variable global para EJS
+const backendUrl = process.env.NODE_ENV === 'production'
+  ? process.env.BACKEND_URL_PROD
+  : process.env.BACKEND_URL_DEV;
+
+app.locals.backendUrl = backendUrl;
 
 // Rutas
 app.use('/api/telegram', telegramRoutes);

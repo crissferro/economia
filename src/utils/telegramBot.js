@@ -7,7 +7,7 @@ const fechaFormateada = hoy.toLocaleDateString('es-AR'); // dd/mm/yyyy
 
 const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
 
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: false });
 
 function enviarNotificacion(chatId, mensaje,) {
     console.log(`🔔 Enviando mensaje a ${chatId}: ${mensaje}`);

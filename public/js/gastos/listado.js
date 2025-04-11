@@ -1,4 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    let backendUrl;
+
+    try {
+        const configResponse = await fetch('/config');
+        const configData = await configResponse.json();
+        backendUrl = configData.backendUrl;
+    } catch (error) {
+        console.error('No se pudo obtener la URL del backend desde /config:', error);
+        return;
+    }
+
     const mesSelect = document.getElementById("mes");
     const anioSelect = document.getElementById("anio");
     const rubroSelect = document.getElementById("rubro");
@@ -26,13 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         anioSelect.appendChild(option);
     }
 
-    cargarRubros();
-    cargarConceptos();
-    getGastos();
+    await cargarRubros();
+    await cargarConceptos();
+    await getGastos();
 
     aplicarBtn.addEventListener("click", () => {
-        console.log("Botón de aplicar filtros presionado");
-
         const conceptoSeleccionado = conceptoSelect.value;
         const rubroSeleccionado = rubroSelect.value;
 
@@ -43,11 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             pagado: pagadoSelect.value
         };
 
-        if (rubroSeleccionado) {
-            filtros.rubro_id = rubroSeleccionado;
-        }
+        if (rubroSeleccionado) filtros.rubro_id = rubroSeleccionado;
 
-        console.log("Filtros aplicados:", filtros);
         getGastos(filtros);
     });
 
@@ -68,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('listaGastos').addEventListener('click', (event) => {
-        // Checkbox de pagado
         const chk = event.target.closest('.chkPagado');
         if (chk) {
             const id = chk.dataset.id;
@@ -77,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Botón modificar
         const btnModificar = event.target.closest('.modificar');
         if (btnModificar) {
             const id = btnModificar.dataset.id;
@@ -85,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Botón eliminar
         const btnEliminar = event.target.closest('.eliminar');
         if (btnEliminar) {
             const id = btnEliminar.dataset.id;
@@ -93,18 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     async function cargarRubros() {
         const rubroSelect = document.getElementById("rubro");
-        if (!rubroSelect) return;
-
         const token = localStorage.getItem('jwt-token');
 
         try {
-            const res = await fetch('http://localhost:8080/rubros', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+            const res = await fetch(`${backendUrl}/rubros`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (!res.ok) throw new Error('Error al cargar rubros');
@@ -123,15 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function cargarConceptos() {
         const conceptoSelect = document.getElementById("concepto");
-        if (!conceptoSelect) return;
-
         const token = localStorage.getItem('jwt-token');
 
         try {
-            const res = await fetch('http://localhost:8080/conceptos', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+            const res = await fetch(`${backendUrl}/conceptos`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (!res.ok) throw new Error('Error al cargar conceptos');
@@ -149,18 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function getGastos(filtros = {}) {
-        console.log("Ejecutando getGastos con filtros:", filtros);
-
         const token = localStorage.getItem('jwt-token');
-
         const filtrosLimpios = Object.fromEntries(
             Object.entries(filtros).filter(([_, value]) => value !== "")
         );
 
         const params = new URLSearchParams(filtrosLimpios).toString();
-        const url = `http://localhost:8080/gastos?${params}`;
-
-        console.log("URL generada para la petición:", url);
+        const url = `${backendUrl}/gastos?${params}`;
 
         try {
             const res = await fetch(url, {
@@ -173,12 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error('Error al obtener gastos');
 
             const gastos = await res.json();
-
-            console.log("Gastos recibidos:", gastos);
-
             window.ultimosGastos = gastos;
             renderizarGastos(gastos);
-
         } catch (error) {
             console.error('Error al cargar gastos:', error);
         }
@@ -199,11 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
 
         gastos.forEach(gasto => {
-            let fechaVenc = gasto.fecha_vencimiento
+            const fechaVenc = gasto.fecha_vencimiento
                 ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
                 : 'Sin fecha';
 
-            let fechaPago = gasto.fecha_pago
+            const fechaPago = gasto.fecha_pago
                 ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
                 : '-';
 
@@ -227,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function actualizarEstadoPago(id, pagado) {
         const token = localStorage.getItem('jwt-token');
         try {
-            const res = await fetch(`http://localhost:8080/gastos/${id}`, {
+            const res = await fetch(`${backendUrl}/gastos/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -240,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
             getGastos();
-
         } catch (error) {
             console.error('Error al actualizar estado de pago:', error);
         }
@@ -255,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('jwt-token');
 
-        fetch(`http://localhost:8080/gastos/${id}`, {
+        fetch(`${backendUrl}/gastos/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         })

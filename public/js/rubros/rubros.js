@@ -1,4 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    let backendUrl;
+
+    try {
+        const configResponse = await fetch('/config');
+        const configData = await configResponse.json();
+        backendUrl = configData.backendUrl;
+    } catch (error) {
+        console.error('No se pudo obtener la URL del backend desde /config:', error);
+        return;
+    }
+
     getRubros(); // Cargar rubros al cargar la página
 
     // Evento para agregar un nuevo rubro
@@ -12,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/rubros', {
+            const response = await fetch(`${backendUrl}/rubros`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getRubros() {
         const token = localStorage.getItem('jwt-token');
         try {
-            const response = await fetch('http://localhost:8080/rubros', {
+            const response = await fetch(`${backendUrl}/rubros`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -52,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const rubros = await response.json();
             const listaRubros = document.getElementById('listaRubros');
-            listaRubros.innerHTML = ''; // Limpiar lista antes de agregar nuevos elementos
+            listaRubros.innerHTML = '';
 
             listaRubros.innerHTML = `
                 <div class="list-header">
@@ -74,25 +85,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>
                         <button class="btn eliminar" data-id="${rubro.id}"><i class="fas fa-trash"></i></button>
                         </div>
-                        
                     </div>
                 `;
 
                 listaRubros.appendChild(listItem);
             });
 
-            // Agregar eventos a los botones de Modificar y Eliminar
             document.querySelectorAll('.modificar').forEach(btn => {
                 btn.addEventListener('click', (event) => {
-                    const id = event.target.dataset.id;
-                    const nombre = event.target.dataset.nombre;
+                    const id = event.target.closest('button').dataset.id;
+                    const nombre = event.target.closest('button').dataset.nombre;
                     modificarRubro(id, nombre);
                 });
             });
 
             document.querySelectorAll('.eliminar').forEach(btn => {
                 btn.addEventListener('click', (event) => {
-                    const rubroId = event.target.dataset.id;
+                    const rubroId = event.target.closest('button').dataset.id;
                     eliminarRubro(rubroId);
                 });
             });
@@ -112,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('jwt-token');
 
-        fetch(`http://localhost:8080/rubros/${id}`, {
+        fetch(`${backendUrl}/rubros/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json().then(err => { throw new Error(err.error || 'Error al modificar el rubro'); });
                 }
                 alert('Rubro modificado con éxito');
-                getRubros(); // Recargar lista
+                getRubros();
             })
             .catch(error => {
                 console.error('Error al modificar rubro:', error);
@@ -139,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('jwt-token');
 
-        fetch(`http://localhost:8080/rubros/${id}`, {
+        fetch(`${backendUrl}/rubros/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -150,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return response.json().then(err => { throw new Error(err.error || 'Error al eliminar el rubro'); });
                 }
                 alert('Rubro eliminado con éxito');
-                getRubros(); // Recargar lista
+                getRubros();
             })
             .catch(error => {
                 console.error('Error al eliminar rubro:', error);
