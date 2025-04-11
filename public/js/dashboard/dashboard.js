@@ -7,16 +7,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const rubrosTable = document.getElementById("rubrosTable");
     const rubrosChartCanvas = document.getElementById("rubrosChart").getContext("2d");
     let rubrosChart;
-    let backendUrl;
 
-    // Obtener la URL del backend desde /config
-    try {
-        const configRes = await fetch('/config');
-        const configData = await configRes.json();
-        backendUrl = configData.backendUrl;
-    } catch (error) {
-        console.error("No se pudo cargar la configuración del backend:", error);
-        return;
+    // Detectar entorno automáticamente
+    let backendUrl = "";
+    if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
+        backendUrl = "http://192.168.1.222:8080";
+    } else {
+        backendUrl = "http://crissferro.net.ar:8080";
     }
 
     const fechaActual = new Date();

@@ -1,20 +1,15 @@
 let backendUrl = '';
 
-async function obtenerBackendUrlYIniciar() {
-    try {
-        const res = await fetch('/config');
-        const data = await res.json();
-        backendUrl = data.backendUrl;
-
-        cargarRubros();
-        cargarConceptos();
-        //setearEventos(); // si tenés esta función definida, buenísimo
-    } catch (error) {
-        console.error('Error al obtener backendUrl:', error);
-    }
+if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
+    backendUrl = "http://192.168.1.222:8080";
+} else {
+    backendUrl = "http://crissferro.net.ar:8080";
 }
 
-document.addEventListener('DOMContentLoaded', obtenerBackendUrlYIniciar);
+document.addEventListener('DOMContentLoaded', () => {
+    cargarRubros();
+    cargarConceptos();
+});
 
 // Cargar Rubros
 async function cargarRubros() {

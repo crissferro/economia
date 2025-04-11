@@ -1,18 +1,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
     let backendUrl;
 
-    try {
-        const configResponse = await fetch('/config');
-        const configData = await configResponse.json();
-        backendUrl = configData.backendUrl;
-    } catch (error) {
-        console.error('No se pudo obtener la URL del backend desde /config:', error);
-        return;
+    // Detectar entorno
+    if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
+        backendUrl = "http://192.168.1.222:8080";
+    } else {
+        backendUrl = "http://crissferro.net.ar:8080";
     }
 
     getRubros(); // Cargar rubros al cargar la página
 
-    // Evento para agregar un nuevo rubro
     document.getElementById('agregarRubro').addEventListener('click', async () => {
         const nombreRubro = document.getElementById('nombreRubro').value.trim();
         const token = localStorage.getItem('jwt-token');
@@ -46,7 +43,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Función para cargar rubros en la lista
     async function getRubros() {
         const token = localStorage.getItem('jwt-token');
         try {
@@ -80,10 +76,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h5>${rubro.nombre}</h5>
                     <div class="acciones">
                         <div>
-                        <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}"><i class="fas fa-edit"></i></button>
+                            <button class="btn modificar" data-id="${rubro.id}" data-nombre="${rubro.nombre}"><i class="fas fa-edit"></i></button>
                         </div>
                         <div>
-                        <button class="btn eliminar" data-id="${rubro.id}"><i class="fas fa-trash"></i></button>
+                            <button class="btn eliminar" data-id="${rubro.id}"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -111,7 +107,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Función para modificar un rubro
     function modificarRubro(id, nombreActual) {
         const nuevoNombre = prompt("Ingrese el nuevo nombre del rubro:", nombreActual);
         if (!nuevoNombre || nuevoNombre.trim() === '') {
@@ -142,7 +137,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
     }
 
-    // Función para eliminar un rubro
     function eliminarRubro(id) {
         if (!confirm("¿Seguro que deseas eliminar este rubro?")) return;
 

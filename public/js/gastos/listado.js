@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     async function cargarRubros() {
-        const rubroSelect = document.getElementById("rubro");
         const token = localStorage.getItem('jwt-token');
 
         try {
@@ -120,7 +119,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function cargarConceptos() {
-        const conceptoSelect = document.getElementById("concepto");
         const token = localStorage.getItem('jwt-token');
 
         try {
@@ -175,6 +173,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="list-header">
             <h4>Año</h4>
             <h4>Mes</h4>
+            <h4>Rubro</h4>
             <h4>Concepto</h4>
             <h4>Monto</h4>
             <h4>Vencimiento</h4>
@@ -183,22 +182,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             <h4>Acciones</h4>
         </div>`;
 
+        if (gastos.length === 0) {
+            listaGastos.innerHTML += `<div class="list-item"><h5>No se encontraron gastos.</h5></div>`;
+            return;
+        }
+
+        const hoy = new Date();
+
         gastos.forEach(gasto => {
             const fechaVenc = gasto.fecha_vencimiento
-                ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
+                ? new Date(gasto.fecha_vencimiento)
+                : null;
+
+            const vencStr = fechaVenc
+                ? fechaVenc.toLocaleDateString('es-AR')
                 : 'Sin fecha';
 
             const fechaPago = gasto.fecha_pago
                 ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
                 : '-';
 
+            let clase = '';
+            if (!gasto.pagado && fechaVenc) {
+                const diasDiff = (fechaVenc - hoy) / (1000 * 60 * 60 * 24);
+                if (diasDiff < 0) {
+                    clase = 'vencido';
+                } else if (diasDiff <= 3) {
+                    clase = 'proximo-vencimiento';
+                }
+            }
+
             listaGastos.innerHTML += `
-            <div class="list-item ${gasto.pagado ? 'pagado' : ''}">
+            <div class="list-item ${gasto.pagado ? 'pagado' : ''} ${clase}">
                 <h5>${gasto.anio}</h5>
                 <h5>${gasto.mes}</h5>
+                <h5>${gasto.rubro || '-'}</h5>
                 <h5>${gasto.concepto}</h5>
                 <h5>${gasto.monto}</h5>
-                <h5>${fechaVenc}</h5>
+                <h5>${vencStr}</h5>
                 <input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}>
                 <h5>${fechaPago}</h5>
                 <div class="acciones">

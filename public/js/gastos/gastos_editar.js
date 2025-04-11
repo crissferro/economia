@@ -1,5 +1,12 @@
 let backendUrl;
 
+// Detectar entorno automáticamente
+if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
+    backendUrl = "http://192.168.1.222:8080";
+} else {
+    backendUrl = "http://crissferro.net.ar:8080";
+}
+
 // Cargar lista de conceptos dinámicamente en el formulario de edición
 async function cargarConceptosEdit(idGasto) {
     try {
@@ -121,13 +128,9 @@ document.getElementById('nombreConcepto').addEventListener('change', function ()
     document.getElementById('fechaVencimientoDiv').style.display = requiereVencimiento ? 'block' : 'none';
 });
 
-// Evento para cargar backendUrl y datos
+// Evento para cargar datos al iniciar
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const configRes = await fetch('/config');
-        const configData = await configRes.json();
-        backendUrl = configData.backendUrl;
-
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
 
@@ -140,6 +143,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await modificarGasto(id);
         });
     } catch (error) {
-        console.error("Error al cargar configuración:", error);
+        console.error("Error en DOMContentLoaded:", error);
     }
 });

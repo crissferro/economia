@@ -635,7 +635,13 @@ form select {
 
 /*..........FIN LOGIN REGISTRO.............*/
 
+.vencido {
+  background-color: #ffd6d6;
+}
 
+.proximo-vencimiento {
+  background-color: #fff7cc;
+}
 
 
 

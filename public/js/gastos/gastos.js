@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
     let backendUrl;
 
-    try {
-        const configResponse = await fetch('/config');
-        const configData = await configResponse.json();
-        backendUrl = configData.backendUrl;
-    } catch (error) {
-        console.error('No se pudo obtener la URL del backend desde /config:', error);
-        return;
+    // Detectar entorno
+    if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
+        backendUrl = "http://192.168.1.222:8080";
+    } else {
+        backendUrl = "http://crissferro.net.ar:8080";
     }
 
     await cargarConceptos(backendUrl);
