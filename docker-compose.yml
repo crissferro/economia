@@ -1,29 +1,32 @@
 version: '3.8'
 
 services:
-  backend:
-    image: backend_gastos
-    container_name: backend_gastos
+  app:
+    container_name: gastos_app
+    build: .
     restart: always
-    depends_on:
-      - frontend
     env_file:
       - .env
-    environment:
-      - NODE_ENV=production # 🔹 Asegura que el backend use producción
     ports:
       - "8080:8080"
+    depends_on:
+      - mariadb
     networks:
       - red_gastos
+    volumes:
+      - .:/app
 
-  frontend:
-    image: frontend_gastos
-    container_name: frontend_gastos
-    restart: always
-    ports:
-      - "80:80"
+  cronjob:
+    container_name: gastos_cron
+    build: .
+    command: ["node", "cronjob/notificarVencimientos.js"]
+    depends_on:
+      - app
     networks:
       - red_gastos
+    volumes:
+      - .:/app
 
 networks:
   red_gastos:
+    external: false

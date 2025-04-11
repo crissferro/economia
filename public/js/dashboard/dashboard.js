@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const mesSelect = document.getElementById("mes");
     const anioSelect = document.getElementById("anio");
     const totalIngresos = document.getElementById("totalIngresos");
@@ -7,6 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const rubrosTable = document.getElementById("rubrosTable");
     const rubrosChartCanvas = document.getElementById("rubrosChart").getContext("2d");
     let rubrosChart;
+    let backendUrl;
+
+    // Obtener la URL del backend desde /config
+    try {
+        const configRes = await fetch('/config');
+        const configData = await configRes.json();
+        backendUrl = configData.backendUrl;
+    } catch (error) {
+        console.error("No se pudo cargar la configuración del backend:", error);
+        return;
+    }
 
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth() + 1;
@@ -32,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const mes = mesSelect.value;
         const anio = anioSelect.value;
         try {
-            const res = await fetch(`http://localhost:8080/dashboard/resumen?mes=${mes}&anio=${anio}`, {
+            const res = await fetch(`${backendUrl}/dashboard/resumen?mes=${mes}&anio=${anio}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
             });
             if (!res.ok) throw new Error('Error al obtener dashboard');

@@ -1,46 +1,17 @@
-// Cargar lista de conceptos dinámicamente
-async function cargarConceptos() {
+document.addEventListener('DOMContentLoaded', async () => {
+    let backendUrl;
+
     try {
-        const response = await fetch('http://localhost:8080/conceptos', {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
-        });
-
-        if (!response.ok) throw new Error('Error al obtener conceptos');
-
-        const conceptos = await response.json();
-        const conceptoSelect = document.getElementById('nombreConcepto');
-
-        if (!conceptoSelect) {
-            console.error("Error: No se encontró el select nombreConcepto");
-            return;
-        }
-
-        // Limpiar antes de agregar opciones
-        conceptoSelect.innerHTML = '<option value="">Seleccione un concepto</option>';
-
-        conceptos.forEach(concepto => {
-            let option = document.createElement('option');
-            option.value = concepto.id;
-            option.textContent = concepto.nombre;
-            option.dataset.requiereVencimiento = concepto.requiere_vencimiento; // Para controlar si se muestra la fecha de vencimiento
-            conceptoSelect.appendChild(option);
-        });
-
+        const configResponse = await fetch('/config');
+        const configData = await configResponse.json();
+        backendUrl = configData.backendUrl;
     } catch (error) {
-        console.error('Error al cargar conceptos:', error);
+        console.error('No se pudo obtener la URL del backend desde /config:', error);
+        return;
     }
-}
 
-// Mostrar u ocultar el campo de fecha de vencimiento según el concepto seleccionado
-document.getElementById('nombreConcepto').addEventListener('change', function () {
-    const selectedOption = this.options[this.selectedIndex];
-    const requiereVencimiento = selectedOption.dataset.requiereVencimiento === "1";
-    document.getElementById('fechaVencimientoDiv').style.display = requiereVencimiento ? 'block' : 'none';
-});
-
-// Evento para agregar un nuevo gasto
-document.addEventListener('DOMContentLoaded', () => {
-    cargarConceptos();
+    await cargarConceptos(backendUrl);
+    configurarCambioConcepto();
 
     document.querySelector("#agregarGasto")?.addEventListener('click', async () => {
         const conceptoId = document.getElementById('nombreConcepto')?.value.trim();
@@ -56,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/gastos', {
+            const response = await fetch(`${backendUrl}/gastos`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Error al agregar Gasto');
+                throw new Error(errorData.error || 'Error al agregar gasto');
             }
 
             alert('Gasto agregado con éxito');
@@ -94,9 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-async function cargarConceptosEdit(conceptoIdSeleccionado = null) {
+// Función reutilizable para cargar conceptos dinámicamente
+async function cargarConceptos(backendUrl, conceptoIdSeleccionado = null) {
     try {
-        const response = await fetch('http://localhost:8080/conceptos', {
+        const response = await fetch(`${backendUrl}/conceptos`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
         });
 
@@ -110,14 +82,13 @@ async function cargarConceptosEdit(conceptoIdSeleccionado = null) {
             return;
         }
 
-        // Limpiar antes de agregar opciones
         conceptoSelect.innerHTML = '<option value="">Seleccione un concepto</option>';
 
         conceptos.forEach(concepto => {
             let option = document.createElement('option');
             option.value = concepto.id;
             option.textContent = concepto.nombre;
-            option.dataset.requiereVencimiento = concepto.requiere_vencimiento; // Para controlar si se muestra la fecha de vencimiento
+            option.dataset.requiereVencimiento = concepto.requiere_vencimiento;
             if (conceptoIdSeleccionado == concepto.id) {
                 option.selected = true;
             }
@@ -129,3 +100,14 @@ async function cargarConceptosEdit(conceptoIdSeleccionado = null) {
     }
 }
 
+// Mostrar u ocultar el campo de fecha de vencimiento
+function configurarCambioConcepto() {
+    const conceptoSelect = document.getElementById('nombreConcepto');
+    if (!conceptoSelect) return;
+
+    conceptoSelect.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const requiereVencimiento = selectedOption.dataset.requiereVencimiento === "1";
+        document.getElementById('fechaVencimientoDiv').style.display = requiereVencimiento ? 'block' : 'none';
+    });
+}
