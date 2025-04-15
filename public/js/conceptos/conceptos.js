@@ -1,10 +1,5 @@
-let backendUrl = '';
-
-if (location.hostname === "localhost" || location.hostname.startsWith("192.168.")) {
-    backendUrl = "http://192.168.1.222:8080";
-} else {
-    backendUrl = "http://crissferro.net.ar:8080";
-}
+    // Detectar entorno
+    const backendUrl = window.location.origin;
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarRubros();

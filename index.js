@@ -2,8 +2,10 @@ const express = require('express');
 const session = require('express-session');
 const override = require('method-override');
 const path = require('path');
+const cors = require('cors'); // <-- agregado
 require('dotenv').config();
 
+// Rutas
 const rubrosRoutes = require('./src/routes/rubrosRoutes');
 const conceptosRoutes = require('./src/routes/conceptosRoutes');
 const gastosRoutes = require('./src/routes/gastosRoutes');
@@ -11,38 +13,38 @@ const login = require('./src/routes/loginRoutes');
 const auth = require('./src/config/auth');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const telegramRoutes = require('./src/routes/telegram');
-const configRoutes = require('./src/routes/configRoutes'); // Esto estaba bien
+const configRoutes = require('./src/routes/configRoutes');
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-// ✅ CORREGIDO: Usar / directamente para que /config esté disponible correctamente
-app.use('/', configRoutes);
+// ✅ Middleware CORS
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production'
+        ? 'http://crissferro.net.ar'
+        : ['http://localhost:8080', 'http://192.168.1.222:8080'],
+    credentials: true
+};
+app.use(cors(corsOptions));
 
-// Middlewares generales
+// Configuración
+app.use('/', configRoutes);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(override('_metodo'));
-
-// Servir archivos estáticos desde /public
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configurar sesión antes de las rutas
 app.use(session({
     secret: 'clave_secreta',
     resave: false,
     saveUninitialized: true
 }));
 
-// Motor de vistas EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Agregamos variable global para EJS
 const backendUrl = process.env.NODE_ENV === 'production'
   ? process.env.BACKEND_URL_PROD
   : process.env.BACKEND_URL_DEV;
-
 app.locals.backendUrl = backendUrl;
 
 // Rutas
@@ -52,15 +54,11 @@ app.use('/conceptos', conceptosRoutes);
 app.use('/gastos', gastosRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/login', login);
-// app.use('/', auth); // Middleware de autenticación si fuera necesario
-// app.use('/', rutas); // Rutas generales
 
-// Middleware 404
+// Errores
 app.use((req, res) => {
     res.status(404).send('<h1 style="color: red"> Recurso no encontrado!</h1>');
 });
-
-// Middleware para errores generales
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');

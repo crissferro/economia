@@ -495,6 +495,14 @@ form select {
   font-weight: bold;
 }
 
+.vencido {
+  background-color: #ffd6d6;
+}
+
+.proximo-vencimiento {
+  background-color: #fff7cc;
+}
+
 /* Estilos específicos para los enlaces */
 #acciones a {
   text-decoration: none;
@@ -635,13 +643,7 @@ form select {
 
 /*..........FIN LOGIN REGISTRO.............*/
 
-.vencido {
-  background-color: #ffd6d6;
-}
 
-.proximo-vencimiento {
-  background-color: #fff7cc;
-}
 
 
 

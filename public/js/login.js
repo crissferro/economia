@@ -2,7 +2,7 @@ const login = async () => {
     const username = document.querySelector(`[name='username']`).value;
     const password = document.querySelector(`[name='password']`).value;
 
-    const resp = await fetch('login/login', {
+    const resp = await fetch(`${window.location.origin}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
