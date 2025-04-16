@@ -18,11 +18,31 @@ const configRoutes = require('./src/routes/configRoutes');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// ✅ Middleware CORS
+// Determinar automáticamente el entorno y las URLs
+const isProduction = process.env.NODE_ENV === 'production';
+const backendUrl = isProduction ? process.env.BACKEND_URL_PROD : process.env.BACKEND_URL_DEV;
+
+
+// ✅ Middleware CORS mejorado
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-        ? 'http://crissferro.net.ar'
-        : ['http://localhost:8080', 'http://192.168.1.222:8080'],
+    origin: function(origin, callback) {
+        // Lista de dominios permitidos
+        const allowedOrigins = [
+            'http://localhost:8080',
+            'http://127.0.0.1:8080',
+            'http://192.168.1.222:8080',
+            'http://crissferro.net.ar',
+            'http://crissferro.net.ar:8080'
+        ];
+        
+        // Permitir peticiones sin origin (como las del navegador directamente)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('Origen bloqueado por CORS:', origin);
+            callback(new Error('No permitido por CORS'));
+        }
+    },
     credentials: true
 };
 app.use(cors(corsOptions));
@@ -42,10 +62,19 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-const backendUrl = process.env.NODE_ENV === 'production'
-  ? process.env.BACKEND_URL_PROD
-  : process.env.BACKEND_URL_DEV;
+// Guardar la URL del backend para usarla en las plantillas
 app.locals.backendUrl = backendUrl;
+
+// Agregar middleware para debugging (solo en desarrollo)
+if (!isProduction) {
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
+}
+
+// Configuración - Mover después de los middleware básicos
+app.use('/', configRoutes);
 
 // Rutas
 app.use('/api/telegram', telegramRoutes);
@@ -54,6 +83,15 @@ app.use('/conceptos', conceptosRoutes);
 app.use('/gastos', gastosRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/login', login);
+
+// Ruta para verificar la configuración del servidor
+app.get('/config', (req, res) => {
+    res.json({
+        environment: process.env.NODE_ENV,
+        backendUrl: backendUrl,
+        isProduction: isProduction
+    });
+});
 
 // Errores
 app.use((req, res) => {
@@ -64,5 +102,9 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo salió mal!');
 });
 
-const IP = '127.0.0.1';
-app.listen(port, () => console.log(`Servidor corriendo en http://${IP}:${port}`));
+// IMPORTANTE: Cambiar para escuchar en todas las interfaces
+app.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 Servidor corriendo en modo ${isProduction ? 'PRODUCCIÓN' : 'DESARROLLO'}`);
+    console.log(`📡 Escuchando en: http://0.0.0.0:${port}`);
+    console.log(`🔗 URL del backend: ${backendUrl}`);
+});
