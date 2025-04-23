@@ -663,21 +663,7 @@ form select {
 
 @media screen and (max-width: 767px) and (min-width: 1px) {
 
-  #capsulas {
-    justify-content: center;
-  }
 
-  #accesorios {
-    justify-content: center;
-  }
-
-  #porta_capsulas {
-    justify-content: center;
-  }
-
-  #recargables {
-    justify-content: center;
-  }
 
   header {
     display: flex;
@@ -731,4 +717,57 @@ form select {
     display: none;
   }
 
+  #login-registro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #login-registro {
+    width: 100%;
+    padding: 16px;
+    margin: auto;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+    border-radius: 15px;
+  }
+  label {
+    width: 72px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: auto;
+  }
+  
+  #login-registro form label {
+    width: 72px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: auto;
+  }
+  #login-registro form input[type="text"],
+  #login-registro form input[type="date"],
+  #login-registro form input[type="number"],
+  #login-registro form input[type="password"] {
+    width: 100%;
+    padding: 3px 10px;
+    border: 1px solid #f6f6f6;
+    border-radius: 3px;
+    background-color: #f6f6f6;
+    margin: 8px 0;
+    display: inline-block;
+  }
+  
+  #login-registro form button[type="button"] {
+    width: 100%;
+    margin-top: 32px;
+    border: none;
+    border-radius: 10px;
+    background-color: #1c8381; }
+
+
 }
+
