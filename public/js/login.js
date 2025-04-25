@@ -35,7 +35,7 @@ const login = async () => {
     
     try {
         // Usar ruta relativa en lugar de URL absoluta
-        const resp = await fetch(`/login`, {
+        const resp = await fetch(`${apiBaseUrl}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),

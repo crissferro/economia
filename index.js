@@ -31,8 +31,7 @@ const corsOptions = {
             'http://localhost:8080',
             'http://127.0.0.1:8080',
             'http://192.168.1.222:8080',
-            'http://crissferro.net.ar',
-            'http://crissferro.net.ar:8080'
+            'https://web.crissferro.net.ar'
         ];
         
         // Permitir peticiones sin origin (como las del navegador directamente)
