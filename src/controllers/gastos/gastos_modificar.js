@@ -1,5 +1,6 @@
 const { conn } = require('../../db/dbconnection');
-const { enviarMensajeTelegram } = require('../../utils/telegramBot');
+const { enviarNotificacion } = require('../../utils/telegramBot');
+const { formatearMensajePago } = require('../../utils/mensajesTelegram');
 
 module.exports = {
     getModificar: async (req, res) => {
@@ -47,16 +48,16 @@ module.exports = {
             // ✅ Notificar por Telegram solo si se marcó como pagado
             if (pagado === 1) {
                 const [rows] = await conn.query(`
-                    SELECT u.chat_id 
+                    SELECT g.monto, c.nombre AS concepto, u.chat_id
                     FROM gastos g
                     JOIN users u ON g.users_id = u.id
+                    JOIN conceptos c ON g.concepto_id = c.id
                     WHERE g.id = ?
                 `, [id]);
 
                 if (rows.length > 0 && rows[0].chat_id) {
-                    const chatId = rows[0].chat_id;
-                    const fechaHoy = new Date().toLocaleDateString('es-AR');
-                    await enviarMensajeTelegram(chatId, `✅ El gasto con ID ${id} fue marcado como pagado el ${fechaHoy}.`);
+                    const { chat_id, concepto, monto } = rows[0];
+                    await enviarNotificacion(chat_id, formatearMensajePago({ concepto, monto }));
                 }
             }
 

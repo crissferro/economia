@@ -12,7 +12,7 @@ module.exports = {
             // Obtener parámetros de la URL
             const { mes, anio, concepto_id, rubro_id, pagado } = req.query;
 
-            console.log("Ejecutando consulta...");
+            //console.log("Ejecutando consulta...");
             // Construir la consulta con filtros dinámicos
             let query = `
                 SELECT g.id, g.concepto_id, 
@@ -49,7 +49,7 @@ module.exports = {
                 params.push(pagado);
             }
 
-            console.log("Consulta generada:", query, params); // Debugging
+            //console.log("Consulta generada:", query, params); // Debugging
 
             // Ejecutar la consulta
             const [gastos] = await conn.execute(query, params);
