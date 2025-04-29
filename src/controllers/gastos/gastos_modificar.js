@@ -1,4 +1,5 @@
 const { conn } = require('../../db/dbconnection');
+const { enviarMensajeTelegram } = require('../../utils/telegramBot');
 
 module.exports = {
     getModificar: async (req, res) => {
@@ -21,7 +22,6 @@ module.exports = {
         const { id } = req.params;
         let { concepto_id, monto, fecha_vencimiento, pagado, mes, anio } = req.body;
 
-        // Obtener valores actuales del gasto antes de actualizar
         try {
             const [gastoActual] = await conn.query(`SELECT * FROM gastos WHERE id = ?`, [id]);
 
@@ -31,24 +31,34 @@ module.exports = {
 
             const gasto = gastoActual[0];
 
-            // Asegurar que los valores no sean NULL ni 0 si no se enviaron en la solicitud
             concepto_id = concepto_id ?? gasto.concepto_id;
             monto = monto ?? gasto.monto;
             fecha_vencimiento = fecha_vencimiento ?? gasto.fecha_vencimiento;
             mes = mes ?? gasto.mes;
             anio = anio ?? gasto.anio;
-
-            // Convertir pagado a booleano
             pagado = pagado == 1 ? 1 : 0;
-
-            // Si el gasto se marca como pagado, registrar la fecha actual; si se desmarca, poner NULL
             const fecha_pago = pagado ? new Date().toISOString().split('T')[0] : null;
 
-            // Actualizar la base de datos
             await conn.query(
                 'UPDATE gastos SET concepto_id = ?, monto = ?, fecha_vencimiento = ?, pagado = ?, fecha_pago = ?, mes = ?, anio = ? WHERE id = ?',
                 [concepto_id, monto, fecha_vencimiento, pagado, fecha_pago, mes, anio, id]
             );
+
+            // ✅ Notificar por Telegram solo si se marcó como pagado
+            if (pagado === 1) {
+                const [rows] = await conn.query(`
+                    SELECT u.chat_id 
+                    FROM gastos g
+                    JOIN users u ON g.users_id = u.id
+                    WHERE g.id = ?
+                `, [id]);
+
+                if (rows.length > 0 && rows[0].chat_id) {
+                    const chatId = rows[0].chat_id;
+                    const fechaHoy = new Date().toLocaleDateString('es-AR');
+                    await enviarMensajeTelegram(chatId, `✅ El gasto con ID ${id} fue marcado como pagado el ${fechaHoy}.`);
+                }
+            }
 
             res.json({ mensaje: 'Gasto actualizado correctamente' });
         } catch (error) {
