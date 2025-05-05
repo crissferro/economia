@@ -39,22 +39,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await cargarRubros();
     await cargarConceptos();
-    await getGastos();
+
+    // Cargar automáticamente los gastos del mes en curso al iniciar
+    getGastos({ mes: mesActual, anio: anioActual });
 
     aplicarBtn.addEventListener("click", () => {
-        const conceptoSeleccionado = conceptoSelect.value;
-        const rubroSeleccionado = rubroSelect.value;
-
         const filtros = {
             mes: mesSelect.value,
             anio: anioSelect.value,
-            concepto_id: conceptoSeleccionado,
+            concepto_id: conceptoSelect.value,
+            rubro_id: rubroSelect.value,
             pagado: pagadoSelect.value
         };
 
-        if (rubroSeleccionado) filtros.rubro_id = rubroSeleccionado;
+        // Elimina filtros vacíos
+        const filtrosLimpios = Object.fromEntries(
+            Object.entries(filtros).filter(([_, v]) => v !== "")
+        );
 
-        getGastos(filtros);
+        getGastos(filtrosLimpios);
     });
 
     let ordenAscendente = true;
@@ -98,7 +101,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function cargarRubros() {
         const token = localStorage.getItem('jwt-token');
-
         try {
             const res = await fetch(`${backendUrl}/rubros`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -120,7 +122,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function cargarConceptos() {
         const token = localStorage.getItem('jwt-token');
-
         try {
             const res = await fetch(`${backendUrl}/conceptos`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -142,11 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function getGastos(filtros = {}) {
         const token = localStorage.getItem('jwt-token');
-        const filtrosLimpios = Object.fromEntries(
-            Object.entries(filtros).filter(([_, value]) => value !== "")
-        );
-
-        const params = new URLSearchParams(filtrosLimpios).toString();
+        const params = new URLSearchParams(filtros).toString();
         const url = `${backendUrl}/gastos?${params}`;
 
         try {
@@ -170,64 +167,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderizarGastos(gastos) {
         const listaGastos = document.getElementById('listaGastos');
         listaGastos.innerHTML = `
-        <div class="list-header">
-            <h4>Año</h4>
-            <h4>Mes</h4>
-            <h4>Rubro</h4>
-            <h4>Concepto</h4>
-            <h4>Monto</h4>
-            <h4>Vencimiento</h4>
-            <h4>Pagado</h4>
-            <h4>Fecha Pago</h4>
-            <h4>Acciones</h4>
-        </div>`;
+        <table class="tablagastos" id="tablaGastos">
+            <thead>
+                <tr>
+                    <th>Año</th>
+                    <th>Mes</th>
+                    <th>Rubro</th>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                    <th>Vencimiento</th>
+                    <th>Pagado</th>
+                    <th>Fecha Pago</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+        `;
 
         if (gastos.length === 0) {
-            listaGastos.innerHTML += `<div class="list-item"><h5>No se encontraron gastos.</h5></div>`;
+            listaGastos.innerHTML += `<tr><td colspan="9">No se encontraron gastos.</td></tr></tbody></table>`;
             return;
         }
 
         const hoy = new Date();
 
         gastos.forEach(gasto => {
-            const fechaVenc = gasto.fecha_vencimiento
-                ? new Date(gasto.fecha_vencimiento)
-                : null;
-
-            const vencStr = fechaVenc
-                ? fechaVenc.toLocaleDateString('es-AR')
-                : 'Sin fecha';
-
-            const fechaPago = gasto.fecha_pago
-                ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR')
-                : '-';
+            const fechaVenc = gasto.fecha_vencimiento ? new Date(gasto.fecha_vencimiento) : null;
+            const vencStr = fechaVenc ? fechaVenc.toLocaleDateString('es-AR') : 'Sin fecha';
+            const fechaPago = gasto.fecha_pago ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR') : '-';
 
             let clase = '';
             if (!gasto.pagado && fechaVenc) {
                 const diasDiff = (fechaVenc - hoy) / (1000 * 60 * 60 * 24);
-                if (diasDiff < 0) {
-                    clase = 'vencido';
-                } else if (diasDiff <= 3) {
-                    clase = 'proximo-vencimiento';
-                }
+                if (diasDiff < 0) clase = 'vencido';
+                else if (diasDiff <= 3) clase = 'proximo-vencimiento';
             }
 
             listaGastos.innerHTML += `
-            <div class="list-item ${gasto.pagado ? 'pagado' : ''} ${clase}">
-                <h5>${gasto.anio}</h5>
-                <h5>${gasto.mes}</h5>
-                <h5>${gasto.rubro || '-'}</h5>
-                <h5>${gasto.concepto}</h5>
-                <h5>${gasto.monto}</h5>
-                <h5>${vencStr}</h5>
-                <input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}>
-                <h5>${fechaPago}</h5>
-                <div class="acciones">
+            <tr class="${gasto.pagado ? 'pagado' : ''} ${clase}">
+                <td>${gasto.anio}</td>
+                <td>${gasto.mes}</td>
+                <td>${gasto.rubro || '-'}</td>
+                <td>${gasto.concepto}</td>
+                <td>${gasto.monto}</td>
+                <td>${vencStr}</td>
+                <td><input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}></td>
+                <td>${fechaPago}</td>
+                <td>
                     <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
                     <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`;
+                </td>
+            </tr>`;
         });
+
+        listaGastos.innerHTML += `</tbody></table>`;
     }
 
     async function actualizarEstadoPago(id, pagado) {
@@ -244,8 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (!res.ok) throw new Error('Error al actualizar el estado de pago');
 
-            console.log(`Gasto ${id} actualizado a ${pagado ? 'PAGADO' : 'NO PAGADO'}`);
-            getGastos();
+            getGastos({ mes: mesSelect.value, anio: anioSelect.value });
         } catch (error) {
             console.error('Error al actualizar estado de pago:', error);
         }
@@ -267,7 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             .then(res => {
                 if (!res.ok) return res.json().then(err => { throw new Error(err.error || 'Error al eliminar el Gasto'); });
                 alert('Gasto eliminado con éxito');
-                getGastos();
+                getGastos({ mes: mesSelect.value, anio: anioSelect.value });
             })
             .catch(error => {
                 console.error('Error al eliminar Gasto:', error);

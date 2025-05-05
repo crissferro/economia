@@ -423,9 +423,6 @@ form select {
 }
 
 
-
-
-
 /*.........INICIO LISTADO...........*/
 .listado {
   width: 1000px;
@@ -462,7 +459,6 @@ form select {
 
 .acciones {
   display: flex;
-  
 }
 
 #acciones .btn {
@@ -477,33 +473,182 @@ form select {
   font-size: 15px;
   text-align: center;
   line-height: 20px;
-  /* Centrar verticalmente el texto */
+  
   text-decoration: none;
-  /* Para los enlaces */
+  
   display: inline-block;
-  /* Para los enlaces */
+ 
 }
+
+/*.........Fin Listados...........*/
+
+
+
+
+
+/*.........INICIO LISTADO GASTOS...........*/
+
+.listado {
+  max-width: 1000px;
+  width: 90%;
+  padding: 16px;
+  margin: 20px auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+  background-color: white;
+}
+
+
+
+#listaGastos {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+
+
+#listaGastos th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  text-align: left;
+}
+
+#listaGastos th, #listaGastos td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  vertical-align: middle;
+}
+
+#listaGastos tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+
+
+/* Estilos por estado */
+
+tr.pagado {
+  background-color: #d4edda;
+  color: #155724;
+  font-weight: bold;
+}
+
+tr.vencido {
+  background-color: #ffd6d6;
+  color: #721c24;
+  font-weight: bold;
+}
+
+tr.proximo-vencimiento {
+  background-color: #fff7cc;
+  color: #856404;
+  font-weight: bold;
+}
+
+
+
+/* Botones dentro de la tabla */
+
+
+.tabla-gastos button.btn {
+  background-color: #d1b3c4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.tabla-gastos button.btn:hover {
+  background-color: #b392ac;
+  transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
+.list-header {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+ 
+
+
+.list-header h4 {
+  font-size: 15px;
+}
+
+.list-item h5 {
+  margin: 0 10px;
+  flex: 1;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.acciones {
+  display: flex;
+}
+
+
+
+#acciones .btn {
+  margin-left: 10px;
+  transition: transform 0.2s ease-in-out; 
+  width: 100px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  background-color: #d1b3c4;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 15px;
+  text-align: center;
+  line-height: 20px;
+  text-decoration: none;
+  display: inline-block;
+}*/
+
 
 #acciones .btn:hover {
   background-color: #d1b3c4;
   transform: scale(1.2);
 }
 
+
+
 .list-item.pagado {
-  background-color: #d4edda; /* Verde claro */
-  color: #155724; /* Verde oscuro */
+  background-color: #d4edda; 
+  color: #155724; 
   font-weight: bold;
 }
 
-.vencido {
+.list-item.vencido {
   background-color: #ffd6d6;
+  color: #721c24;
+  font-weight: bold;
 }
 
-.proximo-vencimiento {
+.list-item.proximo-vencimiento {
   background-color: #fff7cc;
+  color: #856404;
+  font-weight: bold;
 }
+  */
 
 /* Estilos específicos para los enlaces */
+
 #acciones a {
   text-decoration: none;
   display: inline-block;
@@ -513,7 +658,17 @@ form select {
   background-color: #b392ac;
 }
 
-/*.........Fin Listados...........*/
+
+/*.........Fin Listados GASTOS...........*/
+
+
+
+
+
+
+
+
+
 
 
 
