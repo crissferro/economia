@@ -515,7 +515,111 @@ form select {
 
 /*.........Fin Listados...........*/
 
+/*.........Inicio Listados GASTOS...........*/
 
+/* Estilos para la tabla con id #tablaGastos */
+#tablaGastos {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+#tablaGastos th, #tablaGastos td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+#tablaGastos thead {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+#tablaGastos th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+/* Filas alternas */
+#tablaGastos tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Filas vencidas */
+#tablaGastos tr.vencido {
+  background-color: #f8d7da;
+}
+
+/* Filas con próximo vencimiento */
+#tablaGastos tr.proximo-vencimiento {
+  background-color: #fff3cd;
+}
+
+/* Filas con gastos pagados */
+#tablaGastos tr.pagado {
+  background-color: #d4edda;
+}
+
+/* Estilo para las celdas de los montos */
+#tablaGastos td:nth-child(5) {
+  text-align: right;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Estilo de los checkboxes */
+#tablaGastos input.chkPagado {
+  width: 20px;
+  height: 20px;
+}
+
+/* Estilo de los botones */
+#tablaGastos button.btn {
+  background-color: #007bff;
+  border: none;
+  padding: 6px 12px;
+  margin: 0 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: white;
+}
+
+#tablaGastos button.btn:hover {
+  background-color: #0056b3;
+}
+
+#tablaGastos button.btn.eliminar {
+  background-color: #dc3545;
+}
+
+#tablaGastos button.btn.eliminar:hover {
+  background-color: #c82333;
+}
+
+#tablaGastos button.btn.modificar {
+  background-color: #28a745;
+}
+
+#tablaGastos button.btn.modificar:hover {
+  background-color: #218838;
+}
+
+/* Estilos para el mensaje "No se encontraron gastos" */
+#tablaGastos td[colspan="9"] {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+/* Estilos para las celdas de acciones */
+#tablaGastos td:last-child {
+  text-align: center;
+}
+
+
+/*.........Fin Listados GASTOS...........*/
 
 /*.........Inicio Pagina Modificar...........*/
 
@@ -657,7 +761,17 @@ form select {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .tablagastos th,
+  .tablagastos td {
+      font-size: 0.8rem;
+      padding: 6px;
+  }
 
+  .tablagastos {
+      font-size: 0.85rem;
+  }
+}
 
 
 
