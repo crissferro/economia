@@ -264,6 +264,18 @@ async function mostrarGastosVencidos(chatId) {
     }
 }
 
+const iconosPorRubro = {
+    'Automotor': '🚗',
+    'Comunicaciones': '📱',
+    'Deporte': '🏋️‍♂️',
+    'Educacion': '📚',
+    'Plataformas': '📺',
+    'Salud': '💊',
+    'Servicios Gabriela Mistral': '🏠',
+    'Sueldos': '💼',
+    'Tarjetas': '💳',
+    'Varios': '🧾'
+};
 
 // Gastos Pagados:
 // Esta función muestra los gastos pagados al usuario
@@ -275,9 +287,10 @@ async function mostrarGastosPagados(chatId) {
         const mm = hoy.getMonth() + 1;
 
         const [gastos] = await conn.query(`
-            SELECT g.id, c.nombre AS concepto, g.monto, g.fecha_pago
+            SELECT g.id, c.nombre AS concepto, r.nombre AS rubro, g.monto, g.fecha_pago
             FROM gastos g
             JOIN conceptos c ON g.concepto_id = c.id
+            JOIN rubros r ON c.rubro_id = r.id
             JOIN users u ON g.users_id = u.id
             WHERE g.pagado = 1
             AND u.chat_id = ?
@@ -291,7 +304,8 @@ async function mostrarGastosPagados(chatId) {
         } else {
             const texto = gastos.map(g => {
                 const fecha = new Date(g.fecha_pago).toLocaleDateString('es-AR');
-                return `• *${g.concepto}* - $${g.monto} - Pagado: ${fecha} - ID: ${g.id}`;
+                const icono = iconosPorRubro[g.rubro] || '💰'; // fallback si no hay ícono
+                return `• ${icono} *${g.concepto}* - $${g.monto} - Pagado: ${fecha}`;
             }).join('\n');
 
             await enviarNotificacion(chatId, `📋 *Gastos pagados este mes:*\n\n${texto}`);
