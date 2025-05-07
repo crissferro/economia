@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderizarGastos(gastos) {
         const listaGastos = document.getElementById('listaGastos');
-
+    
         let html = `
         <table id="tablaGastos">
             <thead>
@@ -193,49 +193,67 @@ document.addEventListener('DOMContentLoaded', async () => {
             </thead>
             <tbody>
         `;
-
+    
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return 'Sin fecha';
+            const partes = fechaStr.split('T')[0].split('-'); // ['2025', '05', '05']
+            return `${partes[2]}-${partes[1]}-${partes[0]}`; // dd-mm-yyyy
+        }
+    
         if (gastos.length === 0) {
             listaGastos.innerHTML += `<tr><td colspan="9">No se encontraron gastos.</td></tr>`;
         } else {
-
             const hoy = new Date();
-
+    
             gastos.forEach(gasto => {
-                const fechaVenc = gasto.fecha_vencimiento ? new Date(gasto.fecha_vencimiento) : null;
-                const vencStr = fechaVenc ? fechaVenc.toLocaleDateString('es-AR') : 'Sin fecha';
-                const fechaPago = gasto.fecha_pago ? new Date(gasto.fecha_pago).toLocaleDateString('es-AR') : '-';
-
+                const vencStr = formatearFecha(gasto.fecha_vencimiento);
+                const fechaPago = formatearFecha(gasto.fecha_pago);
+            
                 let clase = '';
-                if (!gasto.pagado && fechaVenc) {
-                    const diasDiff = (fechaVenc - hoy) / (1000 * 60 * 60 * 24);
+                if (!gasto.pagado && gasto.fecha_vencimiento) {
+                    const fechaVenc = new Date(gasto.fecha_vencimiento);
+ // Solo para el cálculo, no para mostrar
+
+                    const hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+const vencSinHora = new Date(fechaVenc.getFullYear(), fechaVenc.getMonth(), fechaVenc.getDate());
+
+const diasDiff = (vencSinHora - hoySinHora) / (1000 * 60 * 60 * 24);
                     if (diasDiff < 0) {
-                        clase = 'vencido';
-                    } else if (diasDiff <= 3) {
-                        clase = 'proximo-vencimiento';
+                        clase = 'vencido'; // Color para vencidos
+                    } else if (diasDiff === 0) {
+                        clase = 'vence-hoy'; // Color para los que vencen hoy
+                    } else if (diasDiff <= 2) {
+                        clase = 'proximo-vencimiento'; // Color para los que vencen en 2 días
                     }
                 }
-
+                
+                //log para ver la clase del gasto
+                //console.log({
+                //    concepto: gasto.concepto,
+                //    pagado: gasto.pagado,
+                //    fecha_vencimiento: gasto.fecha_vencimiento,
+                //    claseAsignada: clase
+                //});
                 html += `
-                <tr class="${gasto.pagado ? 'pagado' : ''} ${clase}">
-                    <td>${gasto.anio}</td>
-                    <td>${gasto.mes}</td>
-                    <td>${gasto.rubro || '-'}</td>
-                    <td>${gasto.concepto}</td>
-                    <td>${gasto.monto}</td>
-                    <td>${vencStr}</td>
-                    <td><input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}></td>
-                    <td>${fechaPago}</td>
-                    <td>
-                        <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
-                        <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
+                    <tr class="${gasto.pagado ? 'pagado' : ''} ${clase}">
+                        <td>${gasto.anio}</td>
+                        <td>${gasto.mes}</td>
+                        <td>${gasto.rubro || '-'}</td>
+                        <td>${gasto.concepto}</td>
+                        <td>${gasto.monto}</td>
+                        <td>${vencStr}</td>
+                        <td><input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}></td>
+                        <td>${fechaPago}</td>
+                        <td>
+                            <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
                 `;
             });
         }
-        // Cerrar el tbody y la tabla
-        html += '</tbody></table>';
 
+        html += '</tbody></table>';
         listaGastos.innerHTML = html;
     }
 

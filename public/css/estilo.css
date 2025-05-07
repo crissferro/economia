@@ -542,24 +542,32 @@ form select {
   color: #333;
 }
 
-/* Filas alternas */
+/* Filas alternas 
 #tablaGastos tbody tr:nth-child(even) {
   background-color: #f9f9f9;
-}
+} */
 
 /* Filas vencidas */
 #tablaGastos tr.vencido {
-  background-color: #f8d7da;
+  background-color: #f8d7da; /* Rojo claro */
+  color: #721c24;
+}
+
+#tablaGastos tr.vence-hoy {
+  background-color: #fff3cd; /* Amarillo claro */
+    color: #856404;
 }
 
 /* Filas con próximo vencimiento */
 #tablaGastos tr.proximo-vencimiento {
-  background-color: #fff3cd;
+  background-color: #d8e74f; /* Verde claro */
+  color: #435715;
 }
 
 /* Filas con gastos pagados */
 #tablaGastos tr.pagado {
-  background-color: #d4edda;
+  background-color: #c3e6cb; /* Verde para pagado */
+    color: #155724;
 }
 
 /* Estilo para las celdas de los montos */
