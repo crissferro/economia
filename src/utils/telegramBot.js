@@ -8,6 +8,19 @@ const TelegramBot = require('node-telegram-bot-api');
 const { conn } = require('../db/dbconnection');
 const { formatearMensajePago, mensajeGastoNoEncontrado, mensajeErrorGeneral } = require('./mensajesTelegram');
 
+const iconosPorRubro = {
+    'Automotor': '🚗',
+    'Comunicaciones': '📱',
+    'Deporte': '🏋️‍♂️',
+    'Educacion': '📚',
+    'Plataformas': '📺',
+    'Salud': '💊',
+    'Servicios Gabriela Mistral': '🏠',
+    'Sueldos': '💼',
+    'Tarjetas': '💳',
+    'Varios': '🧾'
+};
+
 
 const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
 const bot = new TelegramBot(token, { polling: true });
@@ -106,9 +119,10 @@ async function mostrarGastosProximos(chatId) {
 
         // Consultar los gastos no pagados, tipo egreso, y dentro del rango de fechas
         const [resultados] = await conn.query(`
-            SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto
+            SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto, r.nombre AS rubro
             FROM gastos g
             JOIN conceptos c ON g.concepto_id = c.id
+            JOIN rubros r ON c.rubro_id = r.id
             JOIN users u ON g.users_id = u.id
             WHERE g.pagado = 0
             AND u.chat_id = ?
@@ -123,21 +137,26 @@ async function mostrarGastosProximos(chatId) {
         if (resultados.length === 0) {
             await enviarNotificacion(chatId, '✅ No tenés gastos próximos a vencer.');
         } else {
-            // Preparar los botones para interactuar con los gastos
+            const textoListado = resultados.map(gasto => {
+                const vencimiento = gasto.fecha_vencimiento
+                    ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
+                    : 'Sin vencimiento';
+
+                const icono = iconosPorRubro[gasto.rubro] || '💰';
+                const montoFormateado = gasto.monto.toLocaleString('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 2
+                });
+
+                return `${icono} *${gasto.concepto}*\nImporte: ${montoFormateado}\nVence: ${vencimiento}\nID: ${gasto.id}`;
+            }).join('\n\n');
+
             const botones = resultados.map(gasto => [{
                 text: `💰 ${gasto.concepto} - $${gasto.monto}`,
                 callback_data: `pagar_${gasto.id}`
             }]);
 
-            // Preparar el listado de gastos para enviar
-            const textoListado = resultados.map(gasto => {
-                const vencimiento = gasto.fecha_vencimiento
-                    ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
-                    : 'Sin vencimiento';
-                return `• *${gasto.concepto}* - $${gasto.monto} - Vence: ${vencimiento} - ID: ${gasto.id}`;
-            }).join('\n');
-
-            // Enviar el mensaje con los gastos y los botones
             await enviarNotificacion(chatId, `📋 *Gastos próximos a vencer:*\n\n${textoListado}`, botones);
         }
     } catch (err) {
@@ -157,9 +176,10 @@ async function mostrarGastosNoPagados(chatId) {
         const mm = hoy.getMonth() + 1;
 
         const [resultados] = await conn.query(`
-            SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto
+            SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto, r.nombre AS rubro
             FROM gastos g
             JOIN conceptos c ON g.concepto_id = c.id
+            JOIN rubros r ON c.rubro_id = r.id
             JOIN users u ON g.users_id = u.id
             WHERE g.pagado = 0
                 AND u.chat_id = ?
@@ -174,21 +194,28 @@ async function mostrarGastosNoPagados(chatId) {
         if (resultados.length === 0) {
             await enviarNotificacion(chatId, '✅ No tenés gastos pendientes por pagar.');
         } else {
-            const botones = resultados.map(gasto => [{
-                text: `💰 ${gasto.concepto} - $${gasto.monto}`,
-                callback_data: `pagar_${gasto.id}`
-            }]);
-
             const textoListado = resultados.map(gasto => {
                 const vencimiento = gasto.fecha_vencimiento
                     ? new Date(gasto.fecha_vencimiento).toLocaleDateString('es-AR')
                     : 'Sin vencimiento';
-                return `• *${gasto.concepto}* - $${gasto.monto} - Vence: ${vencimiento} - ID: ${gasto.id}`;
-            }).join('\n');
 
-            await enviarNotificacion(chatId, `📋 *Gastos pendientes de pago:*
+                const icono = iconosPorRubro[gasto.rubro] || '💰';
+                const montoFormateado = gasto.monto.toLocaleString('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 2
+                });
 
-${textoListado}`, botones);
+                return `${icono} *${gasto.concepto}*\nImporte: ${montoFormateado}\nVence: ${vencimiento}\nID: ${gasto.id}`;
+            }).join('\n\n');
+
+            const botones = resultados.map(g => [{
+                text: `💰 ${g.concepto} - $${g.monto}`,
+                callback_data: `pagar_${g.id}`
+            }]);
+
+            await enviarNotificacion(chatId, `📋 *Gastos pendientes de pago:*\n\n${textoListado}`, botones);
+
         }
     } catch (error) {
         console.error("❌ Error al consultar gastos no pagados:", error);
@@ -230,17 +257,19 @@ async function mostrarGastosVencidos(chatId) {
 
     try {
         const [gastos] = await conn.query(`
-            SELECT g.id, c.nombre AS concepto, g.monto, g.fecha_vencimiento
+            SELECT g.id, c.nombre AS concepto, r.nombre AS rubro, g.monto, g.fecha_vencimiento
             FROM gastos g
             JOIN users u ON g.users_id = u.id
             JOIN conceptos c ON g.concepto_id = c.id
+            JOIN rubros r ON c.rubro_id = r.id  -- Añadido el JOIN con la tabla rubros
             WHERE g.pagado = 0
                 AND u.chat_id = ?
                 AND c.tipo = 'egreso'
                 AND g.fecha_vencimiento IS NOT NULL
                 AND g.fecha_vencimiento < CURDATE()
                 AND MONTH(g.fecha_vencimiento) = ? AND YEAR(g.fecha_vencimiento) = ?
-            ORDER BY g.fecha_vencimiento ASC
+            ORDER BY g.fecha_vencimiento ASC;
+
         `, [chatId, mm, yyyy]);
 
         if (gastos.length === 0) {
@@ -248,8 +277,15 @@ async function mostrarGastosVencidos(chatId) {
         } else {
             const textoListado = gastos.map(g => {
                 const venc = new Date(g.fecha_vencimiento).toLocaleDateString('es-AR');
-                return `• *${g.concepto}* - $${g.monto} - Venció: ${venc} - ID: ${g.id}`;
-            }).join('\n');
+                const icono = iconosPorRubro[g.rubro] || '💰';
+                const montoFormateado = g.monto.toLocaleString('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 2
+                });
+
+                return `${icono} *${g.concepto}*\nImporte: ${montoFormateado}\nVenció: ${venc}\nID: ${g.id}`;
+            }).join('\n\n');
 
             const botones = gastos.map(g => [{
                 text: `💰 ${g.concepto} - $${g.monto}`,
@@ -257,6 +293,7 @@ async function mostrarGastosVencidos(chatId) {
             }]);
 
             await enviarNotificacion(chatId, `⚠️ *Gastos vencidos este mes:*\n\n${textoListado}`, botones);
+
         }
     } catch (error) {
         console.error("❌ Error al consultar gastos vencidos:", error);
@@ -264,18 +301,7 @@ async function mostrarGastosVencidos(chatId) {
     }
 }
 
-const iconosPorRubro = {
-    'Automotor': '🚗',
-    'Comunicaciones': '📱',
-    'Deporte': '🏋️‍♂️',
-    'Educacion': '📚',
-    'Plataformas': '📺',
-    'Salud': '💊',
-    'Servicios Gabriela Mistral': '🏠',
-    'Sueldos': '💼',
-    'Tarjetas': '💳',
-    'Varios': '🧾'
-};
+
 
 // Gastos Pagados:
 // Esta función muestra los gastos pagados al usuario
