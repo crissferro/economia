@@ -304,9 +304,15 @@ async function mostrarGastosPagados(chatId) {
         } else {
             const texto = gastos.map(g => {
                 const fecha = new Date(g.fecha_pago).toLocaleDateString('es-AR');
-                const icono = iconosPorRubro[g.rubro] || '💰'; // fallback si no hay ícono
-                return `• ${icono} *${g.concepto}* - $${g.monto} - Pagado: ${fecha}`;
-            }).join('\n');
+                const icono = iconosPorRubro[g.rubro] || '💰';
+                const montoFormateado = g.monto.toLocaleString('es-AR', {
+                    style: 'currency',
+                    currency: 'ARS',
+                    minimumFractionDigits: 2
+                });
+
+                return `${icono} *${g.concepto}*\nImporte: ${montoFormateado} - Fecha pago: ${fecha}`;
+            }).join('\n\n');
 
             await enviarNotificacion(chatId, `📋 *Gastos pagados este mes:*\n\n${texto}`);
         }
