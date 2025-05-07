@@ -311,7 +311,7 @@ async function mostrarGastosPagados(chatId) {
                     minimumFractionDigits: 2
                 });
 
-                return `${icono} *${g.concepto}*\nImporte: ${montoFormateado} - Fecha pago: ${fecha}`;
+                return `${icono} *${g.concepto}* - Importe: ${montoFormateado} - Fecha pago: ${fecha}`;
             }).join('\n\n');
 
             await enviarNotificacion(chatId, `📋 *Gastos pagados este mes:*\n\n${texto}`);
