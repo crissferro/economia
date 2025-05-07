@@ -149,7 +149,7 @@ async function mostrarGastosProximos(chatId) {
                     minimumFractionDigits: 2
                 });
 
-                return `${icono} *${gasto.concepto}*\nImporte: ${montoFormateado}\nVence: ${vencimiento}\nID: ${gasto.id}`;
+                return `${icono} *${gasto.concepto}* - Importe: ${montoFormateado} - Vence: ${vencimiento}`;
             }).join('\n\n');
 
             const botones = resultados.map(gasto => [{
@@ -206,7 +206,7 @@ async function mostrarGastosNoPagados(chatId) {
                     minimumFractionDigits: 2
                 });
 
-                return `${icono} *${gasto.concepto}*\nImporte: ${montoFormateado}\nVence: ${vencimiento}\nID: ${gasto.id}`;
+                return `${icono} *${gasto.concepto}* - Importe: ${montoFormateado} - Vence: ${vencimiento}`;
             }).join('\n\n');
 
             const botones = resultados.map(g => [{
@@ -284,7 +284,7 @@ async function mostrarGastosVencidos(chatId) {
                     minimumFractionDigits: 2
                 });
 
-                return `${icono} *${g.concepto}*\nImporte: ${montoFormateado}\nVenció: ${venc}\nID: ${g.id}`;
+                return `${icono} *${g.concepto}* - Importe: ${montoFormateado} - Venció: ${venc}`;
             }).join('\n\n');
 
             const botones = gastos.map(g => [{
