@@ -157,20 +157,19 @@ async function mostrarGastosNoPagados(chatId) {
         const mm = hoy.getMonth() + 1;
 
         const [resultados] = await conn.query(`
-                    SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto
-                    FROM gastos g
-                    JOIN conceptos c ON g.concepto_id = c.id
-                    JOIN users u ON g.users_id = u.id
-                    WHERE g.pagado = 0
-                    AND u.chat_id = ?
-                    AND c.tipo = 'egreso'
-                    AND (
-                        (g.fecha_vencimiento IS NOT NULL AND DATE(g.fecha_vencimiento) <= CURDATE())
-                        OR (g.fecha_vencimiento IS NULL AND g.mes = ? AND g.anio = ?)
-                    )
-                    ORDER BY g.fecha_vencimiento IS NULL, g.fecha_vencimiento
-
-        `, [chatId, mm, yyyy]);
+            SELECT g.id, g.monto, g.fecha_vencimiento, c.nombre AS concepto
+            FROM gastos g
+            JOIN conceptos c ON g.concepto_id = c.id
+            JOIN users u ON g.users_id = u.id
+            WHERE g.pagado = 0
+                AND u.chat_id = ?
+                AND c.tipo = 'egreso'
+                AND (
+                    (g.fecha_vencimiento IS NOT NULL AND MONTH(g.fecha_vencimiento) = ? AND YEAR(g.fecha_vencimiento) = ?)
+                    OR (g.fecha_vencimiento IS NULL AND g.mes = ? AND g.anio = ?)
+                )
+            ORDER BY g.fecha_vencimiento IS NULL, g.fecha_vencimiento
+        `, [chatId, mm, yyyy, mm, yyyy]); // <-- acá
 
         if (resultados.length === 0) {
             await enviarNotificacion(chatId, '✅ No tenés gastos pendientes por pagar.');
@@ -224,65 +223,84 @@ async function marcarComoPagado(chatId, gastoId) {
 
 // Gastos Vencidos:
 async function mostrarGastosVencidos(chatId) {
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = new Date();
+    const yyyy = hoy.getFullYear();
+    const mm = hoy.getMonth() + 1;
+    const hoyISO = hoy.toISOString().split('T')[0];
 
     try {
         const [gastos] = await conn.query(`
-                SELECT g.id, c.nombre AS concepto, g.monto, g.fecha_vencimiento
-                FROM gastos g
-                JOIN users u ON g.users_id = u.id
-                JOIN conceptos c ON g.concepto_id = c.id
-                WHERE u.chat_id = ? AND g.pagado = 0 AND g.fecha_vencimiento < ?
-                ORDER BY g.fecha_vencimiento ASC
-        `, [chatId, hoy]);
+            SELECT g.id, c.nombre AS concepto, g.monto, g.fecha_vencimiento
+            FROM gastos g
+            JOIN users u ON g.users_id = u.id
+            JOIN conceptos c ON g.concepto_id = c.id
+            WHERE g.pagado = 0
+                AND u.chat_id = ?
+                AND c.tipo = 'egreso'
+                AND g.fecha_vencimiento IS NOT NULL
+                AND g.fecha_vencimiento < CURDATE()
+                AND MONTH(g.fecha_vencimiento) = ? AND YEAR(g.fecha_vencimiento) = ?
+            ORDER BY g.fecha_vencimiento ASC
+        `, [chatId, mm, yyyy]);
 
         if (gastos.length === 0) {
-            await enviarNotificacion(chatId, "✅ No tenés gastos vencidos por ahora.");
-            return;
+            await enviarNotificacion(chatId, '✅ No tenés gastos vencidos este mes.');
+        } else {
+            const textoListado = gastos.map(g => {
+                const venc = new Date(g.fecha_vencimiento).toLocaleDateString('es-AR');
+                return `• *${g.concepto}* - $${g.monto} - Venció: ${venc} - ID: ${g.id}`;
+            }).join('\n');
+
+            const botones = gastos.map(g => [{
+                text: `💰 ${g.concepto} - $${g.monto}`,
+                callback_data: `pagar_${g.id}`
+            }]);
+
+            await enviarNotificacion(chatId, `⚠️ *Gastos vencidos este mes:*\n\n${textoListado}`, botones);
         }
-
-        const mensaje = `⏰ Gastos vencidos:\n\n` + gastos.map(g =>
-            `#${g.id} - ${g.concepto}: $${g.monto} (📅 venció el ${g.fecha_vencimiento})`
-        ).join('\n');
-
-        await enviarNotificacion(chatId, mensaje);
-    } catch (err) {
-        console.error("❌ Error al mostrar gastos vencidos:", err);
-        await enviarNotificacion(chatId, mensajeErrorGeneral());
+    } catch (error) {
+        console.error("❌ Error al consultar gastos vencidos:", error);
+        await enviarNotificacion(chatId, '⚠️ Ocurrió un error al obtener los gastos vencidos.');
     }
 }
+
 
 // Gastos Pagados:
 // Esta función muestra los gastos pagados al usuario
 
 async function mostrarGastosPagados(chatId) {
     try {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = hoy.getMonth() + 1;
+
         const [gastos] = await conn.query(`
             SELECT g.id, c.nombre AS concepto, g.monto, g.fecha_pago
             FROM gastos g
-            JOIN users u ON g.users_id = u.id
             JOIN conceptos c ON g.concepto_id = c.id
-            WHERE u.chat_id = ? AND g.pagado = 1
+            JOIN users u ON g.users_id = u.id
+            WHERE g.pagado = 1
+            AND u.chat_id = ?
+            AND MONTH(g.fecha_pago) = ? AND YEAR(g.fecha_pago) = ?
             ORDER BY g.fecha_pago DESC
-            LIMIT 10
-        `, [chatId]);
+            LIMIT 10;
+        `, [chatId, mm, yyyy]);
 
         if (gastos.length === 0) {
-            await enviarNotificacion(chatId, "📭 No tenés pagos registrados todavía.");
-            return;
+            await enviarNotificacion(chatId, '✅ No registrás pagos en este mes.');
+        } else {
+            const texto = gastos.map(g => {
+                const fecha = new Date(g.fecha_pago).toLocaleDateString('es-AR');
+                return `• *${g.concepto}* - $${g.monto} - Pagado: ${fecha} - ID: ${g.id}`;
+            }).join('\n');
+
+            await enviarNotificacion(chatId, `📋 *Gastos pagados este mes:*\n\n${texto}`);
         }
-
-        const mensaje = `🧾 Últimos gastos pagados:\n\n` + gastos.map(g =>
-            `#${g.id} - ${g.concepto}: $${g.monto} (💳 ${g.fecha_pago})`
-        ).join('\n');
-
-        await enviarNotificacion(chatId, mensaje);
-    } catch (err) {
-        console.error("❌ Error al mostrar gastos pagados:", err);
-        await enviarNotificacion(chatId, mensajeErrorGeneral());
+    } catch (error) {
+        console.error("❌ Error al consultar gastos pagados:", error);
+        await enviarNotificacion(chatId, '⚠️ Ocurrió un error al obtener los pagos.');
     }
 }
-
 module.exports = {
     bot,
     enviarNotificacion
