@@ -1,53 +1,29 @@
-const { manejarConversacion } = require('./conversacion');
-const { mostrarMenu } = require('../servicios/notificaciones');
+const { estadoConversacion, manejarConversacion } = require('./conversacionHandler');
 const { frasesGastosNoPagados, frasesPagosRealizados, frasesGastosProximos, frasesGastosVencidos } = require('../utils/frasesReconocidas');
-const { formatearMensajePago, mensajeGastoNoEncontrado, mensajeErrorGeneral } = require('../utils/mensajesTelegram');
-const { conn } = require('../../db/dbconnection');
-const { mostrarGastosProximos, mostrarGastosNoPagados, mostrarGastosPagados, mostrarGastosVencidos } = require('../servicios/gastos');
+const { mostrarGastosNoPagados, mostrarGastosPagados, mostrarGastosVencidos, mostrarGastosProximos } = require('../servicios/consultasGastos');
+const { marcarComoPagadoTexto } = require('../servicios/pagos');
+const { enviarNotificacion } = require('../servicios/notificaciones');
 
-module.exports = async function(bot, message) {
+async function manejarMensaje(bot, message) {
     const chatId = message.chat.id;
-    const texto = (message.text || '').toLowerCase();
+    const texto = message.text?.toLowerCase();
+    if (!texto) return;
 
-    if (await manejarConversacion(bot, message)) return;
-
-    if (texto.startsWith('pagado')) {
-        const match = texto.match(/^pagado\s+(\d+)$/);
-        if (!match) return;
-
-        const gastoId = parseInt(match[1], 10);
-        const fechaISO = new Date().toISOString().split('T')[0];
-
-        try {
-            const [[gasto]] = await conn.query(`
-                SELECT g.*, c.nombre AS concepto
-                FROM gastos g
-                JOIN users u ON g.users_id = u.id
-                JOIN conceptos c ON g.concepto_id = c.id
-                WHERE g.id = ? AND u.chat_id = ?
-            `, [gastoId, chatId]);
-
-            if (!gasto) return bot.sendMessage(chatId, mensajeGastoNoEncontrado());
-
-            await conn.query(`UPDATE gastos SET pagado = 1, fecha_pago = ? WHERE id = ?`, [fechaISO, gastoId]);
-            await bot.sendMessage(chatId, formatearMensajePago(gasto), { parse_mode: 'Markdown' });
-        } catch (err) {
-            console.error("❌ Error:", err);
-            await bot.sendMessage(chatId, mensajeErrorGeneral());
-        }
-    } else if (frasesGastosNoPagados.some(f => texto.includes(f))) {
-        await mostrarGastosNoPagados(bot, chatId);
-    } else if (frasesGastosProximos.some(f => texto.includes(f))) {
-        await mostrarGastosProximos(bot, chatId);
-    } else if (frasesPagosRealizados.some(f => texto.includes(f))) {
-        await mostrarGastosPagados(bot, chatId);
-    } else if (frasesGastosVencidos.some(f => texto.includes(f))) {
-        await mostrarGastosVencidos(bot, chatId);
-    } else if (texto.includes('agregar gasto')) {
-        const { iniciarConversacion } = require('./conversacion');
-        iniciarConversacion(chatId);
-        await bot.sendMessage(chatId, '📝 ¿Cuál es el concepto del gasto?');
-    } else {
-        await mostrarMenu(bot, chatId);
+    if (estadoConversacion[chatId]) {
+        return manejarConversacion(bot, chatId, texto);
     }
+
+    if (/^pagado\s+\d+$/.test(texto)) return marcarComoPagadoTexto(bot, chatId, texto);
+    if (frasesGastosNoPagados.some(f => texto.includes(f))) return mostrarGastosNoPagados(bot, chatId);
+    if (frasesGastosVencidos.some(f => texto.includes(f))) return mostrarGastosVencidos(bot, chatId);
+    if (frasesPagosRealizados.some(f => texto.includes(f))) return mostrarGastosPagados(bot, chatId);
+    if (frasesGastosProximos.some(f => texto.includes(f))) return mostrarGastosProximos(bot, chatId);
+    if (texto.includes('agregar gasto')) {
+        estadoConversacion[chatId] = { paso: 'concepto', datos: {} };
+        return enviarNotificacion(bot, chatId, '📝 ¿Cuál es el concepto del gasto?');
+    }
+
+    return enviarNotificacion(bot, chatId, "📋 Elige una opción:\n\n/gastos_impagos\n/gastos_pagados\n/agregar gasto");
 }
+
+module.exports = { manejarMensaje };

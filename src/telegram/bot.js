@@ -7,3 +7,5 @@ const bot = new TelegramBot(token, { polling: true });
 
 bot.on('message', (msg) => mensajeHandler(bot, msg));
 bot.on('callback_query', (query) => callbackHandler(bot, query));
+
+module.exports = bot; // Para usar desde cronjob u otros scripts

@@ -37,4 +37,9 @@ module.exports = {
         'deudas que vencen',
         'vence',
     ],
+
+    frasesInicio:
+
+        ['nuevo gasto', 'cargar gasto', 'añadir gasto'],
+
 };

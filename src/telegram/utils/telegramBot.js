@@ -9,20 +9,6 @@ const TelegramBot = require('node-telegram-bot-api');
 const { conn } = require('../../db/dbconnection');
 const { formatearMensajePago, mensajeGastoNoEncontrado, mensajeErrorGeneral } = require('./mensajesTelegram');
 
-const iconosPorRubro = {
-    'Automotor': '🚗',
-    'Comunicaciones': '📱',
-    'Deporte': '🏋️‍♂️',
-    'Educacion': '📚',
-    'Plataformas': '📺',
-    'Salud': '💊',
-    'Servicios Gabriela Mistral': '🏠',
-    'Sueldos': '💼',
-    'Tarjetas': '💳',
-    'Varios': '🧾'
-};
-
-
 // const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
@@ -56,42 +42,42 @@ bot.on('message', async (message) => {
     console.log('📨 Mensaje recibido:', message.text);
     const chatId = message.chat.id;
 
-if (estadoConversacion[chatId]) {
-    const paso = estadoConversacion[chatId].paso;
-    const datos = estadoConversacion[chatId].datos;
+    if (estadoConversacion[chatId]) {
+        const paso = estadoConversacion[chatId].paso;
+        const datos = estadoConversacion[chatId].datos;
 
-    switch (paso) {
-        case 'concepto':
-            datos.concepto = message.text;
-            estadoConversacion[chatId] = { paso: 'monto', datos };
-            return enviarNotificacion(chatId, '💰 ¿Cuál es el monto del gasto?');
-        
-        case 'monto':
-            const monto = parseFloat(message.text.replace(',', '.'));
-            if (isNaN(monto)) return enviarNotificacion(chatId, '⚠️ Ingresá un monto válido.');
-            datos.monto = monto;
-            estadoConversacion[chatId] = { paso: 'vencimiento_pregunta', datos };
-            return enviarNotificacion(chatId, '📅 ¿Querés ingresar una fecha de vencimiento? (sí / no)');
-        
-        case 'vencimiento_pregunta':
-            if (message.text.toLowerCase().startsWith('s')) {
-                estadoConversacion[chatId] = { paso: 'vencimiento_fecha', datos };
-                return enviarNotificacion(chatId, '📆 Ingresá la fecha en formato DD/MM/AAAA:');
-            } else {
-                datos.fecha_vencimiento = null;
+        switch (paso) {
+            case 'concepto':
+                datos.concepto = message.text;
+                estadoConversacion[chatId] = { paso: 'monto', datos };
+                return enviarNotificacion(chatId, '💰 ¿Cuál es el monto del gasto?');
+
+            case 'monto':
+                const monto = parseFloat(message.text.replace(',', '.'));
+                if (isNaN(monto)) return enviarNotificacion(chatId, '⚠️ Ingresá un monto válido.');
+                datos.monto = monto;
+                estadoConversacion[chatId] = { paso: 'vencimiento_pregunta', datos };
+                return enviarNotificacion(chatId, '📅 ¿Querés ingresar una fecha de vencimiento? (sí / no)');
+
+            case 'vencimiento_pregunta':
+                if (message.text.toLowerCase().startsWith('s')) {
+                    estadoConversacion[chatId] = { paso: 'vencimiento_fecha', datos };
+                    return enviarNotificacion(chatId, '📆 Ingresá la fecha en formato DD/MM/AAAA:');
+                } else {
+                    datos.fecha_vencimiento = null;
+                    return guardarGasto(chatId, datos);
+                }
+
+            case 'vencimiento_fecha':
+                const partes = message.text.split('/');
+                if (partes.length !== 3) return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA');
+                const [dia, mes, anio] = partes.map(p => parseInt(p));
+                const fecha = new Date(anio, mes - 1, dia);
+                if (isNaN(fecha)) return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
+                datos.fecha_vencimiento = fecha.toISOString().split('T')[0];
                 return guardarGasto(chatId, datos);
-            }
-
-        case 'vencimiento_fecha':
-            const partes = message.text.split('/');
-            if (partes.length !== 3) return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA');
-            const [dia, mes, anio] = partes.map(p => parseInt(p));
-            const fecha = new Date(anio, mes - 1, dia);
-            if (isNaN(fecha)) return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
-            datos.fecha_vencimiento = fecha.toISOString().split('T')[0];
-            return guardarGasto(chatId, datos);
+        }
     }
-}
 
 
 
@@ -139,7 +125,7 @@ if (estadoConversacion[chatId]) {
     } else {
         await mostrarMenu(chatId);
     }
-    
+
 });
 
 bot.on('callback_query', async (query) => {

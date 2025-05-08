@@ -29,6 +29,7 @@ async function notificarVencimientos() {
 📋 *${gasto.concepto}*
 💰 $${gasto.monto}
 📅 *Vence el ${fechaVenc}*
+✏️ Respondé con *"pagado"* para marcarlo como abonado.
             `;
             console.log(`🔔 Enviando mensaje a ${gasto.chat_id}: ${mensaje}`);
             await enviarNotificacion(gasto.chat_id, mensaje);

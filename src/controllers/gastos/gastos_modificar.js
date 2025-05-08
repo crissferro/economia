@@ -1,6 +1,6 @@
 const { conn } = require('../../db/dbconnection');
-const { enviarNotificacion } = require('../../utils/telegramBot');
-const { formatearMensajePago } = require('../../utils/mensajesTelegram');
+const { enviarNotificacion } = require('../../telegram/utils/telegramBot');
+const { formatearMensajePago } = require('../../telegram/utils/mensajesTelegram');
 
 module.exports = {
     getModificar: async (req, res) => {
