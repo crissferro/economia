@@ -1,3 +1,4 @@
+const estadoConversacion = {}; // Para cada chatId guardamos en qué paso está y qué datos lleva cargados
 const {
     frasesGastosNoPagados,
     frasesPagosRealizados,
@@ -5,7 +6,7 @@ const {
     frasesGastosVencidos
 } = require('./frasesReconocidas');
 const TelegramBot = require('node-telegram-bot-api');
-const { conn } = require('../db/dbconnection');
+const { conn } = require('../../db/dbconnection');
 const { formatearMensajePago, mensajeGastoNoEncontrado, mensajeErrorGeneral } = require('./mensajesTelegram');
 
 const iconosPorRubro = {
@@ -22,7 +23,8 @@ const iconosPorRubro = {
 };
 
 
-const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
+// const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
+const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
 function enviarNotificacion(chatId, mensaje, buttons = []) {
@@ -53,6 +55,46 @@ function mostrarMenu(chatId) {
 bot.on('message', async (message) => {
     console.log('📨 Mensaje recibido:', message.text);
     const chatId = message.chat.id;
+
+if (estadoConversacion[chatId]) {
+    const paso = estadoConversacion[chatId].paso;
+    const datos = estadoConversacion[chatId].datos;
+
+    switch (paso) {
+        case 'concepto':
+            datos.concepto = message.text;
+            estadoConversacion[chatId] = { paso: 'monto', datos };
+            return enviarNotificacion(chatId, '💰 ¿Cuál es el monto del gasto?');
+        
+        case 'monto':
+            const monto = parseFloat(message.text.replace(',', '.'));
+            if (isNaN(monto)) return enviarNotificacion(chatId, '⚠️ Ingresá un monto válido.');
+            datos.monto = monto;
+            estadoConversacion[chatId] = { paso: 'vencimiento_pregunta', datos };
+            return enviarNotificacion(chatId, '📅 ¿Querés ingresar una fecha de vencimiento? (sí / no)');
+        
+        case 'vencimiento_pregunta':
+            if (message.text.toLowerCase().startsWith('s')) {
+                estadoConversacion[chatId] = { paso: 'vencimiento_fecha', datos };
+                return enviarNotificacion(chatId, '📆 Ingresá la fecha en formato DD/MM/AAAA:');
+            } else {
+                datos.fecha_vencimiento = null;
+                return guardarGasto(chatId, datos);
+            }
+
+        case 'vencimiento_fecha':
+            const partes = message.text.split('/');
+            if (partes.length !== 3) return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA');
+            const [dia, mes, anio] = partes.map(p => parseInt(p));
+            const fecha = new Date(anio, mes - 1, dia);
+            if (isNaN(fecha)) return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
+            datos.fecha_vencimiento = fecha.toISOString().split('T')[0];
+            return guardarGasto(chatId, datos);
+    }
+}
+
+
+
     if (!message.text) return;
 
     const texto = message.text.toLowerCase();
@@ -91,9 +133,13 @@ bot.on('message', async (message) => {
         await mostrarGastosPagados(chatId);
     } else if (frasesGastosVencidos.some(f => texto.includes(f))) {
         await mostrarGastosVencidos(chatId);
+    } else if (texto.includes('agregar gasto')) {
+        estadoConversacion[chatId] = { paso: 'concepto', datos: {} };
+        return enviarNotificacion(chatId, '📝 ¿Cuál es el concepto del gasto?');
     } else {
         await mostrarMenu(chatId);
     }
+    
 });
 
 bot.on('callback_query', async (query) => {
@@ -188,7 +234,7 @@ async function mostrarGastosNoPagados(chatId) {
                     (g.fecha_vencimiento IS NOT NULL AND MONTH(g.fecha_vencimiento) = ? AND YEAR(g.fecha_vencimiento) = ?)
                     OR (g.fecha_vencimiento IS NULL AND g.mes = ? AND g.anio = ?)
                 )
-            ORDER BY g.fecha_vencimiento IS NULL, g.fecha_vencimiento
+            ORDER BY g.fecha_vencimiento IS NULL, g.fecha_vencimiento;
         `, [chatId, mm, yyyy, mm, yyyy]); // <-- acá
 
         if (resultados.length === 0) {
@@ -347,6 +393,62 @@ async function mostrarGastosPagados(chatId) {
         await enviarNotificacion(chatId, '⚠️ Ocurrió un error al obtener los pagos.');
     }
 }
+
+
+async function guardarGasto(chatId, datos) {
+    try {
+        const [[usuario]] = await conn.query(`SELECT id FROM users WHERE chat_id = ?`, [chatId]);
+        if (!usuario) return enviarNotificacion(chatId, '❌ No se encontró tu usuario en la base de datos.');
+
+        const concepto = datos.concepto;
+        const monto = datos.monto;
+        const fecha_vencimiento = datos.vencimiento || null;
+
+        // Validar y parsear fecha
+        const fecha = datos.fecha ? new Date(datos.fecha) : new Date();  // Usa hoy si no hay fecha
+        const mes = fecha.getMonth() + 1;
+        const anio = fecha.getFullYear();
+
+        // Buscar concepto
+        const [[conceptoExistente]] = await conn.query(`SELECT id, tipo FROM conceptos WHERE nombre = ?`, [concepto]);
+        if (!conceptoExistente) {
+            return enviarNotificacion(chatId, `❌ El concepto *${concepto}* no existe. Crealo desde la web primero.`);
+        }
+
+        // Asignar datos derivados
+        datos.concepto_id = conceptoExistente.id;
+        datos.tipo = conceptoExistente.tipo;
+        datos.user_id = usuario.id;
+
+        // Insertar gasto
+        console.log("Datos antes de guardar gasto:", datos);
+        await conn.query(`
+            INSERT INTO gastos (fecha, monto, mes, anio, fecha_vencimiento, pagado, concepto_id, tipo, users_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [
+            fecha.toISOString().split('T')[0],  // YYYY-MM-DD
+            datos.monto,
+            mes,
+            anio,
+            fecha_vencimiento,
+            false,
+            datos.concepto_id,
+            datos.tipo,
+            datos.user_id
+        ]);
+
+        estadoConversacion[chatId] = null;
+
+        return enviarNotificacion(chatId, `✅ Gasto *${concepto}* por *$${monto.toLocaleString('es-AR')}* agregado correctamente.`);
+    } catch (err) {
+        console.error('❌ Error al guardar gasto:', err);
+        estadoConversacion[chatId] = null;
+        return enviarNotificacion(chatId, '⚠️ Ocurrió un error al guardar el gasto.');
+    }
+}
+
+
+
 module.exports = {
     bot,
     enviarNotificacion

@@ -1,5 +1,5 @@
 const { conn } = require('../src/db/dbconnection');
-const { enviarNotificacion } = require('../src/utils/telegramBot');
+const { enviarNotificacion } = require('../src/telegram/utils/telegramBot');
 
 async function notificarVencimientos() {
     try {

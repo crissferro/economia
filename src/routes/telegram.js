@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { enviarNotificacion } = require('../utils/telegramBot');
+const { enviarNotificacion } = require('../telegram/utils/telegramBot');
 
 // 👉 Solo mantenemos esta ruta para enviar notificaciones desde la web
 router.post('/notificar', (req, res) => {
