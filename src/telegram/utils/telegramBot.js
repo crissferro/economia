@@ -9,7 +9,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { conn } = require('../../db/dbconnection');
 const { formatearMensajePago, mensajeGastoNoEncontrado, mensajeErrorGeneral } = require('./mensajesTelegram');
 
-// const token = '7290653879:AAEEBQIF_lbgzrYq45hqatOrh4EVQnz0G0M';
+const { iconosPorRubro } = require('../utils/iconos');
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
@@ -41,6 +41,13 @@ function mostrarMenu(chatId) {
 bot.on('message', async (message) => {
     console.log('📨 Mensaje recibido:', message.text);
     const chatId = message.chat.id;
+    const texto = message.text?.toLowerCase().trim();
+
+    // 🔴 Cancelar en cualquier momento
+    if (texto === 'cancelar') {
+        delete estadoConversacion[chatId];
+        return enviarNotificacion(chatId, '❌ Operación cancelada. Podés empezar de nuevo cuando quieras.');
+    }
 
     if (estadoConversacion[chatId]) {
         const paso = estadoConversacion[chatId].paso;
@@ -60,30 +67,46 @@ bot.on('message', async (message) => {
                 return enviarNotificacion(chatId, '📅 ¿Querés ingresar una fecha de vencimiento? (sí / no)');
 
             case 'vencimiento_pregunta':
-                if (message.text.toLowerCase().startsWith('s')) {
+                if (texto.startsWith('s')) {
                     estadoConversacion[chatId] = { paso: 'vencimiento_fecha', datos };
                     return enviarNotificacion(chatId, '📆 Ingresá la fecha en formato DD/MM/AAAA:');
                 } else {
                     datos.fecha_vencimiento = null;
+                    delete estadoConversacion[chatId];  // Limpiar estado
                     return guardarGasto(chatId, datos);
                 }
 
             case 'vencimiento_fecha':
+                if (['no', 'n', 'omitir'].includes(texto)) {
+                    datos.fecha_vencimiento = null;
+                    delete estadoConversacion[chatId];
+                    return guardarGasto(chatId, datos);
+                }
+
                 const partes = message.text.split('/');
-                if (partes.length !== 3) return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA');
+                if (partes.length !== 3) {
+                    return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA o escribí "cancelar".');
+                }
+
                 const [dia, mes, anio] = partes.map(p => parseInt(p));
                 const fecha = new Date(anio, mes - 1, dia);
-                if (isNaN(fecha)) return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
+
+                if (isNaN(fecha.getTime())) {
+                    return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
+                }
+
                 datos.fecha_vencimiento = fecha.toISOString().split('T')[0];
+                delete estadoConversacion[chatId];
                 return guardarGasto(chatId, datos);
+
+            default:
+                delete estadoConversacion[chatId];
+                return enviarNotificacion(chatId, '⚠️ Paso no reconocido. Escribí "cancelar" para empezar de nuevo.');
         }
     }
 
-
-
     if (!message.text) return;
 
-    const texto = message.text.toLowerCase();
     const match = texto.match(/^pagado\s+(\d+)$/);
 
     if (match) {
@@ -125,8 +148,8 @@ bot.on('message', async (message) => {
     } else {
         await mostrarMenu(chatId);
     }
-
 });
+
 
 bot.on('callback_query', async (query) => {
     const chatId = query.message.chat.id;
@@ -388,7 +411,7 @@ async function guardarGasto(chatId, datos) {
 
         const concepto = datos.concepto;
         const monto = datos.monto;
-        const fecha_vencimiento = datos.vencimiento || null;
+        const fecha_vencimiento = datos.fecha_vencimiento || null;
 
         // Validar y parsear fecha
         const fecha = datos.fecha ? new Date(datos.fecha) : new Date();  // Usa hoy si no hay fecha
