@@ -63,6 +63,25 @@ bot.on('message', async (message) => {
                 const monto = parseFloat(message.text.replace(',', '.'));
                 if (isNaN(monto)) return enviarNotificacion(chatId, '⚠️ Ingresá un monto válido.');
                 datos.monto = monto;
+                estadoConversacion[chatId] = { paso: 'mes', datos };
+                return enviarNotificacion(chatId, '📅 ¿A qué mes corresponde el gasto? (1-12)');
+
+            case 'mes':
+                const mes = parseInt(message.text);
+                if (isNaN(mes) || mes < 1 || mes > 12) {
+                    return enviarNotificacion(chatId, '⚠️ Mes inválido. Ingresá un número entre 1 y 12.');
+                }
+                datos.mes = mes;
+                estadoConversacion[chatId] = { paso: 'anio', datos };
+                return enviarNotificacion(chatId, '🗓️ ¿De qué año es el gasto?');
+
+            case 'anio':
+                const anio = parseInt(message.text);
+                if (isNaN(anio) || anio < 2000 || anio > 2100) {
+                    return enviarNotificacion(chatId, '⚠️ Año inválido. Ingresá un año válido.');
+                }
+                datos.anio = anio;
+                datos.fecha = new Date(anio, datos.mes - 1, 1); // Se genera la fecha base
                 estadoConversacion[chatId] = { paso: 'vencimiento_pregunta', datos };
                 return enviarNotificacion(chatId, '📅 ¿Querés ingresar una fecha de vencimiento? (sí / no)');
 
@@ -72,7 +91,7 @@ bot.on('message', async (message) => {
                     return enviarNotificacion(chatId, '📆 Ingresá la fecha en formato DD/MM/AAAA:');
                 } else {
                     datos.fecha_vencimiento = null;
-                    delete estadoConversacion[chatId];  // Limpiar estado
+                    delete estadoConversacion[chatId];
                     return guardarGasto(chatId, datos);
                 }
 
@@ -88,8 +107,8 @@ bot.on('message', async (message) => {
                     return enviarNotificacion(chatId, '⚠️ Formato incorrecto. Usá DD/MM/AAAA o escribí "cancelar".');
                 }
 
-                const [dia, mes, anio] = partes.map(p => parseInt(p));
-                const fecha = new Date(anio, mes - 1, dia);
+                const [dia, mesV, anioV] = partes.map(p => parseInt(p));
+                const fecha = new Date(anioV, mesV - 1, dia);
 
                 if (isNaN(fecha.getTime())) {
                     return enviarNotificacion(chatId, '⚠️ Fecha inválida. Reintentá.');
@@ -105,6 +124,7 @@ bot.on('message', async (message) => {
         }
     }
 
+    // Si no hay conversación activa
     if (!message.text) return;
 
     const match = texto.match(/^pagado\s+(\d+)$/);
@@ -134,6 +154,7 @@ bot.on('message', async (message) => {
             console.error("❌ Error al procesar mensaje:", err);
             await enviarNotificacion(chatId, mensajeErrorGeneral());
         }
+
     } else if (frasesGastosNoPagados.some(f => texto.includes(f))) {
         await mostrarGastosNoPagados(chatId);
     } else if (frasesGastosProximos.some(f => texto.includes(f))) {
@@ -414,9 +435,9 @@ async function guardarGasto(chatId, datos) {
         const fecha_vencimiento = datos.fecha_vencimiento || null;
 
         // Validar y parsear fecha
-        const fecha = datos.fecha ? new Date(datos.fecha) : new Date();  // Usa hoy si no hay fecha
-        const mes = fecha.getMonth() + 1;
-        const anio = fecha.getFullYear();
+        const fecha = new Date();  // Siempre fecha de carga actual
+        const mes = datos.mes;
+        const anio = datos.anio;
 
         // Buscar concepto
         const [[conceptoExistente]] = await conn.query(`SELECT id, tipo FROM conceptos WHERE nombre = ?`, [concepto]);
