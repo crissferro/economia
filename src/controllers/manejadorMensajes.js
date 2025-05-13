@@ -17,7 +17,7 @@ async function manejarMensajeTelegram(body) {
         if (match) {
             const gastoId = parseInt(match[1]);
             await marcarGastoComoPagado(gastoId);
-            console.log(`✅ Gasto con ID ${gastoId} marcado como pagado.`);
+            console.log(`✅ Gasto con ID ${gastoId} marcado como pagado, desde manejadorMensajes`);
         } else {
             console.log('❌ No se encontró ID de gasto en el mensaje original.');
         }

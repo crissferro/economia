@@ -40,6 +40,6 @@ module.exports = {
 
     frasesInicio:
 
-        ['nuevo gasto', 'cargar gasto', 'añadir gasto'],
+        ['nuevo gasto', 'cargar gasto', 'añadir gasto', 'ingresar gasto'],
 
 };
