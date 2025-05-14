@@ -1,0 +1,65 @@
+<!-- public/estadisticas.html -->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      
+        <link rel="stylesheet" href="css/estilo.css">
+        <script src="https://kit.fontawesome.com/e0f7a1940e.js" crossorigin="anonymous"></script>
+      
+        <title>GastosHogar</title>
+        <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+      </head>
+<body>
+    <header>
+        <div>
+          <a href="index.html">
+            <img src="./img/logo.png" alt="Logo de Gastos Hogar"></a>
+    
+          <h1>Gastos del Hogar</h1>
+            </div>
+            <nav>
+                <a href="index.html">Inicio</a>
+                <a href="dashboard.html" id="listado-link">Dashboard</a>
+                <a class="activo" href="estadisticas.html" id="listado-link">Estadisticas</a>
+                <a href="gastos.html">Cargar Gastos</a>
+                <a href="rubros.html">Rubros</a>
+                <a href="conceptos.html">Conceptos</a>
+                <a href="listado_gastos.html">Listado de Gastos</a>
+                <a href="login.html" style="display:none;">Log In</a>
+                
+                <a href="index.html">Logout</a>
+            </nav>
+        </header>
+  <main>
+    <form id="form-estadisticas">
+        <label for="concepto">Concepto</label>
+        <select id="concepto" name="concepto"></select>
+        <label for="mes">Mes</label>
+        <select id="mes" name="mes">
+          <option value="1">Enero</option>
+          <option value="2">Febrero</option>
+          <option value="3">Marzo</option>
+          <option value="4">Abril</option>
+          <option value="5">Mayo</option>
+          <option value="6">Junio</option>
+          <option value="7">Julio</option>
+          <option value="8">Agosto</option>
+          <option value="9">Septiembre</option>
+          <option value="10">Octubre</option>
+          <option value="11">Noviembre</option>
+          <option value="12">Diciembre</option>
+        </select>
+      
+        <label for="anio">Año</label>
+        <input type="number" id="anio" name="anio" value="2025" />
+      
+        <button type="submit" class="btn">Consultar</button>
+    </form>
+    <div id="resultados"></div>
+  </main>
+  <script src="js/estadisticas.js"></script>
+</body>
+</html>

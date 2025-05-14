@@ -14,6 +14,8 @@ const auth = require('./src/config/auth');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const telegramRoutes = require('./src/routes/telegram');
 const configRoutes = require('./src/routes/configRoutes');
+const estadisticasRoutes = require('./src/routes/estadisticasRoutes');
+
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -25,7 +27,7 @@ const backendUrl = isProduction ? process.env.BACKEND_URL_PROD : process.env.BAC
 
 // ✅ Middleware CORS mejorado
 const corsOptions = {
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
         // Lista de dominios permitidos
         const allowedOrigins = [
             'http://localhost:8080',
@@ -33,7 +35,7 @@ const corsOptions = {
             'http://192.168.1.222:8080',
             'https://web.crissferro.net.ar'
         ];
-        
+
         // Permitir peticiones sin origin (como las del navegador directamente)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -57,6 +59,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
@@ -82,6 +85,7 @@ app.use('/conceptos', conceptosRoutes);
 app.use('/gastos', gastosRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/login', login);
+app.use('/estadisticas', estadisticasRoutes);
 
 // Ruta para verificar la configuración del servidor
 app.get('/config', (req, res) => {
