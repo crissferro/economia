@@ -691,7 +691,7 @@ form select {
 /*..........Fin Modificar ...............*/
 
 
-/*..........INICIO LOGIN REGISTRO ...............*/
+/*..........INICIO LOGIN REGISTRO contraseña...............*/
 
 
 #login-registro {
@@ -753,7 +753,65 @@ form select {
   margin-top: 20px;
 }
 
-/*..........FIN LOGIN REGISTRO.............*/
+
+/* contraseña */
+
+#form-password {
+  width: 800px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+#form-password form label {
+  width: 25px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+}
+
+
+
+#form-password .btn {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background-color: #1c8381;
+  font-family: 'introbold';
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  line-height: 40px;
+  /* Centrar verticalmente el texto */
+  text-decoration: none;
+  /* Para los enlaces */
+  display: inline-block;
+  /* Para los enlaces */
+}
+
+#form-password .btn:hover {
+  background-color: #1c8381;
+  transform: scale(1.2);
+}
+
+/* Estilos específicos para los enlaces */
+#form-password a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+#form-password a:hover {
+  background-color: #b392ac;
+}
+
+
+/*..........FIN LOGIN REGISTRO contraseña.............*/
 
 
 
