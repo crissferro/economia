@@ -1,24 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const { conn } = require('../db/dbconnection');
+const estadisticasController = require('../controllers/estadisticasController');
 
 // Obtener todos los conceptos
 router.get('/conceptos', async (req, res) => {
-    const [rows] = await conn.query('SELECT nombre FROM conceptos ORDER BY nombre');
-    res.json(rows);
+    try {
+        const [rows] = await conn.query('SELECT id, nombre, requiere_vencimiento FROM conceptos ORDER BY nombre');
+        res.json(rows);
+    } catch (err) {
+        console.error('❌ Error al obtener conceptos:', err);
+        res.status(500).send('Error al obtener conceptos');
+    }
 });
 
-// Consultar total por concepto y mes/año
-router.get('/estadisticas', async (req, res) => {
-    const { concepto, mes, anio } = req.query;
-
-    const [[{ total }]] = await conn.query(`
-    SELECT SUM(monto) AS total FROM gastos 
-    INNER JOIN conceptos ON gastos.concepto_id = conceptos.id
-    WHERE conceptos.nombre = ? AND gastos.mes = ? AND gastos.anio = ?
-  `, [concepto, mes, anio]);
-
-    res.json({ total: total || 0 });
-});
+// Consultar estadísticas (usando el controller)
+router.get('/', estadisticasController.obtenerEstadisticas);
+router.get('/evolucion', estadisticasController.obtenerEvolucionMensual);
 
 module.exports = router;

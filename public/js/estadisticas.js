@@ -1,5 +1,5 @@
 // Esta función es reutilizada desde gastos.js, adaptada para estadísticas
-async function cargarConceptos(backendUrl, conceptoIdSeleccionado = null) {
+async function cargarConceptos(backendUrl = '', conceptoIdSeleccionado = null) {
     try {
         const response = await fetch(`${backendUrl}/conceptos`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
@@ -8,10 +8,10 @@ async function cargarConceptos(backendUrl, conceptoIdSeleccionado = null) {
         if (!response.ok) throw new Error('Error al obtener conceptos');
 
         const conceptos = await response.json();
-        const conceptoSelect = document.getElementById('concepto'); // ID en estadisticas.html
+        const conceptoSelect = document.getElementById('concepto');
 
         if (!conceptoSelect) {
-            console.error("Error: No se encontró el select 'concepto'");
+            console.error("❌ No se encontró el select 'concepto'");
             return;
         }
 
@@ -29,12 +29,12 @@ async function cargarConceptos(backendUrl, conceptoIdSeleccionado = null) {
         });
 
     } catch (error) {
-        console.error('Error al cargar conceptos:', error);
+        console.error('❌ Error al cargar conceptos:', error);
     }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await cargarConceptos('', null); // backendUrl vacío si estás en el mismo dominio
+    await cargarConceptos();
 
     document.getElementById('form-estadisticas').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -43,27 +43,86 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mes = document.getElementById('mes').value;
         const anio = document.getElementById('anio').value;
 
+        console.log('📋 Valores seleccionados:');
+        console.log('➡️ Concepto ID:', concepto);
+        console.log('➡️ Mes:', mes);
+        console.log('➡️ Año:', anio);
+
         if (!concepto || !mes || !anio) {
             alert('Por favor complete todos los campos');
             return;
         }
 
+        const url = `/estadisticas?concepto=${concepto}&mes=${mes}&anio=${anio}`;
+        console.log('🔗 URL construida:', url);
+
         try {
-            const response = await fetch(`/estadisticas?concepto=${concepto}&mes=${mes}&anio=${anio}`, {
+            const response = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
             });
 
-            if (!response.ok) throw new Error('Error al obtener estadísticas');
+            if (!response.ok) {
+                console.error('❌ Error HTTP:', response.status, response.statusText);
+                throw new Error('Error al obtener estadísticas');
+            }
 
             const data = await response.json();
+            console.log('📊 Respuesta recibida del backend:', data);
 
-            const resultadoDiv = document.getElementById('resultado-estadisticas');
+            const resultadoDiv = document.getElementById('resultados');
             resultadoDiv.innerHTML = `
-                <p><strong>Total:</strong> $${data.total}</p>
-                <p><strong>Promedio mensual:</strong> $${data.promedio}</p>
+                <div class="estadisticas-box">
+                    <p><strong>Total del mes:</strong> $${parseFloat(data.total).toLocaleString()}</p>
+                    <p><strong>Promedio últimos 5 meses:</strong> $${parseFloat(data.promedio).toLocaleString()}</p>
+                </div>
             `;
+
+            // Obtener evolución mensual
+            const evolucionUrl = `/estadisticas/evolucion?concepto=${concepto}&mes=${mes}&anio=${anio}`;
+            const evolucionRes = await fetch(evolucionUrl, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+            });
+
+            if (!evolucionRes.ok) throw new Error('Error al obtener evolución mensual');
+
+            const evolucionData = await evolucionRes.json();
+            console.log('📈 Datos de evolución mensual:', evolucionData);
+
+            const labels = evolucionData.map(item => `${item.mes}/${item.anio}`);
+            const valores = evolucionData.map(item => parseFloat(item.total));
+
+            // Destruir gráfico anterior si existe
+            if (window.graficoEvolucion) {
+                window.graficoEvolucion.destroy();
+            }
+
+            const ctx = document.getElementById('grafico-evolucion').getContext('2d');
+            window.graficoEvolucion = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Evolución mensual ($)',
+                        data: valores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => '$' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+
         } catch (error) {
-            console.error('Error al consultar estadísticas:', error);
+            console.error('❌ Error al consultar estadísticas:', error);
             alert('No se pudo obtener la estadística');
         }
     });

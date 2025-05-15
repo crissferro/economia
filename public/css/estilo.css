@@ -814,7 +814,30 @@ form select {
 /*..........FIN LOGIN REGISTRO contraseña.............*/
 
 
+/*..........INICIO ESTADISTICAS.............*/
 
+.estadisticas {
+  width: 1000px;
+  padding: 16px;
+  margin: auto;
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+  border-radius: 15px;
+}
+
+#resultados {
+  display: block;
+  background: white;
+  padding: 20px;
+  width: 500px;
+  /*border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);*/
+  text-align: left;
+  /*width: calc(50% - 10px);*/ /* Ajusta el ancho para dos tarjetas en una fila */
+}
+
+
+/*..........FIN ESTADISTICAS.............*/
 
 
 /*..........responsive.............*/

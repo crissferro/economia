@@ -34,32 +34,57 @@
             </nav>
         </header>
   <main>
-    <form id="form-estadisticas">
-        <label for="concepto">Concepto</label>
-        <select id="concepto" name="concepto"></select>
-        <label for="mes">Mes</label>
-        <select id="mes" name="mes">
-          <option value="1">Enero</option>
-          <option value="2">Febrero</option>
-          <option value="3">Marzo</option>
-          <option value="4">Abril</option>
-          <option value="5">Mayo</option>
-          <option value="6">Junio</option>
-          <option value="7">Julio</option>
-          <option value="8">Agosto</option>
-          <option value="9">Septiembre</option>
-          <option value="10">Octubre</option>
-          <option value="11">Noviembre</option>
-          <option value="12">Diciembre</option>
-        </select>
-      
-        <label for="anio">Año</label>
-        <input type="number" id="anio" name="anio" value="2025" />
-      
-        <button type="submit" class="btn">Consultar</button>
-    </form>
-    <div id="resultados"></div>
+    <h2>Estadísticas</h2>
+    <section class="agregar">
+
+        <div class="orden">
+                <h3>Consultar Estadísticas</h3>
+                
+            <article class="formulario">
+                
+                    <form id="form-estadisticas">
+                        <label for="concepto">Concepto</label>
+                        <select id="concepto" name="concepto"></select>
+
+                        <label for="mes">Mes</label>
+                        <select id="mes" name="mes">
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                        </select>
+                    
+                        <label for="anio">Año</label>
+                        <input type="number" id="anio" name="anio" value="2025" />
+                    
+                        <button type="submit" class="btn">Consultar</button>
+                    </form>
+            </article>
+        </div>
+    </section>
+
+    <section class="estadisticas">
+        <article>
+            <h3>📊 Resultados</h3>
+            <div id="resultados"></div>
+        </article>
+        <article>
+            <h3>📈 Gráfico</h3>
+            <div id="grafico">
+                <canvas id="grafico-evolucion" width="400" height="200"></canvas>
+            </div>
+        </article>
+    </section>
   </main>
   <script src="js/estadisticas.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
