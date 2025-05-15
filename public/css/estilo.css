@@ -819,13 +819,12 @@ form select {
 .estadisticas {
   width: 1000px;
   padding: 16px;
-  margin: auto;
   border: 1px solid lightgray;
   box-shadow: 2px 2px 8px 4px #d3d3d3d1;
   border-radius: 15px;
 }
 
-#resultados {
+.resultados {
   display: block;
   background: white;
   padding: 20px;
@@ -836,7 +835,21 @@ form select {
   /*width: calc(50% - 10px);*/ /* Ajusta el ancho para dos tarjetas en una fila */
 }
 
+.grafico-conceptos{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 
+.grafico-conceptos canvas #grafico-evolucion {
+    max-width: 50%;
+    height: 500px; /* o lo que necesites */
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 /*..........FIN ESTADISTICAS.............*/
 
 

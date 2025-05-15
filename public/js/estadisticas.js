@@ -104,26 +104,71 @@ document.addEventListener('DOMContentLoaded', async () => {
                     datasets: [{
                         label: 'Evolución mensual ($)',
                         data: valores,
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderRadius: 10,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.7
                     }]
                 },
                 options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: ctx => `$${ctx.parsed.y.toLocaleString()}`
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     scales: {
+                        x: {
+                            ticks: {
+                                color: '#555',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => '$' + value.toLocaleString()
+                                color: '#555',
+                                callback: value => `$${value.toLocaleString()}`
+                            },
+                            grid: {
+                                color: '#e0e0e0'
                             }
                         }
                     }
                 }
-            });
+            })
+
+
+
 
         } catch (error) {
             console.error('❌ Error al consultar estadísticas:', error);
             alert('No se pudo obtener la estadística');
         }
+        });
     });
-});
+
+    
+
