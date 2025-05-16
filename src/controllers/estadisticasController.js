@@ -71,6 +71,8 @@ module.exports = {
 
             res.json(resultados);
 
+
+
         } catch (err) {
             console.error('❌ Error al obtener evolución mensual:', err);
             res.status(500).send('Error al obtener evolución mensual');

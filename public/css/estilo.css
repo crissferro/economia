@@ -850,6 +850,35 @@ form select {
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+
+.seccion-evolucion {
+  margin-top: 30px;
+}
+
+.tabla-evolucion {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tabla-evolucion th,
+.tabla-evolucion td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.tabla-evolucion th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+
+
+
+
+
 /*..........FIN ESTADISTICAS.............*/
 
 
