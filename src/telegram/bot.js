@@ -10,9 +10,11 @@ bot.on('message', (msg) => mensajeHandler(bot, msg));
 bot.on('callback_query', (query) => callbackHandler(bot, query));
 
 bot.on('message', async (msg) => {
-    if (msg.text.toLowerCase().includes("gasto") || msg.text.toLowerCase().includes("promedio") || msg.text.toLowerCase().includes("obra social")) {
-        await estadisticasIAHandler(msg, bot);
-    }
+    /* if (msg.text.toLowerCase().includes("gasto") || msg.text.toLowerCase().includes("promedio") || msg.text.toLowerCase().includes("obra social")) {
+         await estadisticasIAHandler(msg, bot);
+     }*/
+    // Para pruebas simples, redirigí todo a IA
+    await manejarConsultaIA(msg, bot);
 });
 
 
