@@ -14,6 +14,9 @@ Salida: {"intencion": "variacion_mensual", "concepto": "obra social"}
 Frase: ¿Cuál fue el gasto total de luz este año?
 Salida: {"intencion": "total_concepto_anual", "concepto": "luz"}
 
+Frase: ¿Cuál fue el aumento en salud desde enero de 2025 hasta mayo de 2025?
+Salida: {"intencion": "variacion_personalizada", "concepto": "salud", "desde": "2025-01", "hasta": "2025-05"}
+
 Frase: ${textoUsuario}
 Salida:
 `;
@@ -27,6 +30,7 @@ Salida:
 
         const match = response.data.response.match(/\{[\s\S]*\}/);
         return match ? JSON.parse(match[0]) : null;
+        console.log("🧠 Respuesta cruda IA:", response.data.response);
 
     } catch (err) {
         console.error("Error al interpretar el mensaje:", err.message);

@@ -8,6 +8,7 @@ async function manejarConsultaIA(msg, bot) {
     bot.sendMessage(chatId, 'Procesando tu consulta con IA...');
 
     const interpretacion = await interpretarMensaje(pregunta);
+    console.log("🔍 Interpretación IA:", interpretacion);
 
     if (!interpretacion) {
         return bot.sendMessage(chatId, 'No pude interpretar tu mensaje. ¿Podés reformularlo?');
