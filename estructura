@@ -18,6 +18,30 @@ economia/
 │   │       ├── header.ejs
 │   │   ├── modificar.ejs
 │   │   ├── dashboard.ejs
+telegram/
+    /handlers/
+│   │   ├── callbackHandler.js
+│   │   ├── comandos.js
+│   │   ├── conversacion.js
+│   │   ├── iaHabdler.js
+│   │   ├── mensajesHandler.js
+    /ia/
+        /iaService.js
+        /responderIA.js
+    /servicios/
+│   │   ├── estadisticasServices.js
+│   │   ├── notificaciones.js
+│   │   ├── pagos.js
+    /utils/
+│   │   ├── fechas.js
+│   │   ├── iconos.js
+│   │   ├── frasesReconocidas.js
+│   │   ├── telegramBot.js
+│   │   ├── mensajesTelegram.js
+│   │   ├── accionesGastos.js
+│   │   ├── accionesTelegram.js
+    bot.js
+
 │
 │── public/                  # Lógica del cliente
 │   ├── css/                   # Archivos CSS (Bootstrap u otro)

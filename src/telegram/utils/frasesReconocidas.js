@@ -42,4 +42,10 @@ module.exports = {
 
         ['nuevo gasto', 'cargar gasto', 'añadir gasto', 'ingresar gasto'],
 
+    frasesIA: [
+        { patron: /cuánto debo/i, accion: 'consultarDeuda' },
+        { patron: /gastos.*mes/i, accion: 'consultarGastosMes' },
+        { patron: /promedio.*luz/i, accion: 'promedioLuz' },
+    ],
+
 };

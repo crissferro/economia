@@ -26,12 +26,17 @@ module.exports = bot; // Para usar desde cronjob u otros scripts
 
 */
 
-// src/telegram/bot.js
-const bot = require('./utils/telegramBot');
+const TelegramBot = require('node-telegram-bot-api');
+const dispatcher = require('./core/dispatcher');
 
-// Registrar handlers
-require('../telegram/handlers/mensajes')(bot);
-require('../telegram/handlers/callbacks')(bot);
-require('../telegram/handlers/comandos')(bot);
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
-module.exports = bot;
+bot.on('message', (msg) => {
+    dispatcher.handleMessage(bot, msg);
+});
+
+bot.on('callback_query', (callbackQuery) => {
+    dispatcher.handleCallback(bot, callbackQuery);
+});
+
+console.log('Bot de Telegram iniciado con polling.');
