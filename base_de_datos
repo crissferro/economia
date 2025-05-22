@@ -46,6 +46,9 @@ CREATE TABLE `conceptos` (
   `requiere_vencimiento` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+ALTER TABLE `conceptos`
+ADD COLUMN `permite_detalle` TINYINT(1) NOT NULL DEFAULT 0;
+
 
 -- --------------------------------------------------------
 
@@ -62,11 +65,13 @@ CREATE TABLE `gastos` (
   `mes` int(11) NOT NULL,
   `anio` int(11) NOT NULL,
   `tipo` enum('ingreso','egreso') NOT NULL DEFAULT 'egreso',
-  `pagado` tinyint(1) NOT NULL DEFAULT 0
+  `pagado` tinyint(1) NOT NULL DEFAULT 0,
+  `fecha_pago` date DEFAULT NULL,
+  `users_id` int(11) DEFAULT NULL,
+  `notificado` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
-ALTER TABLE gastos ADD COLUMN fecha_pago DATE NULL;
-ALTER TABLE gastos ADD COLUMN users_id INT;
+
 -- --------------------------------------------------------
 
 --
@@ -87,19 +92,26 @@ CREATE TABLE `rubros` (
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `chat_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `users`
---
+
+CREATE TABLE `gastos_detalle` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `gasto_id` INT(11) NOT NULL,
+  `concepto_id` INT(11) NOT NULL,
+  `monto` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gasto_id` (`gasto_id`),
+  KEY `concepto_id` (`concepto_id`),
+  CONSTRAINT `fk_detalle_gasto` FOREIGN KEY (`gasto_id`) REFERENCES `gastos` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_detalle_concepto` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 
---
--- Índices para tablas volcadas
---
 
---
+
 -- Indices de la tabla `conceptos`
 --
 ALTER TABLE `conceptos`
@@ -128,8 +140,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
 
-ALTER TABLE users ADD COLUMN chat_id VARCHAR(20);
-
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
@@ -138,19 +148,19 @@ ALTER TABLE users ADD COLUMN chat_id VARCHAR(20);
 -- AUTO_INCREMENT de la tabla `conceptos`
 --
 ALTER TABLE `conceptos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `gastos`
 --
 ALTER TABLE `gastos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT de la tabla `rubros`
 --
 ALTER TABLE `rubros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -176,5 +186,3 @@ ALTER TABLE `gastos`
   ADD CONSTRAINT `fk_gastos_concepto` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`),
   ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`);
 COMMIT;
-
-ALTER TABLE gastos ADD COLUMN notificado BOOLEAN DEFAULT 0;
