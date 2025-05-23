@@ -1,5 +1,5 @@
-    // Detectar entorno
-    const backendUrl = window.location.origin;
+// Detectar entorno
+const backendUrl = window.location.origin;
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarRubros();
@@ -48,6 +48,7 @@ function cargarConceptos() {
                     <h4>Nombre</h4>
                     <h4>Tipo</h4>
                     <h4>Requiere Vencimiento</h4>
+                    <h4>Requiere Detalle</h4>
                     <h4>Acciones</h4>
                 </div>`;
 
@@ -59,6 +60,7 @@ function cargarConceptos() {
                     <h5>${concepto.nombre}</h5>
                     <h5>${concepto.tipo}</h5>
                     <h5>${concepto.requiere_vencimiento == 1 ? 'Sí' : 'No'}</h5>
+                    <h5>${concepto.requiere_detalle == 1 ? 'Sí' : 'No'}</h5>
                     <div class="acciones">
                         <button class="btn modificar modificar-btn" data-id="${concepto.id}"><i class="fas fa-edit"></i></button>
                         <button class="btn eliminar" data-id="${concepto.id}"><i class="fas fa-trash"></i></button>
@@ -82,6 +84,7 @@ document.querySelector("#agregarConcepto")?.addEventListener('click', async () =
     const rubroId = document.getElementById('rubroConcepto')?.value;
     const tipo = document.getElementById('tipoConcepto')?.value;
     const requiereVenc = parseInt(document.getElementById('requiereVencimiento')?.value, 10);
+    const requiereDetalle = parseInt(document.getElementById('requiereDetalle')?.value, 10);
     const token = localStorage.getItem('jwt-token');
 
     if (!nombre || !rubroId) return alert('El nombre y el rubro no pueden estar vacíos');
@@ -97,7 +100,8 @@ document.querySelector("#agregarConcepto")?.addEventListener('click', async () =
                 nombre,
                 rubro_id: rubroId,
                 tipo,
-                requiere_vencimiento: requiereVenc
+                requiere_vencimiento: requiereVenc,
+                requiere_detalle: requiereDetalle
             })
         });
 
@@ -111,6 +115,7 @@ document.querySelector("#agregarConcepto")?.addEventListener('click', async () =
         document.getElementById('rubroConcepto').value = '';
         document.getElementById('tipoConcepto').value = '';
         document.getElementById('requiereVencimiento').value = '0';
+        document.getElementById('requiereDetalle').value = '0';
 
         cargarConceptos();
     } catch (err) {

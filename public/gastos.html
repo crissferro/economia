@@ -49,7 +49,7 @@
                         
                         
                             <label for="nombreConcepto">Nombre del Concepto</label>
-                            <select id="nombreConcepto">
+                            <select id="nombreConcepto" class="form-select">
                                 <option value="">Seleccione un concepto</option>
                             </select>
                           
@@ -87,15 +87,14 @@
                           <input type="button" value="Agregar Gasto" id="agregarGasto">
                         </div>
 
-                        <div id="detallesContainer" style="display: none; margin-top: 20px;">
-                      <h4>Detalles del Gasto</h4>
-                      <div id="detallesList"></div>
+                      <div id="detallesContainer" style="display: none; margin-top: 20px;">
+                        <h4>Detalles del Gasto</h4>
+                      <div id="detallesList"></div> <!-- <-- AGREGAR ESTA LÍNEA -->
+                        <div id="botonAgregarDetalleDiv" style="display: none; margin-top: 10px;">
+                          <button id="botonAgregarDetalle">Agregar detalle a este gasto</button>
+                        </div>
+                      </div>
 
-                      <button type="button" class="btn btn-secondary" id="agregarDetalleBtn">Agregar Detalle</button>
-                    </div>
-                    
-
-              
           </form>
           </article>
 
