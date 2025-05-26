@@ -30,7 +30,7 @@ module.exports.crearGasto = async (req, res) => {
             }
         }
 
-        res.status(201).json({ mensaje: 'Gasto registrado con detalles' });
+        res.status(201).json({ mensaje: 'Gasto registrado con detalles', gasto_id: gastoId });
     } catch (error) {
         console.error("Error al insertar gasto:", error);
         res.status(500).json({ error: 'Error interno del servidor' });

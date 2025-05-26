@@ -186,3 +186,5 @@ ALTER TABLE `gastos`
   ADD CONSTRAINT `fk_gastos_concepto` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`),
   ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`concepto_id`) REFERENCES `conceptos` (`id`);
 COMMIT;
+
+ALTER TABLE conceptos ADD COLUMN requiere_detalle TINYINT DEFAULT 0;

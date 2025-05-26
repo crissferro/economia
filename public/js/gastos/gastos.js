@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Recolectar detalles si están visibles
+        const requiereDetalle = await conceptoRequiereDetalle(conceptoId);
+        console.log('¿Requiere detalle?', requiereDetalle);
+
         const detalles = [];
         if (document.getElementById('detallesContainer').style.display !== 'none') {
             const conceptos = document.querySelectorAll('input[name="detalleConcepto[]"]');
@@ -51,22 +53,33 @@ document.addEventListener('DOMContentLoaded', async () => {
                 })
             });
 
+            const resultado = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error al agregar gasto');
+                throw new Error(resultado.error || 'Error al agregar gasto');
             }
 
-            alert('Gasto agregado con éxito');
-            setTimeout(() => {
-                document.getElementById('importeGasto').value = '';
-                document.getElementById('nombreConcepto').value = '';
-                document.getElementById('mesGasto').value = '1';
-                document.getElementById('anioGasto').value = new Date().getFullYear();
-                document.getElementById('fechaVencimientoGasto').value = '';
-                document.getElementById('fechaVencimientoDiv').style.display = 'none';
-                document.getElementById('detallesContainer').style.display = 'none';
-                document.getElementById('detallesList').innerHTML = '';
-            }, 100);
+            const gastoId = resultado.gasto_id;
+            console.log('ID del gasto recién creado:', gastoId);
+
+            console.log('Evaluando si redirigir a la carga de detalles...');
+            if (requiereDetalle) {
+                console.log(`Redirigiendo a detalle_gasto.html con id: ${gastoId}`);
+                window.location.href = `/detalle_gasto.html?id=${gastoId}`;
+            } else {
+                console.log('No requiere detalle, mostrando mensaje de éxito');
+                alert('Gasto agregado con éxito');
+                setTimeout(() => {
+                    document.getElementById('importeGasto').value = '';
+                    document.getElementById('nombreConcepto').value = '';
+                    document.getElementById('mesGasto').value = '1';
+                    document.getElementById('anioGasto').value = new Date().getFullYear();
+                    document.getElementById('fechaVencimientoGasto').value = '';
+                    document.getElementById('fechaVencimientoDiv').style.display = 'none';
+                    document.getElementById('detallesContainer').style.display = 'none';
+                    document.getElementById('detallesList').innerHTML = '';
+                }, 100);
+            }
 
         } catch (error) {
             console.error('Error al agregar gasto:', error);
@@ -126,6 +139,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error al cargar conceptos:', error);
+        }
+    }
+
+    async function conceptoRequiereDetalle(conceptoId) {
+        try {
+            const res = await fetch(`${backendUrl}/conceptos/${conceptoId}/requiere-detalle`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt-token')}` }
+            });
+            
+            const data = await res.json();
+            console.log('Respuesta de requiere-detalle:', data);
+            return !!data.requiere_detalle;
+        } catch (error) {
+            console.error('Error al verificar si requiere detalle:', error);
+            return false;
         }
     }
 });
