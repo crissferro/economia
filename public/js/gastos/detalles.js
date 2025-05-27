@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert('Debe agregar al menos un detalle.');
                 return;
             }
+            console.log('Enviando fetch con detalles:', detalles);
 
             const res = await fetch(`/gastos/${gastoId}/detalles`, {
                 method: 'POST',
@@ -114,16 +115,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             console.log('➡️ Fetch respondió:', res.status);
-            const data = await res.json();
-            console.log('✅ Respuesta backend:', data);
 
-            if (!res.ok) {
-                throw new Error(data.error || 'Error al guardar los detalles.');
+            // Verificar si la respuesta es JSON antes de intentar parsearla
+            const contentType = res.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await res.json();
+                console.log('✅ Respuesta backend:', data);
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Error al guardar los detalles.');
+                }
+
+                alert('Detalles guardados correctamente.');
+                // Forzar la redirección
+                window.location.replace('gastos.html');
+            } else {
+                console.error('❌ La respuesta no es JSON');
+                throw new Error('Respuesta del servidor en formato incorrecto');
             }
-
-            alert('Detalles guardados correctamente.');
-            window.location.href = 'gastos.html';
-
         } catch (error) {
             console.error('❌ Error capturado en submit:', error);
             alert('Error inesperado: ' + error.message);

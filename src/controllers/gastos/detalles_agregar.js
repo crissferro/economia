@@ -1,6 +1,6 @@
 const { conn } = require('../../db/dbconnection');
 
-exports.agregarDetalles = (req, res) => {
+exports.agregarDetalles = async (req, res) => {
     console.log('➡️ POST recibido para gasto ID:', req.params.id);
     console.log('➡️ Body recibido:', req.body);
 
@@ -12,19 +12,30 @@ exports.agregarDetalles = (req, res) => {
         return res.status(400).json({ error: 'Formato de datos incorrecto' });
     }
 
-    const valores = detalles.map(det => [gastoId, det.concepto_id, det.monto]);
-    console.log('➡️ Valores a insertar:', valores);
+    try {
+        // Primero, eliminar detalles existentes
+        await conn.query('DELETE FROM gastos_detalle WHERE gasto_id = ?', [gastoId]);
 
-    const sql = 'INSERT INTO gastos_detalle (gasto_id, concepto_id, monto) VALUES ?';
+        // Luego, insertar los nuevos detalles
+        if (detalles.length > 0) {
+            const valores = detalles.map(det => [gastoId, det.concepto_id, det.monto]);
+            console.log('➡️ Valores a insertar:', valores);
 
-    conn.query(sql, [valores], (err, resultado) => {
-        if (err) {
-            console.error('❌ Error al insertar detalles:', err);
-            // Esto asegura que no queda "pending"
-            return res.status(500).json({ error: 'Error en la base de datos' });
+            console.log('⏳ Iniciando consulta a la base de datos...');
+            const sql = 'INSERT INTO gastos_detalle (gasto_id, concepto_id, monto) VALUES ?';
+
+            // Usar la API de promesas correctamente
+            const [resultado] = await conn.query(sql, [valores]);
+
+            console.log('✅ Detalles insertados correctamente');
+            console.log('✅ Enviando respuesta al cliente');
+        } else {
+            console.log('✅ No hay detalles para insertar, se eliminaron los existentes');
         }
 
-        console.log('✅ Detalles insertados');
-        res.status(200).json({ mensaje: 'OK', filas: resultado.affectedRows });
-    });
+        return res.status(200).json({ mensaje: 'Detalles actualizados correctamente' });
+    } catch (error) {
+        console.error('❌ Error capturado:', error);
+        return res.status(500).json({ error: error.message });
+    }
 };

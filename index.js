@@ -87,6 +87,10 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/login', login);
 app.use('/estadisticas', estadisticasRoutes);
 
+// Agregar esta ruta antes de las rutas de API
+app.get('/gastos/:id/detalles.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/detalles_gestion.html'));
+});
 // Ruta para verificar la configuración del servidor
 app.get('/config', (req, res) => {
     res.json({

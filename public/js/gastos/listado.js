@@ -94,6 +94,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const id = btnEliminar.dataset.id;
             eliminarGasto(id);
         }
+
+        const btnDetalles = event.target.closest('.detalles');
+        if (btnDetalles) {
+            const id = btnDetalles.dataset.id;
+            window.location.href = `/gastos/${id}/detalles.html`;
+            return;
+        }
     });
 
     async function cargarRubros() {
@@ -175,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderizarGastos(gastos) {
         const listaGastos = document.getElementById('listaGastos');
-    
+
         let html = `
         <table id="tablaGastos">
             <thead>
@@ -193,31 +200,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             </thead>
             <tbody>
         `;
-    
+
         function formatearFecha(fechaStr) {
             if (!fechaStr) return 'Sin fecha';
             const partes = fechaStr.split('T')[0].split('-'); // ['2025', '05', '05']
             return `${partes[2]}-${partes[1]}-${partes[0]}`; // dd-mm-yyyy
         }
-    
+
         if (gastos.length === 0) {
             listaGastos.innerHTML += `<tr><td colspan="9">No se encontraron gastos.</td></tr>`;
         } else {
             const hoy = new Date();
-    
+
             gastos.forEach(gasto => {
                 const vencStr = formatearFecha(gasto.fecha_vencimiento);
                 const fechaPago = formatearFecha(gasto.fecha_pago);
-            
+
                 let clase = '';
                 if (!gasto.pagado && gasto.fecha_vencimiento) {
                     const fechaVenc = new Date(gasto.fecha_vencimiento);
- // Solo para el cálculo, no para mostrar
+                    // Solo para el cálculo, no para mostrar
 
                     const hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-const vencSinHora = new Date(fechaVenc.getFullYear(), fechaVenc.getMonth(), fechaVenc.getDate());
+                    const vencSinHora = new Date(fechaVenc.getFullYear(), fechaVenc.getMonth(), fechaVenc.getDate());
 
-const diasDiff = (vencSinHora - hoySinHora) / (1000 * 60 * 60 * 24);
+                    const diasDiff = (vencSinHora - hoySinHora) / (1000 * 60 * 60 * 24);
                     if (diasDiff < 0) {
                         clase = 'vencido'; // Color para vencidos
                     } else if (diasDiff === 0) {
@@ -226,7 +233,7 @@ const diasDiff = (vencSinHora - hoySinHora) / (1000 * 60 * 60 * 24);
                         clase = 'proximo-vencimiento'; // Color para los que vencen en 2 días
                     }
                 }
-                
+
                 //log para ver la clase del gasto
                 //console.log({
                 //    concepto: gasto.concepto,
@@ -245,9 +252,13 @@ const diasDiff = (vencSinHora - hoySinHora) / (1000 * 60 * 60 * 24);
                         <td><input type="checkbox" class="chkPagado" data-id="${gasto.id}" ${gasto.pagado ? 'checked' : ''}></td>
                         <td>${fechaPago}</td>
                         <td>
-                            <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
-                            <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
-                        </td>
+                    <button class="btn modificar" data-id="${gasto.id}"><i class="fas fa-edit"></i></button>
+                    <button class="btn eliminar" data-id="${gasto.id}"><i class="fas fa-trash"></i></button>
+                    ${(gasto.requiere_detalles === 1 || gasto.tiene_detalles > 0) ?
+                        `<button class="btn btn-info detalles" data-id="${gasto.id}" title="${gasto.tiene_detalles > 0 ? `Ver/Editar detalles (${gasto.tiene_detalles})` : 'Ver/Editar detalles'}">
+                         <i class="fas fa-list"></i>
+                       </button>` : ''}
+                </td>
                     </tr>
                 `;
             });

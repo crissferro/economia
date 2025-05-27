@@ -12,16 +12,16 @@ module.exports = {
             // Obtener parámetros de la URL
             const { mes, anio, concepto_id, rubro_id, pagado } = req.query;
 
-            //console.log("Ejecutando consulta...");
             // Construir la consulta con filtros dinámicos
             let query = `
-                SELECT g.id, g.concepto_id, 
-                       CASE WHEN g.tipo = 'egreso' THEN g.monto * -1 ELSE g.monto END AS monto,
-                       g.fecha_vencimiento, g.pagado, g.fecha_pago, g.mes, g.anio, 
-                       c.nombre as concepto, c.rubro_id
-                FROM gastos g
-                JOIN conceptos c ON g.concepto_id = c.id
-                WHERE 1 = 1
+    SELECT g.id, g.concepto_id, 
+           CASE WHEN g.tipo = 'egreso' THEN g.monto * -1 ELSE g.monto END AS monto,
+           g.fecha_vencimiento, g.pagado, g.fecha_pago, g.mes, g.anio, 
+           c.nombre as concepto, c.rubro_id, c.requiere_detalles,
+           (SELECT COUNT(*) FROM gastos_detalle WHERE gasto_id = g.id) as tiene_detalles
+    FROM gastos g
+    JOIN conceptos c ON g.concepto_id = c.id
+    WHERE 1 = 1
             `;
 
             // Array de valores para evitar SQL Injection
@@ -48,8 +48,6 @@ module.exports = {
                 query += " AND g.pagado = ?";
                 params.push(pagado);
             }
-
-            //console.log("Consulta generada:", query, params); // Debugging
 
             // Ejecutar la consulta
             const [gastos] = await conn.execute(query, params);

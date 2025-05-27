@@ -1,4 +1,34 @@
 <%- include('./partials/head') %>
+    <script src="/js/gastos/gastos.js"></script>
+    <script>
+    // Asegurarnos de que cargarConceptos esté disponible globalmente
+    document.addEventListener('DOMContentLoaded', async () => {
+        const conceptoIdSeleccionado = '<%= registro.concepto_id %>';
+        let backendUrl;
+
+        try {
+            const configResponse = await fetch('/config');
+            const configData = await configResponse.json();
+            backendUrl = configData.backendUrl;
+        } catch (error) {
+            console.error('No se pudo obtener la URL del backend:', error);
+            backendUrl = window.location.origin;
+        }
+
+        // Esperar a que cargarConceptos termine
+        window.conceptosData = await cargarConceptos(backendUrl, conceptoIdSeleccionado);
+        configurarCambioConcepto();
+
+        // Mostrar u ocultar campo vencimiento si es necesario
+        const selectedOption = document.querySelector('#nombreConcepto option:checked');
+        if (selectedOption && selectedOption.dataset.requiereVencimiento === "1") {
+            document.getElementById('fechaVencimientoDiv').style.display = 'block';
+        } else {
+            document.getElementById('fechaVencimientoDiv').style.display = 'none';
+        }
+    });
+</script>
+    <script src="/js/gastos/detalles_modificar.js"></script>
 <body>
     <header>
         <!-- ... (sin cambios en header/nav) ... -->
@@ -38,6 +68,16 @@
                     <option value="1" <%= registro.pagado === 1 ? 'selected' : '' %>>Sí</option>
                 </select><br>
 
+    <!-- Sección de detalles -->
+    <div id="detallesSection" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
+        <h3>Detalles del gasto</h3>
+        <div id="detallesList">
+            <!-- Aquí se cargarán dinámicamente los detalles -->
+        </div>
+        
+  <button type="button" id="agregarDetalle" class="btn btn-secondary">Agregar detalle</button>
+</div>
+
                 <button type="submit" class="btn">Actualizar</button>
             </form>
             <div id="btn-cancelar">
@@ -47,31 +87,7 @@
     </main>
 
     <%- include('./partials/footer') %>
-    <script src="/js/gastos/gastos.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const conceptoIdSeleccionado = '<%= registro.concepto_id %>';
-            let backendUrl;
 
-            try {
-                const configResponse = await fetch('/config');
-                const configData = await configResponse.json();
-                backendUrl = configData.backendUrl;
-            } catch (error) {
-                console.error('No se pudo obtener la URL del backend desde /config:', error);
-                return;
-            }
 
-            await cargarConceptos(backendUrl, conceptoIdSeleccionado);
-            configurarCambioConcepto();
-
-            // Mostrar u ocultar campo vencimiento si es necesario
-            const selectedOption = document.querySelector('#nombreConcepto option:checked');
-            if (selectedOption && selectedOption.dataset.requiereVencimiento === "1") {
-                document.getElementById('fechaVencimientoDiv').style.display = 'block';
-            } else {
-                document.getElementById('fechaVencimientoDiv').style.display = 'none';
-            }
-        });
-    </script>
+    
 </body>
