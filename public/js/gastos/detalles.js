@@ -76,25 +76,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const conceptos = document.querySelectorAll('select[name="detalleConcepto[]"]');
-        const montos = document.querySelectorAll('input[name="detalleMonto[]"]');
-
-        const detalles = [];
-        conceptos.forEach((select, i) => {
-            const concepto = select.value.trim();
-            const monto = parseFloat(montos[i].value);
-            if (concepto && !isNaN(monto)) {
-                detalles.push({ concepto, monto });
-            }
-        });
-
-        if (detalles.length === 0) {
-            alert('Debe agregar al menos un detalle.');
-            return;
-        }
+        console.log('Submit iniciado');
 
         try {
+            const conceptos = document.querySelectorAll('select[name="detalleConcepto[]"]');
+            const montos = document.querySelectorAll('input[name="detalleMonto[]"]');
+
+            const detalles = [];
+            conceptos.forEach((select, i) => {
+                const conceptoNombre = select.value.trim();
+                const monto = parseFloat(montos[i].value);
+                console.log(`Detalle ${i}:`, conceptoNombre, monto);
+
+                if (conceptoNombre && !isNaN(monto)) {
+                    const conceptoObj = conceptosDisponibles.find(c => c.nombre === conceptoNombre);
+                    if (conceptoObj) {
+                        detalles.push({
+                            concepto_id: conceptoObj.id,
+                            monto
+                        });
+                    }
+                }
+            });
+
+            if (detalles.length === 0) {
+                alert('Debe agregar al menos un detalle.');
+                return;
+            }
+
             const res = await fetch(`/gastos/${gastoId}/detalles`, {
                 method: 'POST',
                 headers: {
@@ -104,18 +113,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({ detalles })
             });
 
+            console.log('➡️ Fetch respondió:', res.status);
             const data = await res.json();
+            console.log('✅ Respuesta backend:', data);
 
             if (!res.ok) {
                 throw new Error(data.error || 'Error al guardar los detalles.');
             }
 
             alert('Detalles guardados correctamente.');
-            window.location.href = 'listado_gastos.html';
+            window.location.href = 'gastos.html';
 
         } catch (error) {
-            console.error('Error al guardar detalles:', error);
-            alert(error.message);
+            console.error('❌ Error capturado en submit:', error);
+            alert('Error inesperado: ' + error.message);
         }
     });
 });
