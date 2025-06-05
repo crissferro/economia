@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    let backendUrl;
+    let backendUrl = '';
 
     try {
         const configResponse = await fetch('/config');
-        const configData = await configResponse.json();
-        backendUrl = configData.backendUrl;
+        //const configData = await configResponse.json();
+        //backendUrl = configData.backendUrl;
     } catch (error) {
         console.error('No se pudo obtener la URL del backend desde /config:', error);
-        return;
+    
     }
 
     const mesSelect = document.getElementById("mes");

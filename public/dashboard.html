@@ -42,9 +42,8 @@
                     <select id="anio"></select>
                 </div>
             </section>
-        <div class="agregar">
-
-            <section class="tarjeta">
+            <section class="agregar">
+                <div class="tarjeta">
                     <article class="card saldo">
                         <header>
                             <h3 class="titulo">Resumen</h3>
@@ -66,11 +65,12 @@
                             <p class="cuerpo" id="totalEgresos"></p>
                         </article>
                     </div>
+                </div>
             </section>
-        </div>
+        
         <h2>Resumen de Egresos por Rubro</h2>
-        <div class="agregar2">
-            <section class="resumen-rubros">
+        <section class="agregar2">
+            <div class="resumen-rubros">
                 <article>
                                 <table class="table table-striped" id="rubrosTable">
                                 <thead>
@@ -87,14 +87,29 @@
                 <article class="grafico">
                     <!-- Gráfico de torta -->
                     <canvas id="rubrosChart" width="500" height="500"></canvas>
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
                 </article>
-            </section>
-        </div>
-        
-        <div class="chart-container">
-    <h2>Gastos por Concepto</h2>
-    <canvas id="conceptosChart"></canvas>
+            </div>
+        </section>
+        <!-- <h2>Gastos por Concepto</h2>
+        <section class="estadisticas">
+            <article>
+
+                <div class="grafico-conceptos">
+                    <div class="chart-container">
+                        <canvas id="conceptosChart"></canvas>
+                    </div>
+                </div>
+            </article>
+        </section> -->
+
+        <h2>Gastos por Concepto</h2>
+<div class="agregar2">
+    <section class="resumen-conceptos">
+        <article class="grafico">
+            <canvas id="conceptosChart" width="500" height="500"></canvas>
+        </article>
+    </section>
 </div>
 
 
@@ -113,5 +128,6 @@
     </footer>
     
     <script src="js/dashboard/dashboard.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

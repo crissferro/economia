@@ -54,6 +54,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(override('_metodo'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Agregar esta ruta antes de las rutas de API
+app.get('/gastos/:id/detalles.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/detalles_gestion.html'));
+});
+
 app.use(session({
     secret: 'clave_secreta',
     resave: false,
@@ -87,10 +93,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/login', login);
 app.use('/estadisticas', estadisticasRoutes);
 
-// Agregar esta ruta antes de las rutas de API
-app.get('/gastos/:id/detalles.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/detalles_gestion.html'));
-});
+
 // Ruta para verificar la configuración del servidor
 app.get('/config', (req, res) => {
     res.json({
